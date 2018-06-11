@@ -1,0 +1,499 @@
+body {
+	color:#333;
+	background-color: #fffff0;
+	margin:20px;
+	padding:0px;
+	font-size:0.8em;
+	font-family: verdana, arial, helvetica, sans-serif;
+	}
+
+h1 {
+	margin:0px 0px 15px 0px;
+	padding:0px;
+	font-size:large;
+	font-weight:700;
+	text-align:center;
+	color:#6A5ACD;
+	}
+
+h2 {
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size:medium;
+	margin:0px 0px 5px 0px;
+	font-weight:600;
+	padding:0px;
+	color:#6A5ACD;
+	}
+
+h3 {
+	font-family: verdana, arial, helvetica, sans-serif;
+font-size:11px;
+line-height:20px;
+}
+
+h4 {
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size:large;
+
+}
+
+h5{
+font-size: larger; 
+ font-family: Arial; 
+
+font-weight:bold;
+
+}
+
+.liste {
+font-family: Verdana, Arial, Helvetica, Geneva, sans-serif;
+font-size: 100%;
+color: black;
+display : list-item;
+list-style-position: outside;
+list-style-image:url(_themes/blends/blebul2a.gif);
+}
+
+.title-box-title {
+  position: relative;
+  display: inline;
+  border: 1px solid;
+  border-width: 0 .1em;
+  padding: 0 .5em;
+  top: -1.1em;
+  background-color: white; 
+}
+
+.title-box-title + * {
+  margin-top: -1.1em;
+}
+
+.title-box {
+  position: relative;
+  margin: .5em;
+  border: .1em solid black;
+  padding: .5em;
+}
+
+.title-box-title {
+  position: relative;
+  display: inline;
+  border: 1px solid;
+  border-width: 0 .1em;
+  padding: 0 .5em;
+  top: -1.1em;
+  left: 1em;
+  background-color: white; 
+}
+
+pre {font-size: 1.2em;}
+	
+p {
+	font-family: verdana, arial, helvetica, sans-serif;
+	margin:0px 0px 16px 0px;
+	padding:0px;
+	}
+
+table.notable { 
+	text-align: left; 
+	margin:0;
+	border-color: #708090;
+	border-width: medium;
+	border-style: double;
+	border-collapse: collapse;
+	}	
+
+table { 
+	border: 1px solid #000000; 
+	margin:0;
+        text-align: center; 
+	}
+
+th  {	color: #000000; 
+	background: #E2E2E2 ;
+	padding: 0px; 
+	margin: 0;
+        text-align: center; 
+	}
+ 
+td {	padding-left:5px;
+	padding-right:5px;
+	margin:0;
+}
+
+table.primary_table {
+          padding: 1;
+     border-width: medium;
+     border-color: #708090;
+     border-style: double;
+ background-color: #FFFFFF; 	
+}
+
+table.primary_table TBODY {
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: normal;
+    	  font-size: 12px;
+    	      color: black;
+}
+
+table.primary_table TBODY TR {
+}
+
+table.primary_table TBODY TR TH {
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: bold;
+    	  font-size: 13px;
+              color: #FFFFFF;
+   background-color: #6A5ACD; 
+         text-align: center; 
+     vertical-align: middle;
+            padding: 4; 
+             height: 30;
+}
+
+table.primary_table TBODY TR TD {
+      border-right: #999999 1px solid;
+        border-top: #999999 1px solid;
+       border-left: #999999 1px solid;
+     border-bottom: #999999 1px solid;
+    	text-align: center;
+    vertical-align: middle;
+           padding: 3;
+}
+
+table.primary_table_no_align {
+          padding: 2;
+     border-width: medium;
+     border-color: #708090;
+     border-style: double;
+}
+
+table.primary_table_no_align TBODY {
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: normal;
+    	  font-size: 12px;
+    	      color: black;
+}
+
+table.primary_table_no_align TBODY TR {
+}
+
+table.primary_table_no_align TBODY TR TH {
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: bold;
+    	  font-size: 14px;
+              color: #FFFFFF;
+   background-color: #003366;
+            padding: 4; 
+             height: 30;
+}
+
+table.primary_table_no_align TBODY TR TD {
+      border-right: #999999 1px solid;
+        border-top: #999999 1px solid;
+       border-left: #999999 1px solid;
+     border-bottom: #999999 1px solid;
+           padding: 3;
+}
+
+table.primary_table_no_lines {
+          padding: 2;
+     border-width: medium;
+      border-color: #708090;
+     border-style: double;
+}
+
+table.primary_table_no_lines TBODY {
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: normal;
+    	  font-size: 12px;
+    	      color: black;
+}
+
+table.primary_table_no_lines TBODY TR {
+}
+
+table.primary_table_no_lines TBODY TR TH {
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: normal;
+    	  font-size: 17px;
+              color: #FFFFFF;
+   background-color: #003366; 
+         text-align: center; 
+     vertical-align: middle;
+            padding: 5; 
+             height: 40;
+}
+
+table.primary_table_no_lines TBODY TR TD {
+    	text-align: center;
+    vertical-align: middle;
+           padding: 3;
+}
+
+table.primary_table_no_lines_left {
+          padding: 2;
+     border-width: medium;
+     border-color: #708090;
+     border-style: double;
+}
+
+table.primary_table_no_lines_left TBODY {
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: normal;
+    	  font-size: 12px;
+    	      color: black;
+}
+
+table.primary_table_no_lines_left TBODY TR {
+}
+
+table.primary_table_no_lines_left TBODY TR TH {
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: normal;
+    	  font-size: 17px;
+              color: #FFFFFF;
+   background-color: #003366; 
+         text-align: left; 
+            padding: 5; 
+             height: 40;
+}
+table.crispr{
+     border-width: medium;
+     border-color: #708090;
+     border-style: double;
+         padding: 0px;
+	border-collapse : collapse;
+	border-spacing : 0px;
+	
+}
+
+table.primary_table_no_lines_left TBODY TR TD {
+    	text-align: justify;
+           padding: 4;
+}
+table.crisprs_table {
+          padding: 1;
+     border-width: medium;
+     border-color: #708090;
+     border-style: double;
+      empty-cells:hide;	
+}
+
+table.crisprs_table TBODY {
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: normal;
+    	  font-size: 12px;
+    	      color: black;
+}
+
+table.crisprs_table TBODY TR {
+}
+
+table.crisprs_table TBODY TR TH {
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: bold;
+    	  font-size: 13px;
+              color: #FFFFFF;
+   background-color: #6A5ACD; 
+          
+     vertical-align: middle;
+            padding: 4; 
+             height: 30;
+border-bottom: #708090 1px solid;
+}
+
+table.crisprs_table TBODY TR TD {
+//      border-right: #999999 1px solid;
+//        border-top: #999999 1px solid;
+//       border-left: #999999 1px solid;
+//     border-bottom: #999999 1px solid;
+    	text-align: left;
+    vertical-align: middle;
+           padding: 3;
+.nobordertable    { text-align: Center; 
+	border: 0px; 
+	margin:0;
+	}
+}
+
+table.crisprs_table_no_align {
+          padding: 2;
+     border-width: medium;
+     border-color: #708090;
+     border-style: double;
+}
+
+table.crisprs_table_no_align TBODY {
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: normal;
+    	  font-size: 12px;
+    	      color: black;
+}
+
+table.crisprs_table_no_align TBODY TR {
+}
+
+table.crisprs_table_no_align TBODY TR TH {
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: bold;
+    	  font-size: 14px;
+              color: #FFFFFF;
+   background-color: #003366;
+            padding: 4; 
+             height: 30;
+}
+
+table.crisprs_table_no_align TBODY TR TD {
+      border-right: #999999 1px solid;
+        border-top: #999999 1px solid;
+       border-left: #999999 1px solid;
+     border-bottom: #999999 1px solid;
+           padding: 3;
+}
+
+table.crisprs_table_no_lines {
+          padding: 2;
+     border-width: medium;
+      border-color: #708090;
+     border-style: double;
+}
+
+table.crisprs_table_no_lines TBODY {
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: normal;
+    	  font-size: 12px;
+    	      color: black;
+}
+p.code {font-family: Courier New, Courier, mono;} 
+
+
+.nobordertable    { text-align: Center; 
+	border: 0px; 
+	margin:0;
+	}
+
+.noborderlefttable { 
+        text-align: Left;
+        border: 0px;
+        margin:0;
+}
+
+div.collistleft {
+	float: left;
+	width: 0%;
+	position: relative;
+}
+div.collist {
+	float: left;
+	width: 75%;
+	position: relative;
+	padding-right:22%;
+  padding-left:0%;
+
+}
+
+div.collistright {
+	float: right;
+	width: 0%;
+	position: relative;
+
+}
+         
+.td1    { color: #000000; background: #efefff; text-align: Center; }
+.td2	{ color: #000000; background: #fcfcf9; text-align: Center; }
+.menulink {font-weight:600}
+
+.Content>p {margin:0px;}
+.Content>p+p {text-indent:30px;}
+
+a {
+	color:#09c;
+	
+	font-family:verdana, arial, helvetica, sans-serif;
+	text-decoration:none;
+	}
+a:link {color:#0F7FAF;}
+a:visited {color:#0F7FAF;}
+a:hover {background-color:#bbb;}
+  
+img.imagelink {
+  border:0
+}
+
+a.imagelink:hover {
+  background-color:transparent
+}
+
+textarea {width: 98%}
+
+/* All the content boxes belong to the content class. */
+.content {
+	position:relative; /* Position is declared "relative" to gain control of stacking order (z-index). */
+	width:auto;
+	top:0px;
+	min-width:190px;
+	margin:0px 190px 10px 150px;
+	border:0px solid #999;
+ background-color:#fffff0;
+ 	padding:10px ;
+
+
+	z-index:3; /* This allows the content to overlap the right menu in narrow windows in good browsers. */
+	}
+
+#leftmenu {
+	position:absolute;
+	width:auto;
+	min-width:140px;
+	top:20px;
+	left:10px;
+	border:0px solid #708090;
+	background-color:#E6E8FA;
+	padding:10px;
+	z-index:2;
+	voice-family: '\"}\"';
+	voice-family:inherit;
+
+	}
+		
+#rightpane {
+	position:absolute;
+	width:150px;
+	top:20px;
+	right:10px;
+	border:0px solid #708090;
+	background-color:#E6E8FA;
+	padding:10px;
+	z-index:1;
+/* Again, the ugly brilliant hack. */
+	voice-family: "\"}\"";
+	voice-family:inherit;
+	}
+
+
+#contenu {
+	padding-top : 10px;
+	padding-left:5px;
+	padding-right: 5px;
+	margin-left:10px;
+}
+
+.principal {
+	position:relative; /* Position is declared "relative" to gain control of stacking order (z-index). */
+	width:auto;
+	min-width:120px;
+	margin:0px 210px 20px 170px;
+	border:1px solid #0F7FAF;
+	background-color:white;
+	padding:10px;
+	z-index:3; /* This allows the content to overlap the right menu in narrow windows in good browsers. */
+
+}
+
+.lienmenu {  font-family: Arial, Helvetica, sans-serif; font-size: 8pt; font-weight: bold; color: #FFFFFF; text-decoration: none}
+
+.menu-blue { BORDER-RIGHT: #FFFFFF 1px solid; BORDER-TOP: #FFFFFF 1px solid; PADDING-LEFT: 0px;FONT-WEIGHT: normal; BORDER-LEFT: #FFFFFF 1px solid; BORDER-BOTTOM: #FFFFFF 1px solid; font-family:Arial, Helvetica, sans-serif; font-size: 8pt; BACKGROUND-COLOR: #6A5ACD; TEXT-DECORATION: none; font-stretch : condensed; }
+td.summary{font-size: 10px;}
+
+
