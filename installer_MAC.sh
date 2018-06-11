@@ -6,7 +6,7 @@ vmatch_url="http://vmatch.de/distributions/${vmatch}.tar.gz"
 macsyfinder="macsyfinder-1.0.5"
 macsyfinder_url="https://dl.bintray.com/gem-pasteur/MacSyFinder/${macsyfinder}.tar.gz"
 
-casfinder="CasFinder-2.0"
+casfinder="CasFinder-2.0.2"
 
 prokka="prokka-1.12"
 prokka_url="http://www.vicbioinformatics.com/${prokka}.tar.gz"
