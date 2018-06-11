@@ -1,0 +1,73 @@
+<system inter_gene_max_space="5" min_mandatory_genes_required="2" min_genes_required="3">
+
+#Present in other CRISPR-Cas systems
+<gene name="Cas1_0_I-II-III" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas1_0_I-II-III-V" presence="accessory"   system_ref="CAS"/>
+<gene name="Cas2_0_I-II-III" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas2_0_I-II-III-V" presence="accessory"  system_ref="CAS"/>
+
+<gene name="Cas1_0_IA" presence="accessory"  system_ref="CAS-TypeIA"/>
+<gene name="Cas1_0_IC" presence="accessory"  system_ref="CAS-TypeIC"/>
+<gene name="Cas1_0_IE" presence="accessory"  system_ref="CAS-TypeIE"/>
+<gene name="Cas1_0_IF" presence="accessory"  system_ref="CAS-TypeIF"/>
+<gene name="Cas1_0_II" presence="accessory"  system_ref="CAS-TypeIIC"/>
+
+<gene name="Cas6_0_I-III" presence="accessory"  system_ref="CAS"/>
+
+#Specific to TypeIIIA
+<gene name="Cas10_0_IIIA" presence="mandatory"/>
+<gene name="Csm2_0_IIIA" presence="mandatory" exchangeable="1">
+	<homologs>
+			<gene name="Csm2_1_IIIA" presence="mandatory"/>
+	</homologs>
+</gene>	
+<gene name="Csm3_0_IIIA" presence="mandatory"/>
+
+<gene name="Csm4_0_IIIA" presence="mandatory" exchangeable="1">
+	<homologs>
+		<gene name="Csm4_1_IIIA" presence="mandatory"/>
+	</homologs>
+</gene>	
+<gene name="Csm5_0_IIIA" presence="mandatory" exchangeable="1">
+	<homologs>
+		<gene name="Csm5_1_IIIA" presence="mandatory"/>
+	</homologs>
+</gene>	
+<gene name="Csm6_0_IIIA" presence="mandatory"/>
+<gene name="Csm2_1_IIIA" presence="mandatory"/>
+
+
+#Distinguishing from other Types
+<gene name="Cas3_0_I" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas3_1_I" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas9_0_II" presence="forbidden" system_ref="CAS-TypeIIC"/>
+<gene name="Cas9_0_IIB" presence="forbidden"  system_ref="CAS-TypeIIB"/>
+
+
+#Other subtypes III sometimes associated with Type IIIA
+<gene name="Cas10_0_IIIB" presence="accessory" system_ref="CAS-TypeIIIB"/>
+<gene name="Cmr3_0_IIIB" presence="accessory" system_ref="CAS-TypeIIIB"/>
+<gene name="Cmr4_0_IIIB" presence="accessory" system_ref="CAS-TypeIIIB"/>
+<gene name="Cmr5_0_IIIB" presence="accessory" system_ref="CAS-TypeIIIB"/>
+<gene name="Cmr7_0_IIIB" presence="accessory" system_ref="CAS-TypeIIIB"/>
+<gene name="Cmr8_0_IIIB" presence="accessory" system_ref="CAS-TypeIIIB"/>
+
+<gene name="Cas10_0_IIIC" presence="accessory" system_ref="CAS-TypeIIIC"/>
+<gene name="Cmr1_0_IIIC" presence="accessory" system_ref="CAS-TypeIIIC"/>
+<gene name="Cmr3_0_IIIC" presence="accessory" system_ref="CAS-TypeIIIC"/>
+<gene name="Cmr5_0_IIIC" presence="accessory" system_ref="CAS-TypeIIIC"/>
+<gene name="Cmr6_0_IIIC" presence="accessory" system_ref="CAS-TypeIIIC"/>
+
+<gene name="Csm2_0_IIID" presence="accessory" system_ref="CAS-TypeIIID"/>
+<gene name="Csm3_0_IIIAD" presence="accessory" system_ref="CAS-TypeIIID"/>
+<gene name="Csm3_1_IIID" presence="accessory" system_ref="CAS-TypeIIID"/>
+<gene name="Csm3_0_IIID" presence="accessory" system_ref="CAS-TypeIIID"/>
+<gene name="Csx19_0_IIID" presence="accessory" system_ref="CAS-TypeIIID"/>
+<gene name="Csx10_0_IIID" presence="accessory" system_ref="CAS-TypeIIID"/>
+<gene name="Cas10_0_III" presence="accessory" system_ref="CAS-TypeIIID"/>
+
+<gene name="Cas1_0_II" presence="accessory" system_ref="CAS-TypeIIC"/>
+
+
+
+</system>

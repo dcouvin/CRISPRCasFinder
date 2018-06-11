@@ -1,0 +1,23 @@
+<system inter_gene_max_space="5" min_mandatory_genes_required="2" min_genes_required="3">
+
+#Present in Type I
+<gene name="Cas5_0_I" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas3_0_I" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas3_1_I" presence="accessory"  system_ref="CAS"/>
+
+#Specific to Type IE
+<gene name="Cas1_0_IE" presence="mandatory"/>
+<gene name="Cas2_0_IE" presence="mandatory"/>
+<gene name="Cas5_0_IE" presence="mandatory"/>
+<gene name="Cse1_0_IE" presence="mandatory"/>
+<gene name="Cse2_0_IE" presence="mandatory"/>
+<gene name="Cas6_0_IE" presence="mandatory"/>
+<gene name="Cas7_0_IE" presence="mandatory"/>
+
+#Distinguishing Type IE from other Type I
+<gene name="Cas1_0_I-II-III" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas2_0_I-II-III" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas4_0_I-II" presence="accessory"  system_ref="CAS"/>
+
+
+</system>

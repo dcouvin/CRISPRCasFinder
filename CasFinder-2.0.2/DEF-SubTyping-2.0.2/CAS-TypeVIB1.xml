@@ -1,0 +1,13 @@
+<system inter_gene_max_space="5" min_mandatory_genes_required="1" min_genes_required="1">
+
+#Specific to Type VI
+<gene name="Cas13b_0_VIB1" presence="mandatory" loner="1"/>
+
+#Present in other CRISPR-Cas systems
+<gene name="Cas2_0_I-II-III" presence="accessory"   system_ref="CAS"/>
+<gene name="Cas2_0_I-II-III-V" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas1_0_I-II-III-V" presence="accessory"   system_ref="CAS"/>
+<gene name="Cas1_0_I-II-III" presence="accessory"   system_ref="CAS"/>
+
+
+</system>

@@ -1,0 +1,40 @@
+<system inter_gene_max_space="5" min_mandatory_genes_required="1" min_genes_required="1">
+
+
+#TypeII
+<gene name="Cas9_0_II"  presence="mandatory" loner="1"/>
+<gene name="Cas9_0_IIB"  presence="mandatory" loner="1"/>
+<gene name="Cas9_1_IIB"  presence="mandatory" loner="1"/>
+<gene name="Cas9_1_II"  presence="mandatory" loner="1"/>
+<gene name="Cas1_0_II" presence="accessory"/>
+<gene name="Csn2_0_IIA" presence="mandatory" loner="1"/>
+<gene name="Cas4_0_I-II-V" presence="accessory"/>
+
+#TypeV
+<gene name="Cas12b_0_VB" presence="mandatory" loner="1"/>
+<gene name="Cas12c_0_VC" presence="mandatory" loner="1"/>
+<gene name="Cas12a_0_VA" presence="mandatory" loner="1"/>
+<gene name="Cas12a_1_VA" presence="mandatory" loner="1"/>
+<gene name="Cas1_0_V" presence="accessory"/>
+<gene name="Cas1_0_I-II-III-V" presence="accessory"/>
+<gene name="Cas4_0_V" presence="mandatory" loner="1"/>
+
+
+
+#TypeVI
+<gene name="Cas13a_0_VIA" presence="mandatory" loner="1"/>
+<gene name="Cas13b_0_VIB1" presence="mandatory" loner="1"/>
+<gene name="Cas13b_1_VIB2" presence="mandatory" loner="1"/>
+<gene name="Cas13c_0_VIC" presence="mandatory" loner="1"/>
+
+
+
+#Shared with Class1
+<gene name="Cas1_0_I-II-III" presence="accessory" system_ref="General-Class1"/>
+<gene name="Cas2_0_I-II-III" presence="accessory" system_ref="General-Class1"/>
+<gene name="Cas2_0_I-II-III-V" presence="accessory" system_ref="General-Class1"/>
+<gene name="Cas4_0_I-II" presence="accessory" system_ref="General-Class1"/>
+<gene name="Cas6_0_I-III" presence="accessory" system_ref="General-Class1"/>
+
+
+</system>
