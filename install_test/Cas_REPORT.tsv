@@ -1,0 +1,21 @@
+############################################
+CP014688 ( Acetobacter persici strain TMW2.1084 plasmid pAC1084_1, complete sequence ) 
+--------------------------------------------
+### System: General-Class1 (UserReplicon_General-Class1_1)
+#SequenceID	Cas-type/subtype	Gene status	System	Type	Begin	End	Strand	Other_information
+CP014688.1_298	Cse1_0_IE	accessory	General-Class1	CDS	278410	279909	+	ID=1_298;partial=00;start_type=TTG;rbs_motif=GGAG/GAGG;rbs_spacer=5-10bp;gc_cont=0.544;conf=100.00;score=98.68;cscore=98.19;sscore=0.49;rscore=6.98;uscore=0.69;tscore=-7.17;
+CP014688.1_299	Cse2_0_IE	accessory	General-Class1	CDS	279906	280415	+	ID=1_299;partial=00;start_type=GTG;rbs_motif=AGxAGG/AGGxGG;rbs_spacer=5-10bp;gc_cont=0.529;conf=99.70;score=25.20;cscore=20.78;sscore=4.43;rscore=5.59;uscore=2.85;tscore=-5.31;
+CP014688.1_300	Cas7_0_IE	accessory	General-Class1	CDS	280421	281539	+	ID=1_300;partial=00;start_type=ATG;rbs_motif=None;rbs_spacer=None;gc_cont=0.568;conf=100.00;score=90.37;cscore=87.80;sscore=2.57;rscore=-6.58;uscore=4.60;tscore=3.33;
+CP014688.1_301	Cas5_0_IE	accessory	General-Class1	CDS	281532	282155	+	ID=1_301;partial=00;start_type=ATG;rbs_motif=3Base/5BMM;rbs_spacer=13-15bp;gc_cont=0.562;conf=99.97;score=35.23;cscore=33.56;sscore=1.67;rscore=-3.29;uscore=0.38;tscore=3.33;
+CP014688.1_302	Cas6_0_IE	accessory	General-Class1	CDS	282157	282819	+	ID=1_302;partial=00;start_type=ATG;rbs_motif=AGxAGG/AGGxGG;rbs_spacer=5-10bp;gc_cont=0.535;conf=99.99;score=39.95;cscore=28.85;sscore=11.10;rscore=5.59;uscore=0.92;tscore=3.33;
+####Summary system General-Class1:begin=278410;end=282819:{sequenceID=CP014688} : [Cse1_0_IE (278410,279909,+); Cse2_0_IE (279906,280415,+); Cas7_0_IE (280421,281539,+); Cas5_0_IE (281532,282155,+); Cas6_0_IE (282157,282819,+)]
+
+### System: General-Class1 (UserReplicon_General-Class1_2)
+#SequenceID	Cas-type/subtype	Gene status	System	Type	Begin	End	Strand	Other_information
+CP014688.1_512	Csy1_0_IF	accessory	General-Class1	CDS	479746	481005	+	ID=1_512;partial=00;start_type=ATG;rbs_motif=GGA/GAG/AGG;rbs_spacer=5-10bp;gc_cont=0.523;conf=100.00;score=70.37;cscore=61.18;sscore=9.19;rscore=3.44;uscore=2.41;tscore=3.33;
+CP014688.1_513	Csy2_0_IF	accessory	General-Class1	CDS	481002	481982	+	ID=1_513;partial=00;start_type=GTG;rbs_motif=GGAG/GAGG;rbs_spacer=5-10bp;gc_cont=0.539;conf=100.00;score=43.95;cscore=40.99;sscore=2.96;rscore=6.98;uscore=-4.04;tscore=-5.31;
+CP014688.1_514	Csy3_0_IF	accessory	General-Class1	CDS	482013	483044	+	ID=1_514;partial=00;start_type=ATG;rbs_motif=GGAG/GAGG;rbs_spacer=5-10bp;gc_cont=0.507;conf=100.00;score=93.31;cscore=74.81;sscore=18.51;rscore=6.98;uscore=7.25;tscore=3.33;
+CP014688.1_515	Cas6_0_IF	accessory	General-Class1	CDS	483049	483621	+	ID=1_515;partial=00;start_type=GTG;rbs_motif=GGAG/GAGG;rbs_spacer=5-10bp;gc_cont=0.532;conf=99.56;score=23.57;cscore=22.68;sscore=0.89;rscore=6.98;uscore=-2.00;tscore=-5.31;
+####Summary system General-Class1:begin=479746;end=483621:{sequenceID=CP014688} : [Csy1_0_IF (479746,481005,+); Csy2_0_IF (481002,481982,+); Csy3_0_IF (482013,483044,+); Cas6_0_IF (483049,483621,+)]
+
+
