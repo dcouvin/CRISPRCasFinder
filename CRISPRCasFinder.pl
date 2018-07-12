@@ -30,7 +30,7 @@ use Date::Calc qw(:all);
 
 # TODO add URLescape module in case the GFF attributes get messy
 #local modules
-my $version = "4.2.17";
+my $version = "4.2.18";
 
 # set parameters for the Vmatch program
 #$ENV{'LD_LIBRARY_PATH'} = '.';
@@ -139,6 +139,8 @@ my $minNbSpacers = 1; # option allowing to specifiy the minimum number of spacer
 my $betterDetectTruncatedDR = 0; # option allowing to better detect the truncated DR (default value=0)
 
 my $percentageMismatchesHalfDR = 4; # option allowing to set the percentage of allowed mismatches in truncated DR (default value=4)
+
+my $classifySmall = 0; # option allowing to change evidence level status of small arrays (evidence-level 1) having the same consensus repeat as an evidence-level 4 array (default value=0)
 
 #my $doNotMove = 0; # option allowing to do not move final repositories (default value=0)
 
@@ -345,7 +347,10 @@ else{
     elsif($ARGV[$i]=~/-onlyCas/ or $ARGV[$i]=~/-oCas/){
       $onlyCas = 1;
     }
-    #$onlyCas
+    elsif($ARGV[$i]=~/-classifySmallArrays/ or $ARGV[$i]=~/-classifySmall/ or $ARGV[$i]=~/-cSA/){
+      $classifySmall = 1;
+    }
+    #classifySmall
     #$fosteredDRLength $fosteredDRBegin $fosteredDREnd
     #elsif($ARGV[$i]=~/-useMuscle/ or $ARGV[$i]=~/-muscle/){
     #  $useMuscle = 1;
@@ -585,8 +590,16 @@ if($clusteringThreshold and $launchCasFinder){
  
 }
 
+#my Header for smallArraysReclassification.xls
+if ($classifySmall){
+  my $smallArrays = $ResultDir."/smallArraysReclassification.xls";
+  open (SMALL, ">$smallArrays") or die "open : $!"; 
+  print SMALL "CRISPR_Id\tConsensus_Repeat\tFormer_Evidence-level\tNew_Evidence-level\n";
+  close (SMALL);
+}
+
 #sequence version
-#my $sequenceVersion = 0;
+my $sequenceVersion = 0;
 
 while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   
@@ -598,7 +611,8 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   my $seqID1 = $seq->id; # ID of sequence
   my $seqDesc = $seq->desc; # Description of sequence
   if($seqDesc eq ""){ $seqDesc = "Unknown"; }# If description is missing, the sequence will be labeled as "Unknown"
-
+  
+  $sequenceVersion = $seqID1;
   my $seqLength = $seq->length(); #Sequence size
 
   # -meta option as given by user
@@ -760,7 +774,8 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   	#unlink "../$inputfile"; # DC - 12/05/2017 to keep fasta file until gff and json files are done
   	chdir "..";
   	#unlink '*.index';
-
+	
+	makesystemcall("rm -f $inputfile.index");
 
   	## DC - move makeGFF and make JSON functions
   
@@ -922,8 +937,8 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   	else{
 		$tempSumDataCcC = "NA";
   	}
-
-  	$jsonLineRes .= "{\n\"Id\":\"".$RefSeq."\",\n\"Description\":\"".$seqDesc."\",\n\"AT\":".$globalAT.",\n\"Length\":".$seqLength.",\n\"Summary_CRISPR-Cas\":\"".$tempSumDataCcC."\",\n\"Crisprs\":".$catJSONcrispr.",\n\"Cas\":".$catJSONcas."\n},\n";
+#$sequenceVersion
+  	$jsonLineRes .= "{\n\"Id\":\"".$RefSeq."\",\n\"Version\":\"".$sequenceVersion."\",\n\"Description\":\"".$seqDesc."\",\n\"AT\":".$globalAT.",\n\"Length\":".$seqLength.",\n\"Summary_CRISPR-Cas\":\"".$tempSumDataCcC."\",\n\"Crisprs\":".$catJSONcrispr.",\n\"Cas\":".$catJSONcas."\n},\n";
 
 
   	#put analyzed sequence in a folder named: "analyzedSequences"
@@ -934,18 +949,6 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   	}
  } #NV end condition for mss option  
 } # end while (my $seq = $seqIO->next_seq)
-
-# End and close file JSONSEQ
-#$jsonLineSeq .= "]\n";
-#$jsonLineSeq =~ s/,\n]/\n]/; # change end of file to better fit JSON format
-
-#print JSONSEQ $jsonLineSeq;
-#close (JSONSEQ);
-
-# move JSONSEQ in ResultDir
-#if(-e $jsonSeq){
-#  makesystemcall("mv $jsonSeq $ResultDir");
-#}
 
 # End and close file JSONRES
 $jsonLineRes .= "]\n";
@@ -1148,6 +1151,11 @@ if($html){
 
 # Remove '.index' files
 makesystemcall("rm -f *.index");
+
+# Remove macsyOutput if option -quiet is set
+if($quiet){
+	makesystemcall("rm -f macsyfinderOutput");
+}
 
 # // LK
 # DC - End of main script
@@ -1548,7 +1556,7 @@ sub casFinder
   my @tabCCScas = (); # table which will contain all Cas systems of the given sequence
   my %hashCountCas = (); # hash table to count Cas systems
 
-  ####### work on CRISPR-Cas clusters -Begin
+  ####### work on CRISPR-Cas clusters and tracrRNA -Begin
 
 	  my @tabCRISPRCasClusters = (); # table which will contain all CRISPR-Cas clusters according to a given threshold
 	  my %hashCasBegin = ();
@@ -1556,13 +1564,17 @@ sub casFinder
 	  my %hashCrisprBegin = ();
 	  my %hashCrisprEnd = ();
 
+	  my %hashCrisprDRcons = (); # to store the consensus DR corresponding to each CRISPR array
+	  my $limitSide = 3000; # limit allowed in both side of Cas system or neighboring CRISPR
+	  my $matchingCasType = "CAS-TypeII";
+
 	  my @otherTabCas = ();
 	  my @otherTabCrispr = ();
 
 	  #my $clusterCrisprCas = "";
 	  my $clusterResults = $ResultDir."/CRISPR-Cas_clusters.tsv";
 
-  ####### work on CRISPR-Cas clusters -End
+  ####### work on CRISPR-Cas clusters and tracrRNA -End
 
   eval{
     use JSON::Parse 'json_file_to_perl';
@@ -2013,6 +2025,7 @@ sub casFinder
 			## End Fill JSON Cas
 
 			# Read file containing CRISPRs and watch if one is close to a Cas systems
+			# Get also the Consensus repeat (or DR)
 			@otherTabCrispr = ();
 			open (CRISPR, "<$resultsCRISPRs") or die "open : $!";
 			#open (TMP, ">>$resultsTmpCRISPRs") or die "open : $!"; #$resultsTmpCRISPRs
@@ -2770,15 +2783,95 @@ sub makeJson
   my $jsonLine = ""; # lines which will be written in JSON file
   my $secondChain = "";
   my ($file, $extension) = split(/\./, $gff); # retrieve file name
-  # Read and parse GFF file
-  open(GFF,"<",$gff) or die("Could not open the GFF file $gff because $!\n");
   # Write Json file
   my ($hour,$min,$sec) = Now();
 
   if($logOption){
   	print LOG "\n[$hour:$min:$sec] Create JSON format data corresponding to CRISPR arrays\n";
   }
+  
+  # Hash consensusDR <=> evidence-level
+  my %hashDRlevel = ();
 
+  if($classifySmall){
+  ## Pre-treatment in order to detect evidence-level 1 arrays having same consensus DR with an evidence-level 4 array.
+  # Read and parse GFF file
+  open(PRE,"<",$gff) or die("Could not open the GFF file $gff because $!\n");
+  
+  while(<PRE>) {
+    chomp($_);
+
+    if ($_ !~  m/^#/ && $_ =~  m/CRISPRCasFinder/) {
+	
+	my @tab = split(/\t/, $_);
+
+	#### main CRISPR
+        if($tab[2] eq "CRISPR" || $tab[2] eq "PossibleCRISPR"){
+
+	  my %hash = ();
+
+	  my @newTab = split(/;/, $tab[8]);
+	  for (my $i = 0; $i <= $#newTab; $i++) {
+	    my @otherTab = split(/=/, $newTab[$i]);
+	    $hash{$otherTab[0]} = $otherTab[1];
+	  }
+	  #$DRconsensus = $hash{DR};
+	  #$nbSpacers = $hash{Number_of_spacers};
+	  $crisprID = $hash{ID};
+
+	  ## Get Id
+	  my @tabIdCRISPR = split(/_/, $crisprID);
+	  my $idNumber = pop(@tabIdCRISPR);
+
+	  ## Entropy DRs
+	  if(-e $input_dr.$idNumber){
+	  	my $drFasta = fastaAlignmentMuscle($input_dr.$idNumber);
+		
+	  	$entropyDRs = entropy($drFasta);
+	  }
+
+	  ## Conservation Spacers
+	  if(-e $input_spacer.$idNumber) {
+	  	my $spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
+
+		if($useClustalW){
+			$conservationSpacers = sequenceAlignment($spacerFasta);
+		}
+		else{
+			$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
+		}
+		$score .= "_".$conservationSpacers;
+
+		my @tabSpacerLength=();
+		open (SPACER, "<".$input_spacer.$idNumber) or die "open : $!";  #Open Spacer file
+
+		while (defined (my $lineSp = <SPACER>)){
+			chomp($lineSp);
+			my $lengthInfo = 0;
+			if($lineSp !~ /^>/){
+				#$lineSp =~ s/\s//g;   #Remove spaces if exist
+				$lengthInfo = length($lineSp);
+				push(@tabSpacerLength,$lengthInfo);
+			}
+		}
+		close SPACER;
+
+
+	  }
+
+	  if( ($entropyDRs >= 70) and ($conservationSpacers <= 8) and ($hash{Number_of_spacers} > 3) ){ 
+		$hashDRlevel{$hash{DR}} = 4;
+	  } 
+        }
+    }    
+  }
+  ## End of Pre-treatment
+  close(PRE);
+  }
+
+  # Read and parse GFF file
+  open(GFF,"<",$gff) or die("Could not open the GFF file $gff because $!\n");
+  
   #open(JSON,">",$file."_crispr.json") or die("Could not open the JSON file $file _crispr.json because $!\n");
   #print JSON "[\n"; #replacement of "{" by "["
   $jsonCRISPRdata = "[\n";
@@ -2834,7 +2927,7 @@ sub makeJson
 	  $crisprID = $hash{ID};
 	  $name = $hash{name};
 
-	  ## Get score (EntropyDRs_ConservationSpacers)
+	  ## Get Id
 	  my @tabIdCRISPR = split(/_/, $crisprID);
 	  my $idNumber = pop(@tabIdCRISPR);
 
@@ -2921,7 +3014,19 @@ sub makeJson
 	  if( ($entropyDRs >= 70) and ($conservationSpacers <= 8) and ($nbSpacers > 3) ){ $eL=4;}
 	  if( ($entropyDRs >= 70) and ($conservationSpacers > 8) and ($nbSpacers > 3) ){ $eL=3;}
 	  if( ($entropyDRs < 70) and ($nbSpacers > 3) ){ $eL=2;}
-	  if( $nbSpacers <= 3 ){ $eL=1;}
+	  if( $nbSpacers <= 3 ){
+		if(exists($hashDRlevel{$DRconsensus}) and $classifySmall){
+			$eL=4;
+			#print CRISPR into file "smallArraysReclassification.xls"
+			my $smallArrays = $ResultDir."/smallArraysReclassification.xls";
+			open (SMALLAR, ">>$smallArrays") or die "open : $!"; 
+			print SMALLAR "$crisprID\t$DRconsensus\t1\t4\n";
+			close (SMALLAR);
+		}
+		else{ 
+	  		$eL=1;
+		}
+	  }
 
 	  #if( ($entropyDRs >= 70) and ($conservationSpacers <= 8) and ($nbSpacers > 3) and ($ratioDRspacer>=0.8) and ($ratioDRspacer<=1.2) ){ $eL=4;}
       	  #if( ($entropyDRs >= 70) and ($nbSpacers > 3) and (($conservationSpacers > 8) or ($ratioDRspacer<0.8) or ($ratioDRspacer>1.2) ) ){ $eL=3;}
