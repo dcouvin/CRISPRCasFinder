@@ -1,7 +1,7 @@
 # CRISPRCasFinder
-CRISPRCasFinder is an update of CRISPRFinder. The related publication is available at: https://doi.org/10.1093/nar/gky425
+CRISPRCasFinder is an updated, improved, and integrated version of CRISPRFinder and CasFinder. 
 
-CRISPRCasFinder is a perl script allowing to identify CRISPR arrays and associated Cas proteins from DNA sequences.
+The related publication is available at: https://doi.org/10.1093/nar/gky425
 
 Further information are available at: https://crisprcas.i2bc.paris-saclay.fr.
 

@@ -5,7 +5,7 @@
 #  enhanced performance and integrates search for cas genes.
 # 
 #  Copyright (C) 2017- CRISPR-Cas++ team 
-#  (CNRS, Université Paris-Saclay, Institut Pasteur, Université de Lille)
+#  (CNRS, Université Paris-Saclay I2BC, Institut Pasteur C3BI, Université de Lille)
 #
 #  See the COPYRIGHT file for details.
 #
@@ -30,7 +30,7 @@ use Date::Calc qw(:all);
 
 # TODO add URLescape module in case the GFF attributes get messy
 #local modules
-my $version = "4.2.14";
+my $version = "4.2.17";
 
 # set parameters for the Vmatch program
 #$ENV{'LD_LIBRARY_PATH'} = '.';
@@ -140,7 +140,9 @@ my $betterDetectTruncatedDR = 0; # option allowing to better detect the truncate
 
 my $percentageMismatchesHalfDR = 4; # option allowing to set the percentage of allowed mismatches in truncated DR (default value=4)
 
-my $doNotMove = 0; # option allowing to do not move final repositories (default value=0)
+#my $doNotMove = 0; # option allowing to do not move final repositories (default value=0)
+
+my $onlyCas = 0; # option allowing to perform only CasFinder (default value=0)
 
 #my $useMafft = 0; # option allowing to use Mafft for all alignments (default value=0)
 
@@ -340,10 +342,10 @@ else{
       $useMuscle = 0;
       $useClustalW = 1;
     }
-    elsif($ARGV[$i]=~/-doNotMove/ or $ARGV[$i]=~/-dNM/){
-      $doNotMove = 1;
+    elsif($ARGV[$i]=~/-onlyCas/ or $ARGV[$i]=~/-oCas/){
+      $onlyCas = 1;
     }
-    #$doNotMove
+    #$onlyCas
     #$fosteredDRLength $fosteredDRBegin $fosteredDREnd
     #elsif($ARGV[$i]=~/-useMuscle/ or $ARGV[$i]=~/-muscle/){
     #  $useMuscle = 1;
@@ -373,10 +375,6 @@ if (-e $userfile)
   print "# --> Welcome to $0 (version $version) \n";
   print "################################################################\n\n\n";
 
-  #Change the name of $userfile
-  #makesystemcall("cp $userfile uuuuuuuserfile.fna");
-  #makesystemcall("rm -f $userfile");
-  #$userfile = "uuuuuuuserfile.fna";
 }
 else
 {
@@ -487,10 +485,9 @@ if(-d $ResultDirFinal){
 $ResultDir = $outdir;
 mkdir $ResultDir unless -d $ResultDir;
 
-if($doNotMove){}
-else{
-	mkdir $ResultDir."/CRISPRFinderProperties" unless -d $ResultDir."/CRISPRFinderProperties"; #NV
-}
+
+mkdir $ResultDir."/CRISPRFinderProperties" unless -d $ResultDir."/CRISPRFinderProperties"; #NV
+
 
 #create a directory GFF and move all GFFs to this directory
 mkdir $ResultDir."/GFF" unless -d $ResultDir."/GFF";
@@ -568,6 +565,8 @@ my $allCrisprs = 0;
 my $nbrAllCas = 0; # Total nbrCas
 my $currentRepository = getcwd();
 
+#actualMetaOptionValue
+my $actualMetaOptionValue = $metagenome;
 
 #my header CCS to write title of CSS tsv file
 my $resultsCRISPRCasSummary1 = $ResultDir."/CRISPR-Cas_summary.tsv";
@@ -598,15 +597,21 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   # DC - 05/2017 - print $inputfile and seq->id
   my $seqID1 = $seq->id; # ID of sequence
   my $seqDesc = $seq->desc; # Description of sequence
-  if($seqDesc eq ""){ $seqDesc = "Unknown"; }# If no description is missing, the sequence will be labeled as "Unknown"
+  if($seqDesc eq ""){ $seqDesc = "Unknown"; }# If description is missing, the sequence will be labeled as "Unknown"
 
   my $seqLength = $seq->length(); #Sequence size
 
-  # DC - when $seqLength < 100000 bases, consider it as a metagenomic dataset (if option -meta was not set)
-  if(!$metagenome){
-  	if($seqLength < 100000){ $metagenome=1; }
-	else{ $metagenome=0; }
+  # -meta option as given by user
+  $metagenome=$actualMetaOptionValue;
+
+  # DC - when $seqLength < 100000 bases, consider it as a metagenomic dataset for Prodigal (if option -meta was not set)
+  if(!$metagenome and ($seqLength < 100000) ){
+  	$metagenome=1;
   }
+  #else{
+  #	$metagenome=$actualMetaOptionValue;
+  #}
+  
 
   #NV condition for mss option
   if ($seqLength >= $seqMinSize){

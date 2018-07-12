@@ -2,7 +2,7 @@
 
 # shell script allowing to install all CRISPRCasFinder.pl-v4.2's dependencies
 #
-# same version than CRISPRCasFinder.pl, here 4.2.14
+# same version than CRISPRCasFinder.pl, here 4.2.17
 # authors: David Couvin, Fabrice Leclerc, Claire Toffano-Nioche
 
 #------------------------
@@ -113,6 +113,7 @@ else
     
     #set environment variables
     source $HOME/.profile
+
 # if $OSTYPE
 fi 
 
