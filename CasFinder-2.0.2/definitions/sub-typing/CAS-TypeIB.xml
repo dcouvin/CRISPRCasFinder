@@ -1,0 +1,37 @@
+<system inter_gene_max_space="5" min_mandatory_genes_required="2" min_genes_required="3">
+
+#Present in all CRISPR-Cas systems
+<gene name="Cas1_0_I-II-III" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas2_0_I-II-III" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas2_0_I-II-III-V" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas1_0_I-II-III-V" presence="accessory"   system_ref="CAS"/>
+
+#Present in Type I
+<gene name="Cas6_0_I-III" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas4_0_I-II" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas4_0_I-II-V" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas5_0_I" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas3_0_I" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas3_1_I" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas7_0_I" presence="accessory"  system_ref="CAS"/>
+
+#Specific to Type IB
+<gene name="Cas5_0_IB" presence="mandatory"/>
+<gene name="Cas8a1_0_IB" presence="mandatory"/>
+<gene name="Cas7_1_IB" presence="mandatory"/>
+<gene name="Cas5_1_IB" presence="mandatory"/>
+<gene name="Cas8b_0_IB" presence="mandatory"/>
+<gene name="Cas7_2_IB" presence="mandatory"/>
+<gene name="Cas8a1_1_IB" presence="mandatory"/>
+<gene name="Cas8a1_2_IB" presence="mandatory"/>
+<gene name="Cas7_3_IB" presence="mandatory"/>
+
+#Sometimes associated with Type IB
+<gene name="Csm3_0_IIIA" presence="accessory"  system_ref="CAS-TypeIIIA"/>
+<gene name="Csx10_0_IIID" presence="accessory"  system_ref="CAS-TypeIIID"/>
+<gene name="Cas7_0_IC" presence="accessory" system_ref="CAS-TypeIC"/>
+
+#Distinguishing Type IB and Type IC
+<gene name="Cas8c_0_IC" presence="forbidden" system_ref="CAS-TypeIC"/>
+
+</system>

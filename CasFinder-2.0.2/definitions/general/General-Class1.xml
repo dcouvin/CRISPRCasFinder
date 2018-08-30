@@ -1,0 +1,135 @@
+ <system inter_gene_max_space="5" min_mandatory_genes_required="0" min_genes_required="3">
+
+#Alltypes
+<gene name="Cas1_0_I-II-III" presence="accessory"/>
+<gene name="Cas2_0_I-II-III" presence="accessory"/>
+<gene name="Cas2_0_I-II-III-V" presence="accessory"/>
+
+<gene name="Cas6_0_I-III" presence="accessory"/>
+<gene name="Cas4_0_I-II" presence="accessory"/>
+<gene name="Cas5_0_I" presence="accessory"/>
+
+#TypeI
+<gene name="Cas3_0_I" presence="accessory"/>
+<gene name="Cas3_1_I" presence="accessory"/>
+<gene name="Cas7_0_I" presence="accessory"/>
+
+<gene name="Cas5_0_IA" presence="accessory"/>
+<gene name="Cas4_0_IA" presence="accessory"/>
+<gene name="Cas7_0_IA" presence="accessory"/>
+<gene name="Csa5_0_IA" presence="accessory"/>
+<gene name="CsaX_0_IA" presence="accessory"/>
+<gene name="Cas1_0_IA" presence="accessory"/>
+<gene name="Cas8a1_0_IA" presence="accessory"/>
+<gene name="Cas8a1_1_IA" presence="accessory"/>
+<gene name="Cas6_0_IA" presence="accessory"/>
+
+<gene name="Cas5_0_IB" presence="accessory"/>
+<gene name="Cas8a1_0_IB" presence="accessory"/>
+<gene name="Cas7_1_IB" presence="accessory"/>
+<gene name="Cas5_1_IB" presence="accessory"/>
+<gene name="Cas8b_0_IB" presence="accessory"/>
+<gene name="Cas7_2_IB" presence="accessory"/>
+<gene name="Cas8a1_1_IB" presence="accessory"/>
+<gene name="Cas7_3_IB" presence="accessory"/>
+<gene name="Cas8a1_2_IB" presence="accessory"/>
+
+<gene name="Cas1_0_IC" presence="accessory"/>
+<gene name="Cas5_0_IC" presence="accessory"/>
+<gene name="Cas8c_0_IC" presence="accessory"/>
+<gene name="Cas7_0_IC" presence="accessory"/>
+<gene name="Cas5_1_IC" presence="accessory"/>
+<gene name="Cas7_1_IC" presence="accessory"/>
+<gene name="Cas8c_1_IC" presence="accessory"/>
+
+<gene name="Cas3_0_ID" presence="accessory"/>
+<gene name="Csc1_0_ID" presence="accessory"/>
+<gene name="Csc2_0_ID" presence="accessory"/>
+<gene name="Cas10d_0_ID" presence="accessory"/>
+
+<gene name="Cas1_0_IE" presence="accessory"/>
+<gene name="Cas2_0_IE" presence="accessory"/>
+<gene name="Cas5_0_IE" presence="accessory"/>
+<gene name="Cse1_0_IE" presence="accessory"/>
+<gene name="Cse2_0_IE" presence="accessory"/>
+<gene name="Cas6_0_IE" presence="accessory"/>
+<gene name="Cas7_0_IE" presence="accessory"/>
+
+<gene name="Cas1_0_IF" presence="accessory"/>
+<gene name="Cas3-Cas2_0_IF" presence="accessory"/>
+<gene name="Csy1_0_IF" presence="accessory"/>
+<gene name="Csy2_0_IF" presence="accessory"/>
+<gene name="Csy3_0_IF" presence="accessory"/>
+<gene name="Cas6_0_IF" presence="accessory" />
+
+<gene name="Cas3_0_IU" presence="accessory"/>
+<gene name="Csb1_0_IU" presence="accessory"/>
+<gene name="Csb2_0_IU" presence="accessory"/>
+<gene name="Csb3_0_IU" presence="accessory"/>
+<gene name="Csx17_0_IU" presence="accessory"/>
+
+#TypeIII
+<gene name="Cas10_0_IIIA" presence="accessory"/>
+<gene name="Csm2_0_IIIA" presence="accessory"/>
+<gene name="Csm2_1_IIIA" presence="accessory"/>
+<gene name="Csm3_0_IIIA" presence="accessory"/>
+<gene name="Csm3_1_IIIAD" presence="accessory"/>
+<gene name="Csm4_0_IIIA" presence="accessory"/>
+<gene name="Csm4_1_IIIA" presence="accessory"/>
+<gene name="Csm5_0_IIIA" presence="accessory"/>
+<gene name="Csm5_1_IIIA" presence="accessory"/>
+<gene name="Csm6_0_IIIA" presence="accessory"/>
+
+<gene name="Cmr1_0_IIIB" presence="accessory"/>
+<gene name="Cas10_0_IIIB" presence="accessory"/>
+<gene name="Cas10_1_IIIB" presence="accessory"/>
+<gene name="Cmr3_0_IIIB" presence="accessory"/>
+<gene name="Cmr3_1_IIIB" presence="accessory"/>
+<gene name="Cmr4_0_IIIB" presence="accessory"/>
+<gene name="Cmr4_1_IIIB" presence="accessory"/>
+<gene name="Cmr5_0_IIIB" presence="accessory"/>
+<gene name="Cmr5_1_IIIB" presence="accessory"/>
+<gene name="Cmr6_0_IIIB" presence="accessory"/>
+<gene name="Cmr6_1_IIIB" presence="accessory"/>
+<gene name="Cmr7_0_IIIB" presence="accessory"/>
+<gene name="Cmr8_0_IIIB" presence="accessory"/>
+
+<gene name="Cas10_0_IIIC" presence="accessory"/>
+<gene name="Cmr1_0_IIIC" presence="accessory"/>
+<gene name="Cmr3_0_IIIC" presence="accessory"/>
+<gene name="Cmr5_0_IIIC" presence="accessory"/>
+<gene name="Cmr5_1_IIIC" presence="accessory"/>
+<gene name="Cmr6_0_IIIC" presence="accessory"/>
+
+<gene name="Cas10_0_III" presence="accessory"/>
+<gene name="Csm2_0_IIID" presence="accessory"/>
+<gene name="Csx10_1_IIID" presence="accessory"/>
+<gene name="Csm3_0_IIID" presence="accessory"/>
+<gene name="Csm3_1_IIID" presence="accessory"/>
+<gene name="Csm3_0_IIIAD" presence="accessory"/>
+<gene name="Csx19_0_IIID" presence="accessory"/>
+<gene name="Csx10_0_IIID" presence="accessory"/>
+
+
+
+#TypeIV
+<gene name="Csf1_0_IV" presence="accessory"/>
+<gene name="Csf1_1_IV" presence="accessory"/>
+<gene name="Csf2_0_IV" presence="accessory"/>
+<gene name="Csf2_1_IV" presence="accessory"/>
+<gene name="Csf3_0_IV" presence="accessory"/>
+<gene name="Csf3_1_IV" presence="accessory"/>
+<gene name="Csf4_0_IV" presence="accessory"/>
+<gene name="Csf4_1_IV" presence="accessory"/>
+<gene name="Csf5_0_IV" presence="accessory"/>
+
+
+#Shared with Class2
+<gene name="Cas1_0_I-II-III-V" presence="accessory"  system_ref="General-Class2"/>
+<gene name="Cas4_0_I-II-V" presence="accessory"  system_ref="General-Class2"/>
+<gene name="Cas1_0_II" presence="accessory" system_ref="General-Class2"/>
+
+
+
+
+</system>

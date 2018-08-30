@@ -1,0 +1,34 @@
+<system inter_gene_max_space="5" min_mandatory_genes_required="1" min_genes_required="1">
+
+#Present in different CRISPR-Cas systems
+<gene name="Cas1_0_I-II-III" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas1_0_I-II-III-V" presence="accessory"   system_ref="CAS"/>
+
+<gene name="Cas2_0_I-II-III" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas2_0_I-II-III-V" presence="accessory"  system_ref="CAS"/>
+
+<gene name="Cas6_0_I-III" presence="accessory"  system_ref="CAS"/>
+<gene name="Cas4_0_I-II" presence="accessory"  system_ref="CAS"/>
+
+#Specific to Type II
+<gene name="Cas1_0_II" presence="accessory"/>
+<gene name="Cas9_0_II" presence="mandatory" loner="1"/>
+<gene name="Cas9_0_IIB" presence="mandatory" loner="1" />
+<gene name="Csn2_0_IIA" presence="mandatory" loner="1"/>
+<gene name="Cas9_1_IIB" presence="mandatory" loner="1"/>
+<gene name="Cas9_1_II" presence="mandatory" loner="1"/>
+
+#Associated with Type II
+<gene name="Cas3_0_I" presence="accessory"  system_ref="CAS-TypeI"/>
+<gene name="Cas3_1_I" presence="accessory"  system_ref="CAS-TypeI"/>
+
+
+#Distinguishing  from other Types
+<gene name="Cas10_0_IIIA" presence="forbidden"  system_ref="CAS-TypeIII"/>
+<gene name="Cas10_0_IIIB" presence="forbidden"  system_ref="CAS-TypeIII"/>
+
+
+
+
+
+</system>
