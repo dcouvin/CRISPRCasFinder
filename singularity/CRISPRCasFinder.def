@@ -168,7 +168,7 @@ from: ubuntu:xenial
     mkdir -p ${prefix}/src/vmatch
     cd ${prefix}/src/vmatch
     distribution='Linux_x86_64'
-    vmatch="${PN}-$PV{}-${distribution}-64bit"
+    vmatch="${PN}-${PV}-${distribution}-64bit"
     vmatch_url="http://vmatch.de/distributions/${vmatch}.tar.gz"
     curl -L -O --silent "${vmatch_url}"
     tar -zxf ${vmatch}.tar.gz
