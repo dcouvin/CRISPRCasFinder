@@ -1,6 +1,6 @@
---- CRISPRCasFinder.pl.ori	2018-02-09 10:26:27.566343980 +0100
-+++ CRISPRCasFinder.pl	2018-02-09 10:26:40.831271084 +0100
-@@ -22,7 +22,7 @@
+--- CRISPRCasFinder.ori.pl	2018-08-29 15:53:29.000000000 +0200
++++ CRISPRCasFinder.pl	2018-08-29 16:39:09.058237159 +0200
+@@ -14,7 +14,7 @@
  ######################################################################################
  
  # CPAN modules 
@@ -9,16 +9,16 @@
  use strict;
  use Class::Struct;   #charge le module qui construit les struct
  use warnings;
-@@ -68,7 +68,7 @@
+@@ -60,7 +60,7 @@
  
  my $launchCasFinder = 0; # boolean variable indicating if we use casfinder or not (default value=0)
  
--my $casfinder = "CasFinder-2.0"; # repository containing new CasFinder (default 'CasFinder-2.0')
-+my $casfinder = "/usr/local/share/macsyfinder/CasFinder-2.0"; # repository containing new CasFinder (default '/usr/local/share/macsyfinder/CasFinder-2.0')
+-my $casfinder = "CasFinder-2.0.2"; # repository containing new CasFinder (default 'CasFinder-2.0.2')
++my $casfinder = "/usr/local/share/macsyfinder/CasFinder-2.0.2"; # repository containing new CasFinder (default '/usr/local/share/macsyfinder/CasFinder-2.0.2')
  
  my $kingdom = "Bacteria"; # allow to choose analysis between Archaea and Bacteria (default 'Bacteria')
  
-@@ -76,13 +76,13 @@
+@@ -68,13 +68,13 @@
  
  my $writeFullReport = 0; # boolean variable indicating if we write crispr-cas_vicinity_report or not (default value=0)
  
@@ -36,7 +36,7 @@
  
  my $html = 0; # boolean variable indicating if we use html visualization or not (default value=0)
  
-@@ -116,7 +116,7 @@
+@@ -108,7 +108,7 @@
  
  my $gscf = 0; # option allowing to get summary file of Cas-finder and copy it to TSV repository (default value=0) 
  
@@ -45,7 +45,7 @@
  
  my $genCode = 11; # option allowing to modify the genetic code (translation table) for CDS annotation (default value=11)
  
-@@ -4858,11 +4858,11 @@
+@@ -5682,11 +5682,11 @@
  
    -spSim or -s [XXX]	Maximal allowed percentage of similarity between Spacers (default: $SpSim)
  
@@ -60,7 +60,7 @@
  
    -flank or -fl [XXX]	Option allowing to set size of flanking regions in base pairs (bp) for each analyzed CRISPR array (default: $flankingRegion)
  
-@@ -4881,7 +4881,7 @@
+@@ -5722,7 +5722,7 @@
  
    -rcfowce	Option allowing to run Casfinder only when any CRISPR exists (default: $rcfowce) (set if -cas is set)
  
@@ -69,7 +69,7 @@
  
    -gffAnnot or -gff [XXX]	Option allowing user to provide an annotation GFF file (if options -cas and -faa are set) (default: '$userGFF') 
  
-@@ -4921,14 +4921,14 @@
+@@ -5763,16 +5763,16 @@
  - the ID will be used for output.
  
  Examples:
@@ -77,14 +77,17 @@
 +(1): CRISPRCasFinder test.fasta
  In this example, your result folder will be in the directory named: "Result_test"
  
--(2): perl $0 -i test.fasta -md 20 -t 33.3 -mr 23 -xr 55 -ms 25 -xs 60 -pm 0.6 -px 2.5 -s 60
+-(2): perl $0 -in test.fasta -md 20 -t 33.3 -mr 23 -xr 55 -ms 25 -xs 60 -pm 0.6 -px 2.5 -s 60
 +(2): CRISPRCasFinder -i test.fasta -md 20 -t 33.3 -mr 23 -xr 55 -ms 25 -xs 60 -pm 0.6 -px 2.5 -s 60
  
--(3): perl $0 -in genomes100.fna -drpt supplementary_files/repeatDirection.tsv -rpts supplementary_files/Repeat_List.csv -cs -fr -dbc CRISPR_crisprdb.csv -cf CasFinder-2.0 -html
-+(3): CRISPRCasFinder -in genomes100.fna -drpt my_repeatDirection.tsv -rpts my_Repeat_List.csv -cs -fr -dbc CRISPR_crisprdb.csv -cf my_CasFinder-2.0 -html
+-(3): perl $0 -in genomes100.fna -drpt supplementary_files/repeatDirection.tsv -rpts supplementary_files/Repeat_List.csv -cs -ccvr -dbc supplementary_files/CRISPR_crisprdb.csv -cf CasFinder-2.0.2 -html
++(3): CRISPRCasFinder -in genomes100.fna -drpt my_repeatDirection.tsv -rpts my_Repeat_List.csv -cs -fr -dbc CRISPR_crisprdb.csv -cf my_CasFinder -html
  
--(4): perl $0 -in sequence.fasta -cas -log -out RES_Sequence -ccc 20000 -ccvRep -keep -html -rcfowce -def S -cpuM 4 -copyCSS supplementary_files/crispr.css -cf CasFinder-2.0
+-(4): perl $0 -in sequence.fasta -cas -log -out RES_Sequence -ccc 20000 -ccvRep -keep -html -rcfowce -def S -cpuM 4 -copyCSS supplementary_files/crispr.css -cf CasFinder-2.0.2
 +(4): CRISPRCasFinder -in sequence.fasta -cas -log -out RES_Sequence -ccc 20000 -ccvRep -keep -html -rcfowce -def SubTyping -cpuM 4 -copyCSS my_crispr.css
-  
+ 
+-(5): perl $0 -in sequence.fasta -cas -log -out RES_Sequence -cf CasFinder-2.0.2 -def G -force -so path/to/sel392v2.so
++(5): CRISPRCasFinder -in sequence.fasta -cas -log -out RES_Sequence -cf my_CasFinder -def G -force -so path/to/sel392v2.so
  
  HEREDOC
+ }
