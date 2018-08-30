@@ -1,0 +1,11 @@
+--- CRISPRCasFinder.installed	2018-08-30 15:34:54.567026713 +0200
++++ CRISPRCasFinder.singularity	2018-08-30 15:34:09.386725254 +0200
+@@ -68,7 +68,7 @@
+ 
+ my $writeFullReport = 0; # boolean variable indicating if we write crispr-cas_vicinity_report or not (default value=0)
+ 
+-my $so = "/usr/local/lib/sel392v2.so"; # path to shared object (.so) file (former name: $pathSoFile)
++my $so = "/.singularity.d/libs/sel392v2.so"; # path to shared object (.so) file (former name: $pathSoFile)
+ 
+ my $crisprdb = "/usr/local/share/CRISPRCasFinder/CRISPR_crisprdb.csv"; # path to all CRISPR candidates contained in CRISPRdb (from last update)
+ 
