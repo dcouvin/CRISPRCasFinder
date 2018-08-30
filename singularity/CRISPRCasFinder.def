@@ -161,7 +161,7 @@ from: ubuntu:xenial
     # vmatch #
     ##########
     PN="vmatch"
-    PV="2.0.3"
+    PV="2.3.0"
     P="${PN}-${PV}"
     P_SRC=${prefix}/src/${PN}
 
@@ -169,7 +169,7 @@ from: ubuntu:xenial
     cd ${prefix}/src/vmatch
     distribution='Linux_x86_64'
     vmatch="${PN}-${PV}-${distribution}-64bit"
-    vmatch_url="http://vmatch.de/distributions/${vmatch}.tar.gz"
+    vmatch_url="http://vmatch.de/distributions/distributions/${vmatch}.tar.gz"
     curl -L -O --silent "${vmatch_url}"
     tar -zxf ${vmatch}.tar.gz
     cd ${vmatch}
