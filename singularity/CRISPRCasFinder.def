@@ -141,7 +141,7 @@ from: ubuntu:xenial
     infernal \
 
     cd /usr/bin
-    ln -s clustalw2 clustalw
+    ln -s clustalw2 clustalw2
     cd /
 
     cpanm Try::Tiny
