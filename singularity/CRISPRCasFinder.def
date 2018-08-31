@@ -226,7 +226,7 @@ from: ubuntu:xenial
     tbl2asn_url="ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools/converters/by_program/${PN}/linux64.${PN}.gz"
     wget "${tbl2asn_url}"
     gunzip linux64.tbl2asn.gz
-    install -m 0755 linux64.tbl2asn ${prefix}/bin/{PN}
+    install -m 0755 linux64.tbl2asn ${prefix}/bin/${PN}
 
     ##########
     # prokka #
