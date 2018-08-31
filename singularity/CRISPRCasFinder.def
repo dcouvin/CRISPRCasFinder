@@ -289,7 +289,9 @@ from: ubuntu:xenial
 
     cripsr_cas_url="https://github.com/bneron/${PN}/archive/master.zip"
     curl -L -o "${PN}.zip" --silent "${cripsr_cas_url}"
-    unzip ${crispr_cas}.zip
+
+    unzip "${PN}.zip"
+    mv "${PN}-master" "${PN}"
 
     cd "${PN}"
     crispr_data="${prefix}/share/${PN}"
