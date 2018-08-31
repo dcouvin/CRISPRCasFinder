@@ -311,6 +311,10 @@ from: ubuntu:xenial
     #############
     # use the CasFinder distributed with CRISPRCasFinder
     cas_data="${prefix}/share/macsyfinder/"
+    # remove profiles and definitions packaged with macsyfinder
+    rm -Rf "${cas_data}DEF"
+    rm -Rf "${cas_data}profiles"
+    # install cas profiles and definition packaged with CRISPRCasFinder
     cp -r CasFinder-2.0.2 ${cas_data}
     cd /
 
