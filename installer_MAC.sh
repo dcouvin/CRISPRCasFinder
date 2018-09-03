@@ -331,11 +331,14 @@ fi
 #############
 
 cas_data="${PREFIX}share/macsyfinder/"
+cd ${CURDIR}
+
 if [ ! -d ${cas_data} ];
 then
     echo "Create directory for ${casfinder}" | tee -a ${LOGFILE}
     mkdir -p ${cas_data} >> ${LOGFILE} 2>&1
 fi
+
 if [ ! -d "${cas_data}/${casfinder}" ];
 then
     echo "Copy ${casfinder} to ${cas_data}" | tee -a ${LOGFILE}
@@ -346,8 +349,15 @@ then
         exit 5
     fi
 else
-    echo "${casfinder} found at ${cas_data}/${casfinder} skip installation." | tee -a ${LOGFILE}
+    echo "${casfinder} found at ${cas_data}/${casfinder}." | tee -a ${LOGFILE}
+    echo "Clean ${casfinder}." | tee -a ${LOGFILE}
+    rm -Rf "${cas_data}/${casfinder}"
+    # install cas profiles and definition packaged with CRISPRCasFinder
+    echo "Install ${casfinder} from CRISPRCasFinder package." | tee -a ${LOGFILE}
+    sudo cp -pr "${casfinder}" "${cas_data}"
 fi
+
+cd ${CURDIR}
 
 
 #######################
