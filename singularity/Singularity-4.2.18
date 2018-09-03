@@ -288,17 +288,15 @@ from: ubuntu:xenial
     cd "${prefix}/src/${PN}"
 
     cripsr_cas_url="https://github.com/bneron/${PN}/archive/release-${PV}.tar.gz"
-    curl -L -o "${PN}.zip" --silent "${cripsr_cas_url}"
+    curl -L -o "${PN}.tar.gz" --silent "${cripsr_cas_url}"
 
-    unzip "${PN}.zip"
-    mv "${PN}-master" "${PN}"
+    tar -xzf "${PN}.tar.gz" --strip-component 1
 
-    cd "${PN}"
     crispr_data="${prefix}/share/${PN}"
     test -d "${crispr_data}" || mkdir "${crispr_data}"
 
     patch CRISPRCasFinder.pl CRISPRCasFinder.patch
-    patch CRISPRCasFinder.pl ../CRISPRCasFinder.singularity.patch
+    patch CRISPRCasFinder.pl singularity/CRISPRCasFinder.singularity.patch
 
     install -m 0755 CRISPRCasFinder.pl ${prefix}/bin/CRISPRCasFinder
     install -m 0644 supplementary_files/crispr.css ${crispr_data}
@@ -323,7 +321,7 @@ from: ubuntu:xenial
     stamp=$(date '+%Y-%m-%d-%H:%M:%S')
     result_dir="/tmp/test_CRISPRCasFinder_${stamp}"
     prefix=/usr/local
-    crispr_cas_src="${prefix}/src/CRISPRCasFinder/CRISPRCasFinder/"
+    crispr_cas_src="${prefix}/src/CRISPRCasFinder/"
 
     CRISPRCasFinder -def General -cas -i "${crispr_cas_src}/install_test/sequence.fasta" -out "${result_dir}" -keep
 
