@@ -287,7 +287,7 @@ from: ubuntu:xenial
     test -d "${prefix}/src/${PN}" || mkdir -p "${prefix}/src/${PN}"
     cd "${prefix}/src/${PN}"
 
-    cripsr_cas_url="https://github.com/bneron/${PN}/archive/master.zip"
+    cripsr_cas_url="https://github.com/bneron/${PN}/releases/download/release-${PV}/${P}.tar.gz"
     curl -L -o "${PN}.zip" --silent "${cripsr_cas_url}"
 
     unzip "${PN}.zip"
