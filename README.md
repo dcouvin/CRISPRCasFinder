@@ -23,7 +23,7 @@ The standalone version is also available as singularity container:
 ```bash
 singularity run shub://dcouvin/CRISPRCasFinder:4.2.18 -def General -cas -i my_sequence.fasta -keep
 ```
-or download the image locally , and optionally rename it, then run it
+or download the image locally, and optionally rename it, then run it
 ```bash
 singularity pull --name CRISPRCasFinder shub://dcouvin/CRISPRCasFinder:4.2.18 
 ./CRISPRCasFinder -def General -cas -i my_sequence.fasta -keep
