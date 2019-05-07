@@ -30,7 +30,7 @@ use Date::Calc qw(:all);
 
 # TODO add URLescape module in case the GFF attributes get messy
 #local modules
-my $version = "4.2.18";
+my $version = "4.2.19";
 
 # set parameters for the Vmatch program
 #$ENV{'LD_LIBRARY_PATH'} = '.';
@@ -1709,9 +1709,10 @@ sub casFinder
     	$macsyfinder = "macsyfinder -w $cpuMacSyFinder --sequence-db $proteome all --out-dir $casDir"; #MacSyfinder without new definitions/profiles
     }
     #print "$macsyfinder\n";
-
-    if($metagenome){ $macsyfinder .= " --db-type unordered"; }
-    else{ $macsyfinder .= " --db-type ordered_replicon"; }
+    #print "METAGENOME = $metagenome ; ACTUAL VALUE = $actualMetaOptionValue\n\n\n";
+    if($metagenome){ $macsyfinder .= " --db-type unordered"; } 
+    elsif($actualMetaOptionValue == 0){ $macsyfinder .= " --db-type ordered_replicon"; }
+    #elsif($gembase){ $macsyfinder .= " --db-type gembase"; }
     if($quiet){ 
 	open (OUTMACSY, ">macsyfinderOutput") or die "open : $!";  # Open macsyfinderOutput (writing mode)
 	$macsyfinder .= " >> macsyfinderOutput";
@@ -1773,6 +1774,21 @@ sub casFinder
 		system($prokka); # Launch Prokka 
 	    }
     }
+
+    #Addition of a test to see if any CDS exist (DC, 2019)
+    if (-z $proteome){ #Checking if $proteome file is empty
+	if($logOption){
+		print LOG "[$macsyfinder_hour:$macsyfinder_min:$macsyfinder_sec] CDS file ($proteome) is empty! No Cas search because no CDS was detected!\n";
+	}
+	if($quiet){}
+	else{
+	  	print "No Cas search because no CDS was detected!\n";
+	}
+
+	$launchCasFinder = 0; #CasFinder will not be launched if no CDS have been detected
+	next;
+    }
+    #End of Addition
 
     if (-e $gff){   # If GFF is created (Prokka is done)
 	if($logOption){
