@@ -1,0 +1,13 @@
+## News from latest version of CRISPRCasFinder
+
+# Change #1
+# CRISPR arrays having one to three spacers will now be rated with evidence-level 4 if their consensus repeat matched with a level 4 CRISPR array's consensus repeat (from the same studied sequence).
+# The new definition for evidence-levels is now:
+# - Level 1 indicates CRISPR-like arrays having 3 spacers or less,
+# - Level 2 indicates CRISPR arrays having an entropy-based conservation (EBcons) of repeats lower than 70.
+# - Level 3 indicates CRISPR arrays having a EBcons of repeats greater or equal to 70, and a spacer conservation (BioPerl’s overall percentage identity) greater than 8%,
+# - Level 4 indicates CRISPR arrays having a EBcons of repeats greater or equal to 70, and a spacer conservation (BioPerl’s overall percentage identity) lower than 8%. Please note that CRISPR-like arrays having 3 spacers or less will be rated with level 4 if their consensus repeat matched with a formal level 4 CRISPR array's consensus repeat.
+
+# Change #2  
+# In CRISPRCasFinder version 4.2.19, MacSyFinder will not be launched to search Cas proteins if no CDS was detected.
+# This improvement allows to avoid MacSyFinder's "RuntimeError".
