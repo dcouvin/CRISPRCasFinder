@@ -12,6 +12,8 @@ CRISPRCasFinder, an update of CRISRFinder, includes a portable version, enhanced
 
 Further information are available at: https://crisprcas.i2bc.paris-saclay.fr.
 
+Email: david.couvin[AT]googlemail.com 
+
 # Documentation
 A more complete User Manual is available at the following link: https://crisprcas.i2bc.paris-saclay.fr/Home/DownloadFile?filename=CRISPRCasFinder_Viewer_manual.pdf.
 
