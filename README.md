@@ -17,6 +17,10 @@ Email: david.couvin[AT]googlemail.com
 # Documentation
 A more complete User Manual is available at the following link: https://crisprcas.i2bc.paris-saclay.fr/Home/DownloadFile?filename=CRISPRCasFinder_Viewer_manual.pdf.
 
+# Licence
+
+[GPL v3](https://github.com/dcouvin/CRISPRCasFinder/blob/master/COPYING)
+
 # Container
 
 If you want to try CRISPRCasFinder without installing dependencies,
