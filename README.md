@@ -8,7 +8,7 @@ If you use this software, please cite:
 
 Couvin D, Bernheim A, Toffano-Nioche C, Touchon M, Michalik J, Néron B, Rocha EPC, Vergnaud G, Gautheret D, Pourcel C.
 CRISPRCasFinder, an update of CRISRFinder, includes a portable version, enhanced performance and integrates search for Cas proteins
-<b>Nucleic Acids Res.</b> 2018 Jul 2;46(W1):W246-W251. DOI: https://doi.org/10.1093/nar/gky425 PMID:29790974 (https://www.ncbi.nlm.nih.gov/pubmed/29790974)
+<b>Nucleic Acids Res.</b> 2018 Jul 2;46(W1):W246-W251. DOI: https://doi.org/10.1093/nar/gky425 [PMID:29790974](https://www.ncbi.nlm.nih.gov/pubmed/29790974)
 
 Further information are available at: https://crisprcas.i2bc.paris-saclay.fr.
 
