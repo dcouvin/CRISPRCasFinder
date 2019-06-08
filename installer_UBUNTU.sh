@@ -112,7 +112,7 @@ else
     echo "export PATH=${CURDIR}/bin:${PATH}" >> $HOME/.profile
     
     #set environment variables
-    source $HOME/.profile
+    #source $HOME/.profile #this command must be typed directly by user
 
 # if $OSTYPE
 fi 
