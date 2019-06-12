@@ -62,6 +62,12 @@ You may need to reinstall some Perl's modules (with command: sudo cpanm ...), fo
 The notification "Possible precedence issue with control flow operator ..." will not affect results of analysis.
 For further information, please see the documentation.
 
+## To run CRISPRCasFinder in the current directory with example sequence you can type:
+```bash
+perl CRISPRCasFinder.pl -in install_test/sequence.fasta -cas -cf CasFinder-2.0.2 -def G -keep
+```
+For further details, please see the documentation.
+
 # Documentation
 A more complete User Manual is available at the following link: https://crisprcas.i2bc.paris-saclay.fr/Home/DownloadFile?filename=CRISPRCasFinder_Viewer_manual.pdf.
 
