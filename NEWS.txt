@@ -11,3 +11,6 @@
 # Change #2  
 # In CRISPRCasFinder version 4.2.19, MacSyFinder will not be launched to search Cas proteins if no CDS was detected.
 # This improvement allows to avoid MacSyFinder's "RuntimeError".
+
+# Change #3
+# Installation procedures have been added for CentOS and Fedora operating systems.
