@@ -69,7 +69,7 @@ perl CRISPRCasFinder.pl -in install_test/sequence.fasta -cas -cf CasFinder-2.0.2
 For further details, please see the documentation.
 
 # Documentation
-A more complete User Manual is available at the following link: https://crisprcas.i2bc.paris-saclay.fr/Home/DownloadFile?filename=CRISPRCasFinder_Viewer_manual.pdf.
+A more complete User Manual is available at the following file : CRISPRCasFinder_Viewer_manual.pdf
 
 # Licence
 
