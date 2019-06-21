@@ -6,9 +6,9 @@ CRISPRCasFinder is an updated, improved, and integrated version of CRISPRFinder 
 
 If you use this software, please cite: 
 
-- Grissa I, Vergnaud G, Pourcel C. CRISPRFinder: a web tool to identify clustered regularly interspaced short palindromic repeats. <b>Nucleic Acids Res.</b> 2007 Jul;35(Web Server issue):W52-7. DOI: https://doi.org/10.1093/nar/gkm360 [PMID:17537822] (https://www.ncbi.nlm.nih.gov/pubmed/17537822)
+- Grissa I, Vergnaud G, Pourcel C. CRISPRFinder: a web tool to identify clustered regularly interspaced short palindromic repeats. <b>Nucleic Acids Res.</b> 2007 Jul;35(Web Server issue):W52-7. DOI: https://doi.org/10.1093/nar/gkm360 [PMID:17537822](https://www.ncbi.nlm.nih.gov/pubmed/17537822)
 
-- Abby SS, Néron B, Ménager H, Touchon M, Rocha EP. MacSyFinder: a program to mine genomes for molecular systems with an application to CRISPR-Cas systems. <b>PLoS One.</b> 2014 Oct 17;9(10):e110726. DOI: https://doi.org/10.1371/journal.pone.0110726 [PMID:25330359] (https://www.ncbi.nlm.nih.gov/pubmed/25330359)
+- Abby SS, Néron B, Ménager H, Touchon M, Rocha EP. MacSyFinder: a program to mine genomes for molecular systems with an application to CRISPR-Cas systems. <b>PLoS One.</b> 2014 Oct 17;9(10):e110726. DOI: https://doi.org/10.1371/journal.pone.0110726 [PMID:25330359](https://www.ncbi.nlm.nih.gov/pubmed/25330359)
 
 - Couvin D, Bernheim A, Toffano-Nioche C, Touchon M, Michalik J, Néron B, Rocha EPC, Vergnaud G, Gautheret D, Pourcel C.
 CRISPRCasFinder, an update of CRISRFinder, includes a portable version, enhanced performance and integrates search for Cas proteins.
