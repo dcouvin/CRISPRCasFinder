@@ -95,3 +95,7 @@ singularity pull --name CRISPRCasFinder shub://dcouvin/CRISPRCasFinder:4.2.18
 
 
 For more information about singularity containers: https://www.sylabs.io/docs/
+
+# Outline of the CRISPRCasFinder workflow
+
+<img src="http://www.pasteur-guadeloupe.fr/files/Workflow_CRISPRCasFinder.png" title="CRISPRCasFinder workflow">
