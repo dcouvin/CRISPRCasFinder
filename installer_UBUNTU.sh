@@ -66,6 +66,7 @@ else
 
     echo "copy /usr/bin/clustalw to $CURDIR/bin/clustalw2" >> $LOGFILE
     sudo cp /usr/bin/clustalw $CURDIR/bin/clustalw2
+    sudo cpanm Unix::Sysexits >> $LOGFILE
     sudo cpanm Try::Tiny >> $LOGFILE
     sudo cpanm Test::Most >> $LOGFILE
     sudo cpanm JSON::Parse >> $LOGFILE
