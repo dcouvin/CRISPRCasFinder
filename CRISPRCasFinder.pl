@@ -13,20 +13,21 @@
 #  (GPLv3). See the COPYING file for details.  
 ######################################################################################
 
-# CPAN modules 
-## insert perlib ##
+# CPAN modules
 use strict;
-use Class::Struct;   #charge le module qui construit les struct
+use Class::Struct;
 use warnings;
-use Bio::SeqIO;
 use File::Copy;
 use File::Basename;
 use Data::Dumper;
 use Cwd;
-#use JSON; #to create JSON files
-use Bio::DB::Fasta; #to extract sequence from fasta file
 use Date::Calc qw(:all);
-#use CGI qw(:standard);
+use Getopt::Long;
+use Unix::Sysexits;
+
+# Bio Perl modules
+use Bio::SeqIO;
+use Bio::DB::Fasta; #to extract sequence from fasta file
 
 # TODO add URLescape module in case the GFF attributes get messy
 #local modules
@@ -156,23 +157,23 @@ my $onlyCas = 0; # option allowing to perform only CasFinder (default value=0)
 
 
 # Help or Version queries
-  if(@ARGV<1)
-  {
-    printhelpbasic($0);
-    exit 1;
-  }
+if(@ARGV<1)
+{
+  printhelpbasic($0);
+  exit EX_USAGE;
+}
 
-  if ($ARGV[0] eq '-help' || $ARGV[0] eq '-h')
-  {
-    printhelpall($0);
-    exit 0;
-  }
+if ($ARGV[0] eq '-help' || $ARGV[0] eq '-h')
+{
+  printhelpall($0);
+  exit EX_OK;
+}
 
-  if ($ARGV[0] eq '-v' || $ARGV[0] eq '-version')
-  {
-    printversion($0);
-    exit 0;
-  }
+if ($ARGV[0] eq '-v' || $ARGV[0] eq '-version')
+{
+  printversion($0);
+  exit EX_OK;
+}
 
 
 ## Manage arguments
@@ -187,8 +188,7 @@ else{
       $userfile=$ARGV[$i+1];
       if(not -e $userfile){
         print "\nError: file $userfile not found. Please check that your file exists or enter a correct file name.\n";
-	#printhelpall($0);
-        exit 0;
+        exit EX_DATAERR;
       }													
     }
     elsif($ARGV[$i]=~/-soFile/ or $ARGV[$i]=~/-so/){
@@ -385,7 +385,7 @@ else
 {
   print "Input file $userfile does not exist. Please make sure that your file exists.\n"; # add: ... or does not meet FASTA requirements....
   #printhelpall($0);
-  exit 0;
+  exit EX_DATAERR;
 }
 
 
@@ -398,8 +398,7 @@ if($vmatchProg){
 else
 {
   print "vmatch2 is not installed, please install it and try again.\n";
-  #printhelpall($0);
-  exit 0;
+  exit EX_CONFIG;
 }
 
 my $mkvtreeProg = isProgInstalled("mkvtree2");
@@ -409,8 +408,7 @@ if($mkvtreeProg){
 else
 {
   print "mkvtree2 (Vmatch dependency) is not installed, please install it and try again.\n";
-  #printhelpall($0);
-  exit 0;
+  exit EX_CONFIG;
 }
 
 my $vsubseqselectProg = isProgInstalled("vsubseqselect2");
@@ -420,8 +418,7 @@ if($vsubseqselectProg){
 else
 {
   print "vsubseqselect2 (Vmatch dependency) is not installed, please install it and try again.\n";
-  #printhelpall($0);
-  exit 0;
+  exit EX_CONFIG;
 }
 #--
 my $fuzznuc = isProgInstalled("fuzznuc");
@@ -430,10 +427,8 @@ if($fuzznuc){
 }
 else
 {
-  print "fuzznuc (from emboss) is not installed, please install it and try again. You can launch following commands:\n\n";
-  print "sudo apt-get install emboss\nsudo apt-get install emboss-lib\n";
-  #printhelpall($0);
-  exit 0;
+    print "fuzznuc (from emboss) is not installed, please install it and try again.\n";
+    exit EX_CONFIG;
 }
 
 my $needle = isProgInstalled("needle");
@@ -442,10 +437,8 @@ if($needle){
 }
 else
 {
-  print "needle (from emboss) is not installed, please install it and try again. You can launch following commands:\n";
-  print "sudo apt-get install emboss\nsudo apt-get install emboss-lib\n\n\n";
-  #printhelpall($0);
-  exit 0;
+  print "needle (from emboss) is not installed, please install it and try again.\n";
+  exit EX_CONFIG;
 }
 
 ##
@@ -710,8 +703,7 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
 		if($logOption){
 			print LOG "[$vmatch_hour:$vmatch_min:$vmatch_sec] The shared object file ($so) must be available in your current directory. Otherwise, you must use option -soFile (or -so)! \n\n";
 		}
- 		#printhelpall($0);
-        	exit 0;
+        	exit EX_CONFIG;
   	}
 
   	push(@vmatchoptions,$indexname); # DC - replace 
@@ -3932,8 +3924,8 @@ sub isProgInstalled {
                 	print "\nThe program $program cannot be found on your system\n";
 			print "Have you installed it? Your PATH variable contains: $ENV{'PATH'}\n\n";
 			print "\nPlease install $program\n";
-			exit;
-		}        
+			exit EX_CONFIG;
+		}
  	}	
      return $found;
 }
