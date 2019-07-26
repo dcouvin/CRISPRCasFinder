@@ -23,6 +23,7 @@ use File::Copy;
 use File::Basename;
 use Data::Dumper;
 use Cwd;
+use Bio::AlignIO;
 #use JSON; #to create JSON files
 use Bio::DB::Fasta; #to extract sequence from fasta file
 use Date::Calc qw(:all);
@@ -4123,7 +4124,6 @@ sub checkspacersAlignMuscle
     my $ident;
     eval
     {
-	#use Bio::AlignIO;
 	my $resultAlign = fastaAlignmentMuscleOne($file);
       	
 	my $str = Bio::AlignIO->new(-file => $resultAlign);
