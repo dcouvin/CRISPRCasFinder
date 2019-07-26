@@ -96,34 +96,11 @@ else
     launchInstall "$packageManagmentInstall" "perl-XML-Simple" "$LOGFILE"
     launchInstall "$packageManagmentInstall" "perl-Digest-MD5" "$LOGFILE"
     
-	if [ ! -x "$(command -v clustalw)" ]; then
-        launchInstall "$packageManagmentInstall" "clustalw" "$LOGFILE"  # should work for CentOS
-    fi
     if [ ! -x "$(command -v gcc)" ]; then
         launchInstall "$packageManagmentInstall" "gcc-c++" "$LOGFILE"
     fi
     if [ ! -x "$(command -v make)" ]; then
         launchInstall "$packageManagmentInstall" "make" "$LOGFILE"
-    fi
-
-    #clustalw
-    #test if '/usr/bin/clustalw' file exists, otherwise install clustalw manually
-    CLUSTALWFILE=/usr/bin/clustalw
-    if [ -f "$CLUSTALWFILE" ]
-    then
-        echo "copy /usr/bin/clustalw to $CURDIR/bin/clustalw2" >> $LOGFILE
-        sudo cp /usr/bin/clustalw $CURDIR/bin/clustalw2
-    else
-        #manual installation of clustalw
-        wget http://www.clustal.org/download/current/clustalw-2.1.tar.gz >> $LOGFILE
-        tar -xzvf clustalw-2.1.tar.gz >> $LOGFILE
-        cd clustalw-2.1
-		./configure >> $LOGFILE
-		sudo make >> $LOGFILE
-        sudo make install >> $LOGFILE
-        sudo cp src/clustalw2 $CURDIR/bin/clustalw2
-		sudo cp src/clustalw2 /usr/bin/clustalw
-        cd $CURDIR
     fi
 
     #cpanm
@@ -136,7 +113,6 @@ else
     sudo cpanm Bio::DB::Fasta >> $LOGFILE
     sudo cpanm File::Copy  >> $LOGFILE
     sudo cpanm Bio::Seq Bio::SeqIO >> $LOGFILE
-    sudo cpanm --force Bio::Tools::Run::Alignment::Clustalw >> $LOGFILE 
     sudo cpanm --force Bio::Tools::Run::Alignment::Muscle >> $LOGFILE
     sudo cpanm Date::Calc >> $LOGFILE
 
