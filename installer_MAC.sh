@@ -98,7 +98,6 @@ brew_packages=( "gcc:gcc"
                 "emboss:seqret"
                 "muscle:muscle"
                 "parallel:parallel"
-                "clustal-w:clustalw2"
                 "prodigal:prodigal"
                )
 
@@ -107,7 +106,7 @@ brew_packages=( "gcc:gcc"
 # perl packages #
 #################
 perl_packages="Try::Tiny Test::Most JSON::Parse Date::Calc Class::Struct Bio::DB::Fasta File::Copy Bio::Seq Bio::SeqIO"
-perl_packages_forced="Bio::Tools::Run::Alignment::Clustalw Bio::Tools::Run::Alignment::Muscle"
+perl_packages_forced="Bio::Tools::Run::Alignment::Muscle"
 
 ####################
 # Argument parsing #
@@ -231,13 +230,6 @@ done
 #################
 
 echo "Installation of Perl and packages"
-
-if ! command_exists clustalw;
-then
-   echo "Create link to clustalw needed by Bioperl:clustalw" | tee -a ${LOGFILE}
-   clustalw2="$(command -v clustalw2)"
-   sudo ln -s ${clustalw2} ${PREFIX}bin/clustalw || exit 2
-fi
 
 if [[ -d ${crispr_perllib} ]];
 then
