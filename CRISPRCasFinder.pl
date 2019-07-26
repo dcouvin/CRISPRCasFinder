@@ -3743,52 +3743,6 @@ sub sequenceAlignmentMafft
   return $ident;
 }
 
-#------------------------------------------------------------------------------
-#DC - 06/2017 - get %conservation from sequence alignment (using clustalw)
-sub sequenceAlignment
-{
-  my($file) = @_;
-  my $ident = 0;
-  eval
-  {
-	use Bio::Tools::Run::Alignment::Clustalw;
-	
-	my @params = ('ktuple' => 2, 'matrix' => 'BLOSUM');
-	my $factory = Bio::Tools::Run::Alignment::Clustalw->new(@params);
-	
-	my ($hour,$min,$sec) = Now();
-
-	if($logOption){
-		print LOG "\n[$hour:$min:$sec] Perform sequence alignment using ClustalW (with parameters: ktuple => 2, matrix => 'BLOSUM')\n";
-	}
-
-	my $str = Bio::SeqIO->new(-file=> $file, '-format' => 'fasta');
- 
-	my $countSeq = 0;
- 
-	while ( my $seq = $str->next_seq() ) {
-	    $countSeq++;
-	}
-
-	if($countSeq == 1){
-		$ident = 0;
-	}
-	else{
-		#  Pass the factory a list of sequences to be aligned.	
-	   	my $aln = $factory->align($file); # $aln is a SimpleAlign object.
-	  	$ident = $aln->overall_percentage_identity;
-	}
-  };
- 
-  if($@)
-  {
-     	# An error occurred...
-	$ident = -1;
-  }
-
-  return $ident;
-}
-
 # DC - 05/2017 - entropy calculation
 #------------------------------------------------------------------------------
 sub log2 {
@@ -4161,46 +4115,7 @@ sub add_spacer
   return @spacers;
 }
 #------------------------------------------------------------------------------
-# created 26/10/2006
-# use of clustalw in alignement of multiple spacers
-# modif 16/02/2007
-# eval to go on if clustalw errors
-sub checkspacersAlign
-{
- my($file) = @_;
- my $ident;
- eval
- {
- 	#$ENV{CLUSTALDIR} = '/home/username/clustalw1.8/';
- 	use Bio::Tools::Run::Alignment::Clustalw;
-	#open STDOUT, "|tee stdout >/dev/null 2>&1";
-	my @params = ('ktuple' => 2, 'matrix' => 'BLOSUM');
-	my $factory = Bio::Tools::Run::Alignment::Clustalw->new(@params);
-	
-	my ($hour,$min,$sec) = Now();
 
-	if($logOption){
-   		print LOG "[$hour:$min:$sec] Spacers alignment using ClustalW (parameters: ktuple => 2, matrix => 'BLOSUM')\n";
-	}
-
-	#  Pass the factory a list of sequences to be aligned.	
-   	my $aln = $factory->align($file); # $aln is a SimpleAlign object.
-  	$ident = $aln->percentage_identity;
- };
- 
- if($@)
- {
-    # An error occurred...
-	$ident = 100;
- }
-
- # DC - 05/2017 - 
- #print "% IDENTITY = $ident\n"; 
- if($ident >= $SpSim) {return 0;} else {return 1;} # DC - replaced 60 by $SpSim
-
-}
-
-#------------------------------------------------------------------------------
 # sub checkspacersAlignMuscle (do the same as above but using Muscle)
 sub checkspacersAlignMuscle
 {
