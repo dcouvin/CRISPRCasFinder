@@ -62,10 +62,7 @@ else
     launchInstall "$packageManagmentInstall" "libdatetime-perl" "$LOGFILE"
     launchInstall "$packageManagmentInstall" "libxml-simple-perl" "$LOGFILE"
     launchInstall "$packageManagmentInstall" "libdigest-md5-perl" "$LOGFILE"
-    launchInstall "$packageManagmentInstall" "clustalw" "$LOGFILE"
-
-    echo "copy /usr/bin/clustalw to $CURDIR/bin/clustalw2" >> $LOGFILE
-    sudo cp /usr/bin/clustalw $CURDIR/bin/clustalw2
+    
     sudo cpanm Try::Tiny >> $LOGFILE
     sudo cpanm Test::Most >> $LOGFILE
     sudo cpanm JSON::Parse >> $LOGFILE
@@ -73,7 +70,6 @@ else
     sudo cpanm Bio::DB::Fasta >> $LOGFILE
     sudo cpanm File::Copy  >> $LOGFILE
     sudo cpanm Bio::Seq Bio::SeqIO >> $LOGFILE
-    sudo cpanm Bio::Tools::Run::Alignment::Clustalw >> $LOGFILE 
     sudo cpanm Bio::Tools::Run::Alignment::Muscle >> $LOGFILE
 
     #install vmatch
