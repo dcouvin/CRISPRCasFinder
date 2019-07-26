@@ -14,8 +14,9 @@
 ######################################################################################
 
 # CPAN modules
+## insert perlib ##
 use strict;
-use Class::Struct;
+use Class::Struct;   #charge le module qui construit les struct
 use warnings;
 use File::Copy;
 use File::Basename;
