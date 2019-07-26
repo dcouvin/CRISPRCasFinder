@@ -114,10 +114,6 @@ my $genCode = 11; # option allowing to modify the genetic code (translation tabl
 
 my $levelMin = 1; # option allowing to choose the minimum evidence-level corresponding to CRISPR arrays we want to display (default value=1)
 
-my $useMuscle = 1; # option allowing to use Muscle for all alignments (default value=1)
-
-my $useClustalW = 0; # option allowing to use ClustalW for spacers alignments (default value=0)
-
 my $quiet = 0; # option allowing to run the program quieter (default value=0) 
 
 my $seqMinSize = 0; #NV option allowing to fix a sequence minimum size to search CRISPR and Cas systems (lighter process on big Data) (default value=0)
@@ -339,10 +335,6 @@ else{
     }
     elsif($ARGV[$i]=~/-PercMismTrunc/ or $ARGV[$i]=~/-PMT/){
       $percentageMismatchesHalfDR=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-useClustalW/ or $ARGV[$i]=~/-Clustal/){
-      $useMuscle = 0;
-      $useClustalW = 1;
     }
     elsif($ARGV[$i]=~/-onlyCas/ or $ARGV[$i]=~/-oCas/){
       $onlyCas = 1;
@@ -760,9 +752,8 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   	unlink <..\/seq_v*>;
   	unlink <..\/$inputfile.*> ; 
   	unlink <..\/spacersseq_v*>;
-  	if($useMuscle){
-    		unlink <..\/fastaMuscle_spacersseq_v*>; # added when using muscle for all alignments
-  	}
+    unlink <..\/fastaMuscle_spacersseq_v*>; # added when using muscle for all alignments
+
   	#if($useMafft){
   	#  unlink <..\/fastaMafft_spacersseq_v*>; # added
   	#}
@@ -1285,13 +1276,8 @@ sub makeHtml
 	  ## Conservation Spacers
 	  if(-e $input_spacer.$idNumber) {
 	  	my $spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
-
-		if($useClustalW){
-			$conservationSpacers = sequenceAlignment($spacerFasta);
-		}
-		else{
-			$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
-		}
+		$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
+		
 		#if($useMuscle){
 		#	$spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
 		#	$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
@@ -2849,13 +2835,7 @@ sub makeJson
 	  ## Conservation Spacers
 	  if(-e $input_spacer.$idNumber) {
 	  	my $spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
-
-		if($useClustalW){
-			$conservationSpacers = sequenceAlignment($spacerFasta);
-		}
-		else{
-			$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
-		}
+		$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
 		$score .= "_".$conservationSpacers;
 
 		my @tabSpacerLength=();
@@ -2967,13 +2947,8 @@ sub makeJson
 	  ## Conservation Spacers
 	  if(-e $input_spacer.$idNumber) {
 	  	my $spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
-
-		if($useClustalW){
-			$conservationSpacers = sequenceAlignment($spacerFasta);
-		}
-		else{
-			$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
-		}
+		$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
+	
 		#if($useMuscle){
 		#	$spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
 		#	$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
@@ -3394,13 +3369,7 @@ sub crisprAnalysis
 		#if($useMuscle){
 			$drFasta = fastaAlignmentMuscle($input_dr.$j);
 			$entropy = entropy($drFasta);
-			
-			if($useClustalW){
-				$identityDR = sequenceAlignment($drFasta);
-			}
-			else{
-				$identityDR = sequenceAlignmentMuscle($drFasta);
-			}
+			$identityDR = sequenceAlignmentMuscle($drFasta);
 			#$identityDR = sequenceAlignmentMuscle($drFasta); # %Conservation DR
 		#}
 		#elsif($useMafft){
@@ -3457,13 +3426,8 @@ sub crisprAnalysis
 		
 		#if($useMuscle){
 			$spacerFasta = fastaAlignmentMuscle($input_spacer.$j);
+			$identity = sequenceAlignmentMuscle($spacerFasta);
 
-			if($useClustalW){
-				$identity = sequenceAlignment($spacerFasta);
-			}
-			else{
-				$identity = sequenceAlignmentMuscle($spacerFasta);
-			}
 		#}
 		#elsif($useMafft){
 		#	$spacerFasta = fastaAlignmentMafft($input_spacer.$j);
@@ -5340,13 +5304,7 @@ sub Find_theCrispr
 	else
 	{
 		#if($useMuscle){
-
-		if($useClustalW){
-		  $goodcrispr = checkspacersAlign("spacers".$indexname);
-		}
-		else{
-		  $goodcrispr = checkspacersAlignMuscle("spacers".$indexname);
-		}
+		$goodcrispr = checkspacersAlignMuscle("spacers".$indexname);
 
 		#}
 		#elsif($useMafft){
