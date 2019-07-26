@@ -22,7 +22,6 @@ use File::Basename;
 use Data::Dumper;
 use Cwd;
 use Date::Calc qw(:all);
-use Getopt::Long;
 use Unix::Sysexits;
 
 # Bio Perl modules
