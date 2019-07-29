@@ -5788,17 +5788,15 @@ HEREDOC
 
 sub printversion
 {
-  my $programname = shift @_;
-  
-  print "\nThis is $programname, version $version,\n";
-  print " a perl script to identify CRISPR arrays and associated Cas genes from DNA sequences\n";
-  
+    my $programname = shift @_;
+    print "This is $programname, version $version,\n";
+    print "a perl script to identify CRISPR arrays and associated Cas genes from DNA sequences\n";
 }
 
 sub printhelpbasic
 {
-  my $programname = shift @_;
-  print STDERR "Usage: $programname [options] -in <filename>\n";
-  print "type -version or -v to see the current version\n";
-  print "type -help or -h for help\n";
+    my $programname = shift @_;
+    print "Usage: $programname [options] [-in] <filename>\n";
+    print "type -version or -v to see the current version\n";
+    print "type -help or -h for help\n";
 }
