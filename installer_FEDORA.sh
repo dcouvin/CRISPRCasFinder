@@ -127,6 +127,7 @@ else
     fi
 
     #cpanm
+    sudo cpanm Unix::Sysexits >> $LOGFILE
     sudo cpanm Bio::Perl >> $LOGFILE
     sudo cpanm Bio::FeatureIO >> $LOGFILE
     sudo cpanm Try::Tiny >> $LOGFILE
