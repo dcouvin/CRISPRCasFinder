@@ -5700,6 +5700,8 @@ Other options:
   -flank or -fl [XXX]	Option allowing to set size of flanking regions in base pairs (bp) for each analyzed CRISPR array (default: $flankingRegion)
 
   -levelMin or -lMin [XXX]	Option allowing to choose the minimum evidence-level corresponding to CRISPR arrays we want to display in Crisprs_REPORT file (default: $levelMin)
+
+-classifySmallArrays or -classifySmall or -cSA [XXX]	Option allowing to change evidence level status of small arrays (evidence-level 1) having the same consensus repeat as an evidence-level 4 array (default value=$classifySmall)
   
   -forceDetection or -force	Option allowing to force/foster detection of specific CRISPR arrays (default: $force)
 
