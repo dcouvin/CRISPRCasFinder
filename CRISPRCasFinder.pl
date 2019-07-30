@@ -3637,29 +3637,6 @@ sub sequenceAlignmentMuscle
 
   return $ident;
 }
-#------------------------------------------------------------------------------
-#DC - get %conservation (overall % identity) from a Mafft sequence alignment 
-sub sequenceAlignmentMafft
-{
-  my($file) = @_;
-  my $ident = -1;
-  eval
-  {
-	my $str = Bio::AlignIO->new(-file => $file);
-  	my $aln = $str->next_aln();
-
-	$ident = $aln->overall_percentage_identity; #overall_percentage_identity;
-	
-  };
- 
-  if($@)
-  {
-     	# An error occurred...
-	$ident = -1;
-  }
-
-  return $ident;
-}
 
 # DC - 05/2017 - entropy calculation
 #------------------------------------------------------------------------------
@@ -3773,47 +3750,7 @@ sub isProgInstalled {
  	}	
      return $found;
 }
-#------------------------------------------------------------------------------
-# Mafft alignment
-sub fastaAlignmentMafft
-{
-  my($file) = @_;
-  my $result = $file."_fasta";
 
-  eval
-  {
-	my $prog = isProgInstalled("mafft");
-	
-	my $mafft = "";
-	#if($autoMafft){
-	#	$mafft = "mafft --auto $file > $result";
-	#}
-	#elsif($legacyMafft){
-	#	$mafft = "mafft --legacygappenalty $file > $result";
-	#}
-	#else{
-		$mafft = "mafft $file > $result";
-	#}
-	 
-	my ($hour,$min,$sec) = Now();
-
-	if($prog){
-		makesystemcall($mafft);
-
-		if($logOption){
-			print LOG "\n[$hour:$min:$sec] $mafft\n";
-		}
-	}
-  };
-
-  if($@)
-  {
-     	# An error occurred...
-	print "An error occurred in function fastaAlignmentMafft\n";
-  }
-
-  return $result;
-}
 #------------------------------------------------------------------------------
 sub extractcrispr
 {
@@ -4128,70 +4065,6 @@ sub fastaAlignmentMuscleOne
   {
      	# An error occurred...
 	print "An error occurred in function fastaAlignmentMuscle\n";
-  }
-
-  return $result;
-}
-#--------------------------------------------------------------------
-# sub checkspacersAlignMafft (do the same as above but using Mafft)
-sub checkspacersAlignMafft
-{
-    my($file) = @_;
-    my $ident;
-    eval
-    {
-	#use Bio::AlignIO;
-	my $resultAlign = fastaAlignmentMafftOne($file);
-      	
-	my $str = Bio::AlignIO->new(-file => $resultAlign);
-  	my $aln = $str->next_aln();
-
-	$ident = $aln->percentage_identity;
-    };
- 
-    if($@)
-    {
-        # An error occurred...
-	$ident = 100;
-    }
-
-    if($ident >= $SpSim) {return 0;} else {return 1;} # DC - replaced 60 by $SpSim
-
-}
-#------------------------------------------------------------------------------
-# Mafft alignment
-sub fastaAlignmentMafftOne
-{
-  my($file) = @_;
-  my $result = "fastaMafft_".$file;
-
-  eval
-  {
-	my $prog = isProgInstalled("mafft");
-	#my $mafft = "mafft $file > $result "; #mafft command-line
-
-	my $mafft = "";
-	#if($autoMafft){
-	#	$mafft = "mafft --auto $file > $result";
-	#}
-	#elsif($legacyMafft){
-	#	$mafft = "mafft --legacygappenalty $file > $result";
-	#}
-	#else{
-		$mafft = "mafft $file > $result";
-	#}
-
-	my ($hour,$min,$sec) = Now();
-
-	if($prog){
-		makesystemcall($mafft);
-	}
-  };
-
-  if($@)
-  {
-     	# An error occurred...
-	print "An error occurred in function fastaAlignmentMafft\n";
   }
 
   return $result;
@@ -5135,16 +5008,7 @@ sub Find_theCrispr
 	}
 	else
 	{
-		#if($useMuscle){
 		$goodcrispr = checkspacersAlignMuscle("spacers".$indexname);
-
-		#}
-		#elsif($useMafft){
-		#  $goodcrispr = checkspacersAlignMafft("spacers".$indexname);
-		#}
-		#else{
-		#  $goodcrispr = checkspacersAlign("spacers".$indexname);
-		#}
 	}
 	if($goodcrispr)
 	{
