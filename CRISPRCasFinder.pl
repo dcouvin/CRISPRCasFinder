@@ -143,12 +143,6 @@ my $classifySmall = 0; # option allowing to change evidence level status of smal
 
 my $onlyCas = 0; # option allowing to perform only CasFinder (default value=0)
 
-#my $useMafft = 0; # option allowing to use Mafft for all alignments (default value=0)
-
-#my $autoMafft = 0; # option allowing to launch Mafft with its '--auto' option (default value=0)
-
-#my $legacyMafft = 0; # option allowing to launch Mafft with its '--legacygappenalty' option (default value=0)
-
 ##
 
 
@@ -343,20 +337,6 @@ else{
     elsif($ARGV[$i]=~/-classifySmallArrays/ or $ARGV[$i]=~/-classifySmall/ or $ARGV[$i]=~/-cSA/){
       $classifySmall = 1;
     }
-    #classifySmall
-    #$fosteredDRLength $fosteredDRBegin $fosteredDREnd
-    #elsif($ARGV[$i]=~/-useMuscle/ or $ARGV[$i]=~/-muscle/){
-    #  $useMuscle = 1;
-    #}
-    #elsif($ARGV[$i]=~/-useMafft/ or $ARGV[$i]=~/-mafft/){
-    #  $useMafft = 1;
-    #}
-    #elsif($ARGV[$i]=~/-autoMafft/ or $ARGV[$i]=~/-auto/){
-    #  $autoMafft = 1;
-    #}
-    #elsif($ARGV[$i]=~/-legacyMafft/ or $ARGV[$i]=~/-legacy/){
-    #  $legacyMafft = 1;
-    #}
 
   }
 
@@ -753,11 +733,8 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   	unlink <..\/seq_v*>;
   	unlink <..\/$inputfile.*> ; 
   	unlink <..\/spacersseq_v*>;
-    unlink <..\/fastaMuscle_spacersseq_v*>; # added when using muscle for all alignments
+    unlink <..\/fastaMuscle_spacersseq_v*>;
 
-  	#if($useMafft){
-  	#  unlink <..\/fastaMafft_spacersseq_v*>; # added
-  	#}
   	unlink '../stdout';
   	unlink '../vmatch_result.txt';
   	unlink '../alignDR_Spacer.needle';
@@ -1268,9 +1245,7 @@ sub makeHtml
 
 	  ## Entropy DRs
 	  if(-e $input_dr.$idNumber){
-	  	my $drFasta = fastaAlignmentMuscle($input_dr.$idNumber); #fastaAlignmentMuscle
-		#if($useMafft){$drFasta = fastaAlignmentMafft($input_dr.$idNumber);}
-		#else{$drFasta = fastaAlignmentMuscle($input_dr.$idNumber);}
+	  	my $drFasta = fastaAlignmentMuscle($input_dr.$idNumber);
 	  	$entropyDRs = entropy($drFasta);
 	  }
 
@@ -1278,19 +1253,6 @@ sub makeHtml
 	  if(-e $input_spacer.$idNumber) {
 	  	my $spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
 		$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
-		
-		#if($useMuscle){
-		#	$spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
-		#	$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
-		#}
-		#elsif($useMafft){
-		#	$spacerFasta = fastaAlignmentMafft($input_spacer.$idNumber);
-		#	$conservationSpacers = sequenceAlignmentMafft($spacerFasta);
-		#}
-		#else{
-		#	$spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
-		#	$conservationSpacers = sequenceAlignment($spacerFasta); #sequenceAlignmentMuscle replaced by sequenceAlignment
-		#}
 
 		my @tabSpacerLength=();
 		open (SPACER, "<".$input_spacer.$idNumber) or die "open : $!";  #Open Spacer file
@@ -2931,15 +2893,6 @@ sub makeJson
 	  ## Entropy DRs
 	  if(-e $input_dr.$idNumber){
 	  	my $drFasta = fastaAlignmentMuscle($input_dr.$idNumber);
-		#if($useMuscle){
-		#	$drFasta = fastaAlignmentMuscle($input_dr.$idNumber);
-		#}
-		#elsif($useMafft){
-		#	$drFasta = fastaAlignmentMafft($input_dr.$idNumber);
-		#}
-		#else{
-		#	$drFasta = fastaAlignmentMuscle($input_dr.$idNumber);
-		#}
 		
 	  	$entropyDRs = entropy($drFasta);
 		#$score = "$entropyDRs";
@@ -2949,19 +2902,7 @@ sub makeJson
 	  if(-e $input_spacer.$idNumber) {
 	  	my $spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
 		$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
-	
-		#if($useMuscle){
-		#	$spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
-		#	$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
-		#}
-		#elsif($useMafft){
-		#	$spacerFasta = fastaAlignmentMafft($input_spacer.$idNumber);
-		#	$conservationSpacers = sequenceAlignmentMafft($spacerFasta);
-		#}
-		#else{
-		#	$spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
-		#	$conservationSpacers = sequenceAlignment($spacerFasta);
-		#}
+
 		$score .= "_".$conservationSpacers;
 
 		my @tabSpacerLength=();
@@ -3366,23 +3307,10 @@ sub crisprAnalysis
 		close (DRFILE);
 
 		## Entropy DRs
-		
-		#if($useMuscle){
+	
 			$drFasta = fastaAlignmentMuscle($input_dr.$j);
 			$entropy = entropy($drFasta);
 			$identityDR = sequenceAlignmentMuscle($drFasta);
-			#$identityDR = sequenceAlignmentMuscle($drFasta); # %Conservation DR
-		#}
-		#elsif($useMafft){
-		#	$drFasta = fastaAlignmentMafft($input_dr.$j);
-		#	$entropy = entropy($drFasta);
-		#	$identityDR = sequenceAlignmentMafft($drFasta); 
-		#}
-		#else{
-		#	$drFasta = fastaAlignmentMuscle($input_dr.$j);
-		#	$entropy = entropy($drFasta);
-		#	$identityDR = sequenceAlignment($drFasta);
-		#}
 	}
     #### End Analyze DRs
 
@@ -3425,19 +3353,8 @@ sub crisprAnalysis
 
 		#### %Alignment spacers
 		
-		#if($useMuscle){
 			$spacerFasta = fastaAlignmentMuscle($input_spacer.$j);
 			$identity = sequenceAlignmentMuscle($spacerFasta);
-
-		#}
-		#elsif($useMafft){
-		#	$spacerFasta = fastaAlignmentMafft($input_spacer.$j);
-		#	$identity = sequenceAlignmentMafft($spacerFasta);
-		#}
-		#else{
-		#	$spacerFasta = fastaAlignmentMuscle($input_spacer.$j);
-		#	$identity = sequenceAlignment($spacerFasta);
-		#}
 
 		#Entropy based conservation of spacers
 
