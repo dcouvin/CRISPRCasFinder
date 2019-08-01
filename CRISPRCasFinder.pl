@@ -3738,7 +3738,6 @@ sub isProgInstalled {
     	  }
 	}
 	
-	#if (($program =~ /^clustalw/) or ($program =~ /^muscle/))
 	if ( $program =~ /^muscle/ )
 	{
         	unless ($found) {
