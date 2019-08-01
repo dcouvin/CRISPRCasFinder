@@ -1,5 +1,5 @@
---- CRISPRCasFinder.ori.pl	2018-08-29 15:53:29.000000000 +0200
-+++ CRISPRCasFinder.pl	2018-08-29 16:39:09.058237159 +0200
+--- CRISPRCasFinder.pl.orig	2019-08-01 23:28:19.071094519 +0200
++++ CRISPRCasFinder.pl	2019-08-01 23:29:15.454585619 +0200
 @@ -14,7 +14,7 @@
  ######################################################################################
  
@@ -9,7 +9,7 @@
  use strict;
  use Class::Struct;   #charge le module qui construit les struct
  use warnings;
-@@ -60,7 +60,7 @@
+@@ -61,7 +61,7 @@
  
  my $launchCasFinder = 0; # boolean variable indicating if we use casfinder or not (default value=0)
  
@@ -18,7 +18,7 @@
  
  my $kingdom = "Bacteria"; # allow to choose analysis between Archaea and Bacteria (default 'Bacteria')
  
-@@ -68,13 +68,13 @@
+@@ -69,13 +69,13 @@
  
  my $writeFullReport = 0; # boolean variable indicating if we write crispr-cas_vicinity_report or not (default value=0)
  
@@ -36,7 +36,7 @@
  
  my $html = 0; # boolean variable indicating if we use html visualization or not (default value=0)
  
-@@ -108,7 +108,7 @@
+@@ -109,7 +109,7 @@
  
  my $gscf = 0; # option allowing to get summary file of Cas-finder and copy it to TSV repository (default value=0) 
  
@@ -45,7 +45,7 @@
  
  my $genCode = 11; # option allowing to modify the genetic code (translation table) for CDS annotation (default value=11)
  
-@@ -5682,11 +5682,11 @@
+@@ -5351,11 +5351,11 @@
  
    -spSim or -s [XXX]	Maximal allowed percentage of similarity between Spacers (default: $SpSim)
  
@@ -60,7 +60,7 @@
  
    -flank or -fl [XXX]	Option allowing to set size of flanking regions in base pairs (bp) for each analyzed CRISPR array (default: $flankingRegion)
  
-@@ -5722,7 +5722,7 @@
+@@ -5391,7 +5391,7 @@
  
    -rcfowce	Option allowing to run Casfinder only when any CRISPR exists (default: $rcfowce) (set if -cas is set)
  
@@ -69,7 +69,7 @@
  
    -gffAnnot or -gff [XXX]	Option allowing user to provide an annotation GFF file (if options -cas and -faa are set) (default: '$userGFF') 
  
-@@ -5763,16 +5763,16 @@
+@@ -5432,16 +5432,16 @@
  - the ID will be used for output.
  
  Examples:
