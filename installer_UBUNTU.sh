@@ -62,7 +62,8 @@ else
     launchInstall "$packageManagmentInstall" "libdatetime-perl" "$LOGFILE"
     launchInstall "$packageManagmentInstall" "libxml-simple-perl" "$LOGFILE"
     launchInstall "$packageManagmentInstall" "libdigest-md5-perl" "$LOGFILE"
-    
+
+    sudo cpanm Unix::Sysexits >> $LOGFILE
     sudo cpanm Try::Tiny >> $LOGFILE
     sudo cpanm Test::Most >> $LOGFILE
     sudo cpanm JSON::Parse >> $LOGFILE

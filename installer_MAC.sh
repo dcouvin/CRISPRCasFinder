@@ -105,7 +105,7 @@ brew_packages=( "gcc:gcc"
 #################
 # perl packages #
 #################
-perl_packages="Try::Tiny Test::Most JSON::Parse Date::Calc Class::Struct Bio::DB::Fasta File::Copy Bio::Seq Bio::SeqIO"
+perl_packages="Try::Tiny Test::Most JSON::Parse Date::Calc Class::Struct Bio::DB::Fasta File::Copy Bio::Seq Bio::SeqIO Unix::Sysexits"
 perl_packages_forced="Bio::Tools::Run::Alignment::Muscle"
 
 ####################

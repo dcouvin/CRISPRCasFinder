@@ -131,6 +131,7 @@ else
     launchInstall "$packageManagmentInstall" "make" "$LOGFILE"
     
     #cpanm BioPerl
+    sudo cpanm Unix::Sysexits >> $LOGFILE
     sudo cpanm Bio::Perl >> $LOGFILE
 
     #BioPerl-Run
