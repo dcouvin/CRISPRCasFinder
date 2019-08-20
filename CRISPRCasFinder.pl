@@ -245,7 +245,7 @@ if ($print_version)
     exit EX_OK;
 }
 
-# Basi checks of CLI arguments
+# Basic checks of CLI arguments
 # Output dir is created later if not given
 
 # Check that input file was given and exists
