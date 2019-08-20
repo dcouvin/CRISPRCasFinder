@@ -45,7 +45,7 @@
  
  my $genCode = 11; # option allowing to modify the genetic code (translation table) for CDS annotation (default value=11)
  
-@@ -5576,11 +5576,11 @@
+@@ -5246,11 +5246,11 @@
  
    -spSim or -s [XXX]	Maximal allowed percentage of similarity between Spacers (default: $SpSim)
  
@@ -60,7 +60,7 @@
  
    -flank or -fl [XXX]	Option allowing to set size of flanking regions in base pairs (bp) for each analyzed CRISPR array (default: $flankingRegion)
  
-@@ -5618,7 +5618,7 @@
+@@ -5288,7 +5288,7 @@
  
    -rcfowce	Option allowing to run Casfinder only when any CRISPR exists (default: $rcfowce) (set if -cas is set)
  
@@ -69,7 +69,7 @@
  
    -gffAnnot or -gff [XXX]	Option allowing user to provide an annotation GFF file (if options -cas and -faa are set) (default: '$userGFF') 
  
-@@ -5659,16 +5659,16 @@
+@@ -5329,16 +5329,16 @@
  - the ID will be used for output.
  
  Examples:
