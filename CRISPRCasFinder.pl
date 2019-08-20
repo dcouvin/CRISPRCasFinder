@@ -116,10 +116,6 @@ my $genCode = 11; # option allowing to modify the genetic code (translation tabl
 
 my $levelMin = 1; # option allowing to choose the minimum evidence-level corresponding to CRISPR arrays we want to display (default value=1)
 
-my $useMuscle = 1; # option allowing to use Muscle for all alignments (default value=1)
-
-my $useClustalW = 0; # option allowing to use ClustalW for spacers alignments (default value=0)
-
 my $quiet = 0; # option allowing to run the program quieter (default value=0) 
 
 my $seqMinSize = 0; #NV option allowing to fix a sequence minimum size to search CRISPR and Cas systems (lighter process on big Data) (default value=0)
@@ -143,12 +139,6 @@ my $betterDetectTruncatedDR = 0; # option allowing to better detect the truncate
 my $percentageMismatchesHalfDR = 4; # option allowing to set the percentage of allowed mismatches in truncated DR (default value=4)
 
 my $classifySmall = 0; # option allowing to change evidence level status of small arrays (evidence-level 1) having the same consensus repeat as an evidence-level 4 array (default value=0)
-
-#my $useMafft = 0; # option allowing to use Mafft for all alignments (default value=0)
-
-#my $autoMafft = 0; # option allowing to launch Mafft with its '--auto' option (default value=0)
-
-#my $legacyMafft = 0; # option allowing to launch Mafft with its '--legacygappenalty' option (default value=0)
 
 # Variables used to determine mode
 my $print_version = 0;  # Print version
@@ -637,12 +627,8 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   	unlink <..\/seq_v*>;
   	unlink <..\/$inputfile.*> ; 
   	unlink <..\/spacersseq_v*>;
-  	if($useMuscle){
-    		unlink <..\/fastaMuscle_spacersseq_v*>; # added when using muscle for all alignments
-  	}
-  	#if($useMafft){
-  	#  unlink <..\/fastaMafft_spacersseq_v*>; # added
-  	#}
+    unlink <..\/fastaMuscle_spacersseq_v*>;
+
   	unlink '../stdout';
   	unlink '../vmatch_result.txt';
   	unlink '../alignDR_Spacer.needle';
@@ -1153,34 +1139,14 @@ sub makeHtml
 
 	  ## Entropy DRs
 	  if(-e $input_dr.$idNumber){
-	  	my $drFasta = fastaAlignmentMuscle($input_dr.$idNumber); #fastaAlignmentMuscle
-		#if($useMafft){$drFasta = fastaAlignmentMafft($input_dr.$idNumber);}
-		#else{$drFasta = fastaAlignmentMuscle($input_dr.$idNumber);}
+	  	my $drFasta = fastaAlignmentMuscle($input_dr.$idNumber);
 	  	$entropyDRs = entropy($drFasta);
 	  }
 
 	  ## Conservation Spacers
 	  if(-e $input_spacer.$idNumber) {
 	  	my $spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
-
-		if($useClustalW){
-			$conservationSpacers = sequenceAlignment($spacerFasta);
-		}
-		else{
-			$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
-		}
-		#if($useMuscle){
-		#	$spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
-		#	$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
-		#}
-		#elsif($useMafft){
-		#	$spacerFasta = fastaAlignmentMafft($input_spacer.$idNumber);
-		#	$conservationSpacers = sequenceAlignmentMafft($spacerFasta);
-		#}
-		#else{
-		#	$spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
-		#	$conservationSpacers = sequenceAlignment($spacerFasta); #sequenceAlignmentMuscle replaced by sequenceAlignment
-		#}
+		$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
 
 		my @tabSpacerLength=();
 		open (SPACER, "<".$input_spacer.$idNumber) or die "open : $!";  #Open Spacer file
@@ -2726,13 +2692,7 @@ sub makeJson
 	  ## Conservation Spacers
 	  if(-e $input_spacer.$idNumber) {
 	  	my $spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
-
-		if($useClustalW){
-			$conservationSpacers = sequenceAlignment($spacerFasta);
-		}
-		else{
-			$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
-		}
+		$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
 		$score .= "_".$conservationSpacers;
 
 		my @tabSpacerLength=();
@@ -2827,15 +2787,6 @@ sub makeJson
 	  ## Entropy DRs
 	  if(-e $input_dr.$idNumber){
 	  	my $drFasta = fastaAlignmentMuscle($input_dr.$idNumber);
-		#if($useMuscle){
-		#	$drFasta = fastaAlignmentMuscle($input_dr.$idNumber);
-		#}
-		#elsif($useMafft){
-		#	$drFasta = fastaAlignmentMafft($input_dr.$idNumber);
-		#}
-		#else{
-		#	$drFasta = fastaAlignmentMuscle($input_dr.$idNumber);
-		#}
 		
 	  	$entropyDRs = entropy($drFasta);
 		#$score = "$entropyDRs";
@@ -2844,25 +2795,8 @@ sub makeJson
 	  ## Conservation Spacers
 	  if(-e $input_spacer.$idNumber) {
 	  	my $spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
+		$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
 
-		if($useClustalW){
-			$conservationSpacers = sequenceAlignment($spacerFasta);
-		}
-		else{
-			$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
-		}
-		#if($useMuscle){
-		#	$spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
-		#	$conservationSpacers = sequenceAlignmentMuscle($spacerFasta);
-		#}
-		#elsif($useMafft){
-		#	$spacerFasta = fastaAlignmentMafft($input_spacer.$idNumber);
-		#	$conservationSpacers = sequenceAlignmentMafft($spacerFasta);
-		#}
-		#else{
-		#	$spacerFasta = fastaAlignmentMuscle($input_spacer.$idNumber);
-		#	$conservationSpacers = sequenceAlignment($spacerFasta);
-		#}
 		$score .= "_".$conservationSpacers;
 
 		my @tabSpacerLength=();
@@ -3267,29 +3201,10 @@ sub crisprAnalysis
 		close (DRFILE);
 
 		## Entropy DRs
-		
-		#if($useMuscle){
+	
 			$drFasta = fastaAlignmentMuscle($input_dr.$j);
 			$entropy = entropy($drFasta);
-			
-			if($useClustalW){
-				$identityDR = sequenceAlignment($drFasta);
-			}
-			else{
-				$identityDR = sequenceAlignmentMuscle($drFasta);
-			}
-			#$identityDR = sequenceAlignmentMuscle($drFasta); # %Conservation DR
-		#}
-		#elsif($useMafft){
-		#	$drFasta = fastaAlignmentMafft($input_dr.$j);
-		#	$entropy = entropy($drFasta);
-		#	$identityDR = sequenceAlignmentMafft($drFasta); 
-		#}
-		#else{
-		#	$drFasta = fastaAlignmentMuscle($input_dr.$j);
-		#	$entropy = entropy($drFasta);
-		#	$identityDR = sequenceAlignment($drFasta);
-		#}
+			$identityDR = sequenceAlignmentMuscle($drFasta);
 	}
     #### End Analyze DRs
 
@@ -3332,24 +3247,8 @@ sub crisprAnalysis
 
 		#### %Alignment spacers
 		
-		#if($useMuscle){
 			$spacerFasta = fastaAlignmentMuscle($input_spacer.$j);
-
-			if($useClustalW){
-				$identity = sequenceAlignment($spacerFasta);
-			}
-			else{
-				$identity = sequenceAlignmentMuscle($spacerFasta);
-			}
-		#}
-		#elsif($useMafft){
-		#	$spacerFasta = fastaAlignmentMafft($input_spacer.$j);
-		#	$identity = sequenceAlignmentMafft($spacerFasta);
-		#}
-		#else{
-		#	$spacerFasta = fastaAlignmentMuscle($input_spacer.$j);
-		#	$identity = sequenceAlignment($spacerFasta);
-		#}
+			$identity = sequenceAlignmentMuscle($spacerFasta);
 
 		#Entropy based conservation of spacers
 
@@ -3632,75 +3531,6 @@ sub sequenceAlignmentMuscle
 
   return $ident;
 }
-#------------------------------------------------------------------------------
-#DC - get %conservation (overall % identity) from a Mafft sequence alignment 
-sub sequenceAlignmentMafft
-{
-  my($file) = @_;
-  my $ident = -1;
-  eval
-  {
-	my $str = Bio::AlignIO->new(-file => $file);
-  	my $aln = $str->next_aln();
-
-	$ident = $aln->overall_percentage_identity; #overall_percentage_identity;
-	
-  };
- 
-  if($@)
-  {
-     	# An error occurred...
-	$ident = -1;
-  }
-
-  return $ident;
-}
-
-#------------------------------------------------------------------------------
-#DC - 06/2017 - get %conservation from sequence alignment (using clustalw)
-sub sequenceAlignment
-{
-  my($file) = @_;
-  my $ident = 0;
-  eval
-  {
-	use Bio::Tools::Run::Alignment::Clustalw;
-	
-	my @params = ('ktuple' => 2, 'matrix' => 'BLOSUM');
-	my $factory = Bio::Tools::Run::Alignment::Clustalw->new(@params);
-	
-	my ($hour,$min,$sec) = Now();
-
-	if($logOption){
-		print LOG "\n[$hour:$min:$sec] Perform sequence alignment using ClustalW (with parameters: ktuple => 2, matrix => 'BLOSUM')\n";
-	}
-
-	my $str = Bio::SeqIO->new(-file=> $file, '-format' => 'fasta');
- 
-	my $countSeq = 0;
- 
-	while ( my $seq = $str->next_seq() ) {
-	    $countSeq++;
-	}
-
-	if($countSeq == 1){
-		$ident = 0;
-	}
-	else{
-		#  Pass the factory a list of sequences to be aligned.	
-	   	my $aln = $factory->align($file); # $aln is a SimpleAlign object.
-	  	$ident = $aln->overall_percentage_identity;
-	}
-  };
- 
-  if($@)
-  {
-     	# An error occurred...
-	$ident = -1;
-  }
-
-  return $ident;
-}
 
 # DC - 05/2017 - entropy calculation
 #------------------------------------------------------------------------------
@@ -3802,7 +3632,6 @@ sub isProgInstalled {
     	  }
 	}
 	
-	#if (($program =~ /^clustalw/) or ($program =~ /^muscle/))
 	if ( $program =~ /^muscle/ )
 	{
         	unless ($found) {
@@ -3814,47 +3643,7 @@ sub isProgInstalled {
  	}	
      return $found;
 }
-#------------------------------------------------------------------------------
-# Mafft alignment
-sub fastaAlignmentMafft
-{
-  my($file) = @_;
-  my $result = $file."_fasta";
 
-  eval
-  {
-	my $prog = isProgInstalled("mafft");
-	
-	my $mafft = "";
-	#if($autoMafft){
-	#	$mafft = "mafft --auto $file > $result";
-	#}
-	#elsif($legacyMafft){
-	#	$mafft = "mafft --legacygappenalty $file > $result";
-	#}
-	#else{
-		$mafft = "mafft $file > $result";
-	#}
-	 
-	my ($hour,$min,$sec) = Now();
-
-	if($prog){
-		makesystemcall($mafft);
-
-		if($logOption){
-			print LOG "\n[$hour:$min:$sec] $mafft\n";
-		}
-	}
-  };
-
-  if($@)
-  {
-     	# An error occurred...
-	print "An error occurred in function fastaAlignmentMafft\n";
-  }
-
-  return $result;
-}
 #------------------------------------------------------------------------------
 sub extractcrispr
 {
@@ -4074,46 +3863,7 @@ sub add_spacer
   return @spacers;
 }
 #------------------------------------------------------------------------------
-# created 26/10/2006
-# use of clustalw in alignement of multiple spacers
-# modif 16/02/2007
-# eval to go on if clustalw errors
-sub checkspacersAlign
-{
- my($file) = @_;
- my $ident;
- eval
- {
- 	#$ENV{CLUSTALDIR} = '/home/username/clustalw1.8/';
- 	use Bio::Tools::Run::Alignment::Clustalw;
-	#open STDOUT, "|tee stdout >/dev/null 2>&1";
-	my @params = ('ktuple' => 2, 'matrix' => 'BLOSUM');
-	my $factory = Bio::Tools::Run::Alignment::Clustalw->new(@params);
-	
-	my ($hour,$min,$sec) = Now();
 
-	if($logOption){
-   		print LOG "[$hour:$min:$sec] Spacers alignment using ClustalW (parameters: ktuple => 2, matrix => 'BLOSUM')\n";
-	}
-
-	#  Pass the factory a list of sequences to be aligned.	
-   	my $aln = $factory->align($file); # $aln is a SimpleAlign object.
-  	$ident = $aln->percentage_identity;
- };
- 
- if($@)
- {
-    # An error occurred...
-	$ident = 100;
- }
-
- # DC - 05/2017 - 
- #print "% IDENTITY = $ident\n"; 
- if($ident >= $SpSim) {return 0;} else {return 1;} # DC - replaced 60 by $SpSim
-
-}
-
-#------------------------------------------------------------------------------
 # sub checkspacersAlignMuscle (do the same as above but using Muscle)
 sub checkspacersAlignMuscle
 {
@@ -4121,7 +3871,6 @@ sub checkspacersAlignMuscle
     my $ident;
     eval
     {
-	#use Bio::AlignIO;
 	my $resultAlign = fastaAlignmentMuscleOne($file);
       	
 	my $str = Bio::AlignIO->new(-file => $resultAlign);
@@ -4209,70 +3958,6 @@ sub fastaAlignmentMuscleOne
   {
      	# An error occurred...
 	print "An error occurred in function fastaAlignmentMuscle\n";
-  }
-
-  return $result;
-}
-#--------------------------------------------------------------------
-# sub checkspacersAlignMafft (do the same as above but using Mafft)
-sub checkspacersAlignMafft
-{
-    my($file) = @_;
-    my $ident;
-    eval
-    {
-	#use Bio::AlignIO;
-	my $resultAlign = fastaAlignmentMafftOne($file);
-      	
-	my $str = Bio::AlignIO->new(-file => $resultAlign);
-  	my $aln = $str->next_aln();
-
-	$ident = $aln->percentage_identity;
-    };
- 
-    if($@)
-    {
-        # An error occurred...
-	$ident = 100;
-    }
-
-    if($ident >= $SpSim) {return 0;} else {return 1;} # DC - replaced 60 by $SpSim
-
-}
-#------------------------------------------------------------------------------
-# Mafft alignment
-sub fastaAlignmentMafftOne
-{
-  my($file) = @_;
-  my $result = "fastaMafft_".$file;
-
-  eval
-  {
-	my $prog = isProgInstalled("mafft");
-	#my $mafft = "mafft $file > $result "; #mafft command-line
-
-	my $mafft = "";
-	#if($autoMafft){
-	#	$mafft = "mafft --auto $file > $result";
-	#}
-	#elsif($legacyMafft){
-	#	$mafft = "mafft --legacygappenalty $file > $result";
-	#}
-	#else{
-		$mafft = "mafft $file > $result";
-	#}
-
-	my ($hour,$min,$sec) = Now();
-
-	if($prog){
-		makesystemcall($mafft);
-	}
-  };
-
-  if($@)
-  {
-     	# An error occurred...
-	print "An error occurred in function fastaAlignmentMafft\n";
   }
 
   return $result;
@@ -5216,22 +4901,7 @@ sub Find_theCrispr
 	}
 	else
 	{
-		#if($useMuscle){
-
-		if($useClustalW){
-		  $goodcrispr = checkspacersAlign("spacers".$indexname);
-		}
-		else{
-		  $goodcrispr = checkspacersAlignMuscle("spacers".$indexname);
-		}
-
-		#}
-		#elsif($useMafft){
-		#  $goodcrispr = checkspacersAlignMafft("spacers".$indexname);
-		#}
-		#else{
-		#  $goodcrispr = checkspacersAlign("spacers".$indexname);
-		#}
+		$goodcrispr = checkspacersAlignMuscle("spacers".$indexname);
 	}
 	if($goodcrispr)
 	{
