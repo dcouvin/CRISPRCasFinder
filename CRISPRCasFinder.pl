@@ -23,6 +23,7 @@ use File::Basename;
 use Data::Dumper;
 use Cwd;
 use Date::Calc qw(:all);
+use Getopt::Long;
 use Unix::Sysexits;
 
 # Bio Perl modules
@@ -139,227 +140,129 @@ my $percentageMismatchesHalfDR = 4; # option allowing to set the percentage of a
 
 my $classifySmall = 0; # option allowing to change evidence level status of small arrays (evidence-level 1) having the same consensus repeat as an evidence-level 4 array (default value=0)
 
-#my $doNotMove = 0; # option allowing to do not move final repositories (default value=0)
-
-my $onlyCas = 0; # option allowing to perform only CasFinder (default value=0)
+# Variables used to determine mode
+my $print_version = 0;  # Print version
+my $print_help = 0;     # Print help
 
 ##
-
-
-# Help or Version queries
-if(@ARGV<1)
-{
-  printhelpbasic($0);
-  exit EX_USAGE;
-}
-
-if ($ARGV[0] eq '-help' || $ARGV[0] eq '-h')
-{
-  printhelpall($0);
-  exit EX_OK;
-}
-
-if ($ARGV[0] eq '-v' || $ARGV[0] eq '-version')
-{
-  printversion($0);
-  exit EX_OK;
-}
-
 
 ## Manage arguments
-if($#ARGV == 0){
-  $userfile = $ARGV[0];
+# Note that standard overloading is possible i.e.
+# using -cpuMacSysFinder after -fast will set the
+# option to the desired value (it was the case with the
+# previous implementation).
+# Note that $DRtrunMism and $DRerrors are modified after.
+GetOptions (
+    # General options
+    "help|h" => \$print_help,
+    "version|v" => \$print_version,
+    # Input/Output and -so
+    "in|i=s" => \$userfile,
+    "outdir|out=s" => \$outputDirName,
+    "keepAll|keep" => \$keep,
+    "LOG|log" => \$logOption,
+    "HTML|html" => \$html,
+    "copyCSS=s" => \$cssFile,
+    "soFile|so=s" => \$so,
+    "quiet|q" => \$quiet,
+    "faster|fast" => sub {
+	# Fast mode
+	$fast = 1;
+	# Use all CPU for Prokka and MacSyFinder
+	$cpuProkka = 0;
+	$cpuMacSyFinder = 0;
+    },
+    "minSeqSize|mSS=i" => \$seqMinSize,
+    # Options for detection of CRISPR arrays
+    "mismDRs|md=f" => \$DRerrors,
+    "truncDR|t=f" => \$DRtrunMism,
+    "minDR|mr=i" => \$M1,
+    "maxDR|xr=i" => \$M2,
+    "minSP|ms=i" => \$S1,
+    "maxSP|xs=i" => \$S2,
+    "noMism|n" => sub { $mismOne=0; },
+    "percSPmin|pm=f" => \$Sp1,
+    "percSPmax|px=f" => \$Sp2,
+    "spSim|s=f" => \$SpSim,
+    "DBcrispr|dbc=s" => \$crisprdb,
+    "repeats|rpts=s" => \$repeats,
+    "DIRrepeat|drpt=s" => \$dirRepeat,
+    "flank|fl=i" => \$flankingRegion,
+    "levelMin|lMin=i" => \$levelMin,
+    "classifySmallArrays|classifySmall|cSA" => \$classifySmall,
+    "forceDetection|force" => sub {
+	$force = 1;
+	$M1 = $fosteredDRLength;
+    },
+    "fosterDRLength|fDRL=i" => \$fosteredDRLength,
+    "fosterDRBegin|fDRB=s" => \$fosteredDRBegin,
+    "fosterDREnd|fDRE=s" => \$fosteredDREnd,
+    "MatchingRepeats|Mrpts=s" => \$repeatsQuery,
+    "minNbSpacers|mNS=i" => \$minNbSpacers,
+    "betterDetectTrunc|bDT" => \$betterDetectTruncatedDR,
+    "PercMismTrunc|PMT=f" => \$percentageMismatchesHalfDR,
+    # Options for detection of Cas clusters
+    "cas|cs" => \$launchCasFinder,
+    "ccvRep|ccvr" => \$writeFullReport,
+    "vicinity|vi=i" => \$vicinity,
+    "CASFinder|cf|CasFinder=s" => \$casfinder,
+    "cpuMacSyFinder|cpuM=i" => \$cpuMacSyFinder,
+    "rcfowce" => \$rcfowce,
+    "definition|def=s" => \$definition, # Values: "SubTyping", "Typing", "General"
+    "gffAnnot|gff=s" => \$userGFF,
+    "proteome|faa=s" => \$userFAA, # Need -cas and -gff
+    "cluster|ccc=i" => \$clusteringThreshold, # Need -cas
+    "getSummaryCasfinder|gscf" => \$gscf,
+    "geneticCode|gcode=i" => \$genCode,
+    "metagenome|meta" => \$metagenome,
+    # Options to use Prokka
+    "useProkka|prokka" => sub { $useProkka = 1; $useProdigal = 0; },
+    "cpuProkka|cpuP=i" => \$cpuProkka,
+    "ArchaCas|ac" => sub { $launchCasFinder=1; $kingdom = "Archaea"; },
+) or do {
+    print STDERR "Error in command line arguments\n";
+    printhelpbasic($0);
+    exit EX_USAGE;
+};
+
+# If a positional argument remains, it's the input file
+my $n_rem_arguments = @ARGV;
+if ($n_rem_arguments) {
+    $userfile = $ARGV[0];
 }
-else{
 
-  for(my $i=0;$i<=$#ARGV;$i++){
-
-    if($ARGV[$i]=~/-in/ or $ARGV[$i]=~/-i/){
-      $userfile=$ARGV[$i+1];
-      if(not -e $userfile){
-        print "\nError: file $userfile not found. Please check that your file exists or enter a correct file name.\n";
-        exit EX_DATAERR;
-      }													
-    }
-    elsif($ARGV[$i]=~/-soFile/ or $ARGV[$i]=~/-so/){
-      $so=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-mismDRs/ or $ARGV[$i]=~/-md/){
-      $DRerrors=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-truncDR/ or $ARGV[$i]=~/-t/){
-      $DRtrunMism=$ARGV[$i+1];
-    }    
-    elsif($ARGV[$i]=~/-minDR/ or $ARGV[$i]=~/-mr/){
-      $M1=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-maxDR/ or $ARGV[$i]=~/-xr/){
-      $M2=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-minSP/ or $ARGV[$i]=~/-ms/){
-      $S1=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-maxSP/ or $ARGV[$i]=~/-xs/){
-      $S2=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-noMism/ or $ARGV[$i]=~/-n/){
-      $mismOne=0;
-    }
-    elsif($ARGV[$i]=~/-percSPmin/ or $ARGV[$i]=~/-pm/){
-      $Sp1=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-percSPmax/ or $ARGV[$i]=~/-px/){
-      $Sp2=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-spSim/ or $ARGV[$i]=~/-s/){
-      $SpSim=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-ArchaCas/ or $ARGV[$i]=~/-ac/){
-      $launchCasFinder=1;
-      $kingdom = "Archaea";
-    }
-    elsif($ARGV[$i]=~/-cas/ or $ARGV[$i]=~/-cs/){
-      $launchCasFinder=1;
-    }
-    elsif($ARGV[$i]=~/-CASFinder/ or $ARGV[$i]=~/-cf/ or $ARGV[$i]=~/-CasFinder/){
-      $casfinder=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-vicinity/ or $ARGV[$i]=~/-vi/){
-      $vicinity=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-DBcrispr/ or $ARGV[$i]=~/-dbc/){
-      $crisprdb=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-repeats/ or $ARGV[$i]=~/-rpts/){
-      $repeats=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-DIRrepeat/ or $ARGV[$i]=~/-drpt/ ){
-      $dirRepeat=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-ccvRep/ or $ARGV[$i]=~/-ccvr/){
-      $writeFullReport=1;
-    }
-    elsif($ARGV[$i]=~/-HTML/ or $ARGV[$i]=~/-html/){
-      $html=1;
-    }
-    elsif($ARGV[$i]=~/-outdir/ or $ARGV[$i]=~/-out/){
-      $outputDirName=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-flank/ or $ARGV[$i]=~/-fl/){
-      $flankingRegion=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-cpuProkka/ or $ARGV[$i]=~/-cpuP/){
-      $cpuProkka=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-cpuMacSyFinder/ or $ARGV[$i]=~/-cpuM/){
-      $cpuMacSyFinder=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-rcfowce/){
-      $rcfowce=1;
-    }
-    elsif($ARGV[$i]=~/-metagenome/ or $ARGV[$i]=~/-meta/){
-      $metagenome=1;
-    }
-    elsif($ARGV[$i]=~/-LOG/ or $ARGV[$i]=~/-log/){
-      $logOption=1;
-    }
-    elsif($ARGV[$i]=~/-keepAll/ or $ARGV[$i]=~/-keep/){
-      $keep=1;
-    }
-    elsif($ARGV[$i]=~/-definition/ or $ARGV[$i]=~/-def/){
-      $definition=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-gffAnnot/ or $ARGV[$i]=~/-gff/){
-      $userGFF=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-proteome/ or $ARGV[$i]=~/-faa/){
-      $userFAA=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-cluster/ or $ARGV[$i]=~/-ccc/){
-      $clusteringThreshold=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-useProkka/ or $ARGV[$i]=~/-prokka/){
-      $useProdigal = 0;
-      $useProkka = 1;
-    }
-    elsif($ARGV[$i]=~/-getSummaryCasfinder/ or $ARGV[$i]=~/-gscf/){
-      $gscf = 1;
-    }
-    elsif($ARGV[$i]=~/-copyCSS/){
-      $cssFile=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-geneticCode/ or $ARGV[$i]=~/-gcode/){
-      $genCode=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-levelMin/ or $ARGV[$i]=~/-lMin/){
-      $levelMin=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-quiet/ or $ARGV[$i]=~/-q/){
-      $quiet = 1;
-    }
-    elsif($ARGV[$i]=~/-faster/ or $ARGV[$i]=~/-fast/){
-      $fast = 1;
-      $cpuProkka = 0;
-      $cpuMacSyFinder = 0;
-    }
-    elsif($ARGV[$i]=~/-minSeqSize/ or $ARGV[$i]=~/-mSS/){
-      $seqMinSize=$ARGV[$i+1];
-    } #NV
-    elsif($ARGV[$i]=~/-fosterDRLength/ or $ARGV[$i]=~/-fDRL/){
-      $fosteredDRLength=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-fosterDRBegin/ or $ARGV[$i]=~/-fDRB/){
-      $fosteredDRBegin=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-fosterDREnd/ or $ARGV[$i]=~/-fDRE/){
-      $fosteredDREnd=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-forceDetection/ or $ARGV[$i]=~/-force/){
-      $force = 1;
-      $M1 = $fosteredDRLength;
-    }
-    elsif($ARGV[$i]=~/-MatchingRepeats/ or $ARGV[$i]=~/-Mrpts/){
-      $repeatsQuery=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-minNbSpacers/ or $ARGV[$i]=~/-mNS/){
-      $minNbSpacers=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-betterDetectTrunc/ or $ARGV[$i]=~/-bDT/){
-      $betterDetectTruncatedDR=1;
-    }
-    elsif($ARGV[$i]=~/-PercMismTrunc/ or $ARGV[$i]=~/-PMT/){
-      $percentageMismatchesHalfDR=$ARGV[$i+1];
-    }
-    elsif($ARGV[$i]=~/-onlyCas/ or $ARGV[$i]=~/-oCas/){
-      $onlyCas = 1;
-    }
-    elsif($ARGV[$i]=~/-classifySmallArrays/ or $ARGV[$i]=~/-classifySmall/ or $ARGV[$i]=~/-cSA/){
-      $classifySmall = 1;
-    }
-
-  }
-
-}
-##
-
-## check if file name contains spaces
-
-
-## Check if a correct input file exists
-if (-e $userfile)
+# Print help and exit
+if ($print_help)
 {
-  print "################################################################\n";
-  print "# --> Welcome to $0 (version $version) \n";
-  print "################################################################\n\n\n";
-
+    printhelpall($0);
+    exit EX_OK;
 }
-else
+
+# Print version and exit
+if ($print_version)
 {
-  print "Input file $userfile does not exist. Please make sure that your file exists.\n"; # add: ... or does not meet FASTA requirements....
-  #printhelpall($0);
-  exit EX_DATAERR;
+    printversion($0);
+    exit EX_OK;
 }
 
+# Basic checks of CLI arguments
+# Output dir is created later if not given
+
+# Check that input file was given and exists
+if (!$userfile) {
+    print STDERR "Error: input file not given.\n";
+    printhelpbasic($0);
+    exit EX_USAGE;
+}
+if (not -e $userfile) {
+    print STDERR "Error: file $userfile not found. Please check that the file exists or enter a correct file name.\n";
+    printhelpbasic($0);
+    exit EX_NOINPUT;
+}
+
+print "################################################################\n";
+print "# --> Welcome to $0 (version $version) \n";
+print "################################################################\n\n\n";
 
 ## Control dependencies
 
@@ -462,11 +365,11 @@ mkdir $ResultDir."/CRISPRFinderProperties" unless -d $ResultDir."/CRISPRFinderPr
 #create a directory GFF and move all GFFs to this directory
 mkdir $ResultDir."/GFF" unless -d $ResultDir."/GFF";
 
-  struct Rep => {
+struct Rep => {
     Pos1  => '$',
     Length  => '$',
     DRseq => '$',
-  };
+};
 
 
 my $htmlFile = "index.html"; # web page allowing a simple visualization of CRISPRs and Cas genes ($ResultDir/ removed)
@@ -5274,6 +5177,7 @@ sub trim($)
 	return $string;
 }
 #------------------------------------------------------------------------------
+
 sub printhelpall
 {
 print <<HEREDOC;
@@ -5302,7 +5206,7 @@ Other options:
   [Input/Output and -so]
   -in or -i [XXX]	Input Fasta file (with extensions: .fasta, .fna, .mfa, .fa, .txt)
 
-  -outdir or -out [XXX]	Output directory (if users do not use this option, a delault directory will be created wit the date and time)
+  -outdir or -out [XXX]	Output directory (if users do not use this option, a default directory will be created with the date and time)
 
   -keepAll or -keep	Option allowing to keep secondary folders/files (Prodigal/Prokka, CasFinder, rawFASTA, Properties) (default: $keep)
  
@@ -5346,11 +5250,13 @@ Other options:
 
   -repeats or -rpts [XXX]	Option allowing to use a consensus repeats list generated by CRISPRdb (default: 'supplementary_files/Repeat_List.csv')
 
-  -DIRrepeat or -drpt [XXX]	Option allowing to use a file file containing repeat IDs and orientation according to CRISPRDirection (default: 'supplementary_files/repeatDirection.tsv')
+  -DIRrepeat or -drpt [XXX]	Option allowing to use a file containing repeat IDs and orientation according to CRISPRDirection (default: 'supplementary_files/repeatDirection.tsv')
 
   -flank or -fl [XXX]	Option allowing to set size of flanking regions in base pairs (bp) for each analyzed CRISPR array (default: $flankingRegion)
 
   -levelMin or -lMin [XXX]	Option allowing to choose the minimum evidence-level corresponding to CRISPR arrays we want to display in Crisprs_REPORT file (default: $levelMin)
+
+-classifySmallArrays or -classifySmall or -cSA [XXX]	Option allowing to change evidence level status of small arrays (evidence-level 1) having the same consensus repeat as an evidence-level 4 array (default value=$classifySmall)
   
   -forceDetection or -force	Option allowing to force/foster detection of specific CRISPR arrays (default: $force)
 
@@ -5439,17 +5345,15 @@ HEREDOC
 
 sub printversion
 {
-  my $programname = shift @_;
-  
-  print "\nThis is $programname, version $version,\n";
-  print " a perl script to identify CRISPR arrays and associated Cas genes from DNA sequences\n";
-  
+    my $programname = shift @_;
+    print "This is $programname, version $version,\n";
+    print "a perl script to identify CRISPR arrays and associated Cas genes from DNA sequences\n";
 }
 
 sub printhelpbasic
 {
-  my $programname = shift @_;
-  print STDERR "Usage: $programname [options] -in <filename>\n";
-  print "type -version or -v to see the current version\n";
-  print "type -help or -h for help\n";
+    my $programname = shift @_;
+    print "Usage: $programname [options] [-in] <filename>\n";
+    print "type -version or -v to see the current version\n";
+    print "type -help or -h for help\n";
 }
