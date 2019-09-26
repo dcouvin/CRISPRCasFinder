@@ -27,6 +27,7 @@ use Getopt::Long;
 use Unix::Sysexits;
 
 # Bio Perl modules
+use Bio::AlignIO;
 use Bio::SeqIO;
 use Bio::DB::Fasta; #to extract sequence from fasta file
 
