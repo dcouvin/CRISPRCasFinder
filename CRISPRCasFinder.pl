@@ -5186,7 +5186,7 @@ Name:
   $0 standalone version $version
 
 Synopsis:
-  A perl script to identify CRISPR arrays and associated Cas genes in DNA sequences
+  A perl script to identify CRISPR arrays and associated cas genes in DNA sequences
 
 Usage:
   perl $0 <filename.fasta>
@@ -5257,7 +5257,7 @@ Other options:
 
   -levelMin or -lMin [XXX]	Option allowing to choose the minimum evidence-level corresponding to CRISPR arrays we want to display in Crisprs_REPORT file (default: $levelMin)
 
--classifySmallArrays or -classifySmall or -cSA [XXX]	Option allowing to change evidence level status of small arrays (evidence-level 1) having the same consensus repeat as an evidence-level 4 array (default value=$classifySmall)
+  -classifySmallArrays or -classifySmall or -cSA	Option allowing to change evidence level status of small arrays (evidence-level 1) having the same consensus repeat as an evidence-level 4 array (default value=$classifySmall)
   
   -forceDetection or -force	Option allowing to force/foster detection of specific CRISPR arrays (default: $force)
 
