@@ -25,7 +25,7 @@ Further information are available at: https://crisprcas.i2bc.paris-saclay.fr.
 ## Ubuntu
 ```bash
 bash installer_UBUNTU.sh
-source ~/.profle
+source ~/.profile
 ```
 
 ## CentOS
