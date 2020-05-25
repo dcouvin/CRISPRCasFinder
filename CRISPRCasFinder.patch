@@ -13,8 +13,8 @@
  
  my $launchCasFinder = 0; # boolean variable indicating if we use casfinder or not (default value=0)
  
--my $casfinder = "CasFinder-2.0.2"; # repository containing new CasFinder (default 'CasFinder-2.0.2')
-+my $casfinder = "/usr/local/share/macsyfinder/CasFinder-2.0.2"; # repository containing new CasFinder (default '/usr/local/share/macsyfinder/CasFinder-2.0.2')
+-my $casfinder = "CasFinder-2.0.3"; # repository containing new CasFinder (default 'CasFinder-2.0.3')
++my $casfinder = "/usr/local/share/macsyfinder/CasFinder-2.0.3"; # repository containing new CasFinder (default '/usr/local/share/macsyfinder/CasFinder-2.0.3')
  
  my $kingdom = "Bacteria"; # allow to choose analysis between Archaea and Bacteria (default 'Bacteria')
  
@@ -80,13 +80,13 @@
 -(2): perl $0 -in test.fasta -md 20 -t 33.3 -mr 23 -xr 55 -ms 25 -xs 60 -pm 0.6 -px 2.5 -s 60
 +(2): CRISPRCasFinder -i test.fasta -md 20 -t 33.3 -mr 23 -xr 55 -ms 25 -xs 60 -pm 0.6 -px 2.5 -s 60
  
--(3): perl $0 -in genomes100.fna -drpt supplementary_files/repeatDirection.tsv -rpts supplementary_files/Repeat_List.csv -cs -ccvr -dbc supplementary_files/CRISPR_crisprdb.csv -cf CasFinder-2.0.2 -html
+-(3): perl $0 -in genomes100.fna -drpt supplementary_files/repeatDirection.tsv -rpts supplementary_files/Repeat_List.csv -cs -ccvr -dbc supplementary_files/CRISPR_crisprdb.csv -cf CasFinder-2.0.3 -html
 +(3): CRISPRCasFinder -in genomes100.fna -drpt my_repeatDirection.tsv -rpts my_Repeat_List.csv -cs -fr -dbc CRISPR_crisprdb.csv -cf my_CasFinder -html
  
--(4): perl $0 -in sequence.fasta -cas -log -out RES_Sequence -ccc 20000 -ccvRep -keep -html -rcfowce -def S -cpuM 4 -copyCSS supplementary_files/crispr.css -cf CasFinder-2.0.2
+-(4): perl $0 -in sequence.fasta -cas -log -out RES_Sequence -ccc 20000 -ccvRep -keep -html -rcfowce -def S -cpuM 4 -copyCSS supplementary_files/crispr.css -cf CasFinder-2.0.3
 +(4): CRISPRCasFinder -in sequence.fasta -cas -log -out RES_Sequence -ccc 20000 -ccvRep -keep -html -rcfowce -def SubTyping -cpuM 4 -copyCSS my_crispr.css
  
--(5): perl $0 -in sequence.fasta -cas -log -out RES_Sequence -cf CasFinder-2.0.2 -def G -force -so path/to/sel392v2.so
+-(5): perl $0 -in sequence.fasta -cas -log -out RES_Sequence -cf CasFinder-2.0.3 -def G -force -so path/to/sel392v2.so
 +(5): CRISPRCasFinder -in sequence.fasta -cas -log -out RES_Sequence -cf my_CasFinder -def G -force -so path/to/sel392v2.so
  
  HEREDOC
