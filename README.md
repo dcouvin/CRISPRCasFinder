@@ -64,7 +64,7 @@ For further information, please see the documentation.
 
 ## To run CRISPRCasFinder in the current directory with example sequence you can type:
 ```bash
-perl CRISPRCasFinder.pl -in install_test/sequence.fasta -cas -cf CasFinder-2.0.2 -def G -keep
+perl CRISPRCasFinder.pl -in install_test/sequence.fasta -cas -cf CasFinder-2.0.3 -def G -keep
 ```
 For further details, please see the documentation.
 
