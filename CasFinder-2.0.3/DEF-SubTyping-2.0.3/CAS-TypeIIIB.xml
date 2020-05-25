@@ -51,7 +51,10 @@
 
 #Distinguishing from other Types
 <gene name="Cas9_0_II" presence="forbidden" system_ref="CAS-TypeIIC"/>
+<gene name="Cas9_1_II" presence="forbidden" system_ref="CAS-TypeIIC"/>
+<gene name="Cas9_2_II" presence="forbidden" system_ref="CAS-TypeIIC"/>
 <gene name="Cas9_0_IIB" presence="forbidden"  system_ref="CAS-TypeIIB"/>
+<gene name="Cas9_1_IIB" presence="forbidden"  system_ref="CAS-TypeIIB"/>
 
 #Distinguishing from Type IIIA
 <gene name="Cas10_0_IIIA" presence="forbidden" system_ref="CAS-TypeIIIA"/>

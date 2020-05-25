@@ -30,13 +30,20 @@
 
 #Associated with type IV
 <gene name="Cas6_0_IF" presence="accessory" system_ref="CAS-TypeIF"/>
+<gene name="Cas6_0_IE" presence="accessory" system_ref="CAS-TypeIE"/>
 <gene name="Cas6_0_I-III" presence="accessory" system_ref="CAS"/>
+
 
 #Distinguishing from other Types
 <gene name="Cas3_0_I" presence="forbidden" system_ref="CAS"/>
 <gene name="Cas3_1_I" presence="forbidden" system_ref="CAS"/>
-<gene name="Cas9_0_II" presence="forbidden"  system_ref="CAS-TypeIIC"/>
+<gene name="Cas9_0_II" presence="forbidden" system_ref="CAS-TypeIIC"/>
+<gene name="Cas9_1_II" presence="forbidden" system_ref="CAS-TypeIIC"/>
+<gene name="Cas9_2_II" presence="forbidden" system_ref="CAS-TypeIIC"/>
 <gene name="Cas9_0_IIB" presence="forbidden"  system_ref="CAS-TypeIIB"/>
+<gene name="Cas9_1_IIB" presence="forbidden"  system_ref="CAS-TypeIIB"/>
+
+
 <gene name="Cas10_0_IIIA" presence="forbidden"  system_ref="CAS-TypeIIIA"/>
 <gene name="Cas10_0_IIIB" presence="forbidden"  system_ref="CAS-TypeIIIB"/>
 

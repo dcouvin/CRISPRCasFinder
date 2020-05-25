@@ -2,7 +2,7 @@
 
 # shell script allowing to install all CRISPRCasFinder.pl-v4.2's dependencies
 #
-# same version than CRISPRCasFinder.pl, here 4.2.19
+# same version than CRISPRCasFinder.pl, here 4.2.20
 # authors: David Couvin, Fabrice Leclerc, Claire Toffano-Nioche
 
 #------------------------

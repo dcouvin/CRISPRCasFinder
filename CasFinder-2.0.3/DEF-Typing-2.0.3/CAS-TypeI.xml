@@ -75,11 +75,21 @@
 #Distinguishing from other types
 <gene name="Cas9_0_II" presence="forbidden"  system_ref="CAS-TypeII"/>
 <gene name="Cas9_0_IIB" presence="forbidden"  system_ref="CAS-TypeII"/>
+<gene name="Cas9_1_II" presence="forbidden"  system_ref="CAS-TypeII"/>
+<gene name="Cas9_1_IIB" presence="forbidden"  system_ref="CAS-TypeII"/>
+<gene name="Cas9_2_II" presence="forbidden"  system_ref="CAS-TypeII"/>
+
+
+<gene name="Cas10_0_III" presence="forbidden"  system_ref="CAS-TypeIII"/>
 <gene name="Cas10_0_IIIA" presence="forbidden"  system_ref="CAS-TypeIII"/>
 <gene name="Cas10_0_IIIB" presence="forbidden"  system_ref="CAS-TypeIII"/>
+<gene name="Cas10_1_IIIB" presence="forbidden"  system_ref="CAS-TypeIII"/>
+<gene name="Cas10_0_IIIC" presence="forbidden"  system_ref="CAS-TypeIII"/>
+
 
 <gene name="Csm3_0_IIIA" presence="accessory" system_ref="CAS-TypeIII"/>
 <gene name="Csm3_0_IIIAD" presence="accessory" system_ref="CAS-TypeIII"/>
+<gene name="Csm3_1_IIIAD" presence="accessory" system_ref="CAS-TypeIII"/>
 <gene name="Csm3_0_IIID" presence="accessory" system_ref="CAS-TypeIII"/>
 <gene name="Csm3_1_IIID" presence="accessory" system_ref="CAS-TypeIII"/>
 

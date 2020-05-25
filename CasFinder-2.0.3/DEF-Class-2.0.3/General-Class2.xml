@@ -6,6 +6,7 @@
 <gene name="Cas9_0_IIB"  presence="mandatory" loner="1"/>
 <gene name="Cas9_1_IIB"  presence="mandatory" loner="1"/>
 <gene name="Cas9_1_II"  presence="mandatory" loner="1"/>
+<gene name="Cas9_2_II"  presence="mandatory" loner="1"/>
 <gene name="Cas1_0_II" presence="accessory"/>
 <gene name="Csn2_0_IIA" presence="mandatory" loner="1"/>
 <gene name="Cas4_0_I-II-V" presence="accessory"/>

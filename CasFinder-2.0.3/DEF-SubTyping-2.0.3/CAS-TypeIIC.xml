@@ -14,6 +14,10 @@
 	<homologs>
 		<gene name="Cas9_1_II" presence="mandatory" loner="1"/>
 	</homologs>
+	<homologs>
+		<gene name="Cas9_2_II" presence="mandatory" loner="1"/>
+	</homologs>
+
 </gene>
 
 #Sometimes associated with Type IIC
@@ -23,6 +27,7 @@
 
 #Distinguishing from other Type II	
 <gene name="Cas9_0_IIB" presence="forbidden"  system_ref="CAS-TypeIIB"/>
+<gene name="Cas9_1_IIB" presence="forbidden"  system_ref="CAS-TypeIIB"/>
 <gene name="Csn2_0_IIA" presence="forbidden"   system_ref="CAS-TypeIIA"/>
 <gene name="Cas4_0_I-II" presence="forbidden"  system_ref="CAS"/>
 

@@ -9,21 +9,26 @@
 #Present in Type II
 <gene name="Cas1_0_II" presence="accessory"   system_ref="CAS-TypeIIC"/>
 
-#Specific to Type IIB
-<gene name="Cas4_0_I-II" presence="accessory"  system_ref="CAS"/>
-<gene name="Cas9_0_IIB" presence="mandatory" loner="1" exchangeable="1">
-	<homologs>
-		<gene name="Cas9_1_IIB" presence="mandatory" loner="1"/>
-	</homologs>
-</gene>	
+#Specific to Type IIA
+<gene name="Csn2_0_IIA" presence="mandatory" loner="1"/>
 
-#Distinguishing from other Types	
+<gene name="Cas9_0_II" presence="accessory"   system_ref="CAS-TypeIIC" exchangeable="1">
+	<homologs>
+		<gene name="Cas9_1_II" presence="accessory"   system_ref="CAS-TypeIIC"/>
+	</homologs>
+	<homologs>
+		<gene name="Cas9_2_II" presence="accessory"   system_ref="CAS-TypeIIC"/>
+	</homologs>
+</gene>
+
+#Distinguishing from other Types
 <gene name="Cas3_0_I" presence="forbidden"  system_ref="CAS"/>
 <gene name="Cas3_1_I" presence="forbidden"  system_ref="CAS"/>
 
-#Distinguishing from other Type II	
-<gene name="Csn2_0_IIA" presence="forbidden"  system_ref="CAS-TypeIIA"/>
-<gene name="Cas9_0_II" presence="forbidden"   system_ref="CAS-TypeIIC"/>
+#Distinguishing from other Type II
+<gene name="Cas9_0_IIB" presence="forbidden"  system_ref="CAS-TypeIIB"/>
+<gene name="Cas9_1_IIB" presence="forbidden"  system_ref="CAS-TypeIIB"/>
+<gene name="Cas4_0_I-II" presence="forbidden"  system_ref="CAS"/>
 
 
 

@@ -17,6 +17,7 @@
 <gene name="Csn2_0_IIA" presence="mandatory" loner="1"/>
 <gene name="Cas9_1_IIB" presence="mandatory" loner="1"/>
 <gene name="Cas9_1_II" presence="mandatory" loner="1"/>
+<gene name="Cas9_2_II" presence="mandatory" loner="1"/>
 
 #Associated with Type II
 <gene name="Cas3_0_I" presence="accessory"  system_ref="CAS-TypeI"/>
@@ -24,9 +25,11 @@
 
 
 #Distinguishing  from other Types
+<gene name="Cas10_0_III" presence="forbidden"  system_ref="CAS-TypeIII"/>
 <gene name="Cas10_0_IIIA" presence="forbidden"  system_ref="CAS-TypeIII"/>
 <gene name="Cas10_0_IIIB" presence="forbidden"  system_ref="CAS-TypeIII"/>
-
+<gene name="Cas10_1_IIIB" presence="forbidden"  system_ref="CAS-TypeIII"/>
+<gene name="Cas10_0_IIIC" presence="forbidden"  system_ref="CAS-TypeIII"/>
 
 
 

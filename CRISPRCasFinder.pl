@@ -33,7 +33,7 @@ use Bio::DB::Fasta; #to extract sequence from fasta file
 
 # TODO add URLescape module in case the GFF attributes get messy
 #local modules
-my $version = "4.2.19";
+my $version = "4.2.20";
 
 # set parameters for the Vmatch program
 #$ENV{'LD_LIBRARY_PATH'} = '.';
@@ -63,7 +63,7 @@ my $userfile = "";
 
 my $launchCasFinder = 0; # boolean variable indicating if we use casfinder or not (default value=0)
 
-my $casfinder = "CasFinder-2.0.2"; # repository containing new CasFinder (default 'CasFinder-2.0.2')
+my $casfinder = "CasFinder-2.0.3"; # repository containing new CasFinder (default 'CasFinder-2.0.3')
 
 my $kingdom = "Bacteria"; # allow to choose analysis between Archaea and Bacteria (default 'Bacteria')
 
@@ -1366,18 +1366,18 @@ sub casFinder
   my $addToMacSy = "";
   #manage $definition info
   if( ($definition eq "General") or ($definition eq "general") or ($definition eq "G") or ($definition eq "g") ){
-	$casdb = $casfinder."/DEF-Class-2.0.2/";  # DEF-General-2.0 replaced by DEF-Class-2.0.2 
+	$casdb = $casfinder."/DEF-Class-2.0.3/";  # DEF-General-2.0 replaced by DEF-Class-2.0.2 then replaced by DEF-Class-2.0.3
 	$addToMacSy .= "--min-genes-required General-Class1 1 "; # General-1CAS replaced by General-Class1
 	$addToMacSy .= "--min-genes-required General-Class2 1 "; # General-3CAS replaced by General-Class2
 	#$default = 1;
   }
   elsif( ($definition eq "Typing") or ($definition eq "typing") or ($definition eq "T") or ($definition eq "t") ){
-  	$casdb = $casfinder."/DEF-Typing-2.0.2/"; # DEF-Typing-2.0 replaced by DEF-Typing-2.0.2
+  	$casdb = $casfinder."/DEF-Typing-2.0.3/"; # DEF-Typing-2.0 replaced by DEF-Typing-2.0.2 then replaced by DEF-Typing-2.0.3
 	#$addToMacSy .= "--min-genes-required CAS 1 --min-genes-required CAS-TypeI 1 --min-genes-required CAS-TypeII 1 --min-genes-required CAS-TypeIII 1 --min-genes-required CAS-TypeIV 1 --min-genes-required CAS-TypeV 1 ";
 	#$addToMacSy .= "--min-genes-required CAS-TypeVI 1 ";
   }
   elsif( ($definition eq "SubTyping") or ($definition eq "subtyping") or ($definition eq "S") or ($definition eq "s") ){
-  	$casdb = $casfinder."/DEF-SubTyping-2.0.2/"; # DEF-SubTyping-2.0 replaced by DEF-SubTyping-2.0.2
+  	$casdb = $casfinder."/DEF-SubTyping-2.0.3/"; # DEF-SubTyping-2.0 replaced by DEF-SubTyping-2.0.2 then replaced by DEF-SubTyping-2.0.3
   }
   else{
   	#$casdb = $casfinder."/DEF-General-2.0/";
@@ -1386,7 +1386,7 @@ sub casFinder
   
   $casdb =~ s/\/\//\//; #DC - replace '//' by '/'
 
-  my $profiles = $casfinder."/CASprofiles-2.0.2/"; # CASprofiles-2.0 replaced by CASprofiles-2.0.2
+  my $profiles = $casfinder."/CASprofiles-2.0.3/"; # CASprofiles-2.0 replaced by CASprofiles-2.0.2 then replaced by CASprofiles-2.0.3
   $profiles =~ s/\/\//\//; #DC - replace '//' by '/'
 
   my $results = $ResultDir."/Cas_REPORT.tsv"; # former name: $ResultDir."/Cas_".$RefSeq.".txt";
@@ -1539,7 +1539,8 @@ sub casFinder
     my ($macsyfinder_hour,$macsyfinder_min,$macsyfinder_sec) = Now();
     if ( (-d $casfinder) and (-d $casdb) and (-d $profiles) ) {
 	  #if($default){
-	    $macsyfinder = "macsyfinder -w $cpuMacSyFinder -d $casdb -p $profiles --sequence-db $proteome all --out-dir $casDir "; 
+	    $macsyfinder = "macsyfinder -w $cpuMacSyFinder -d $casdb -p $profiles --sequence-db $proteome all --out-dir $casDir ";
+	    #$macsyfinder = "macsyfinder -w $cpuMacSyFinder -d $casdb -p $profiles --sequence-db $proteome all --out-dir $casDir "; 
 	    $macsyfinder .= $addToMacSy; # --multi-loci General-CAS
 	  #}
 	  #else{
@@ -1619,7 +1620,8 @@ sub casFinder
 	    }
     }
 
-    #Addition of a test to see if any CDS exist (DC, 2019)
+    #Addition of a test to see if any CDS exist (DC, 2019 + modifications on may 2020)
+    my $cdsCheck = 1;
     if (-z $proteome){ #Checking if $proteome file is empty
 	if($logOption){
 		print LOG "[$macsyfinder_hour:$macsyfinder_min:$macsyfinder_sec] CDS file ($proteome) is empty! No Cas search because no CDS was detected!\n";
@@ -1629,12 +1631,15 @@ sub casFinder
 	  	print "No Cas search because no CDS was detected!\n";
 	}
 
-	$launchCasFinder = 0; #CasFinder will not be launched if no CDS have been detected
-	next;
+	$cdsCheck = 0; #CasFinder will not be launched if no CDS have been detected ; $launchCasFinder has been replaced by $cdsCheck
+	#next;
+    }
+    else{
+	$cdsCheck = 1;
     }
     #End of Addition
 
-    if (-e $gff){   # If GFF is created (Prokka is done)
+    if (-e $gff and $cdsCheck){   # If GFF is created (Prokka is done) + addition of $cdsCheck
 	if($logOption){
 		print LOG "[$macsyfinder_hour:$macsyfinder_min:$macsyfinder_sec] $macsyfinder\n";
 	}
@@ -5335,11 +5340,11 @@ In this example, your result folder will be in the directory named: "Result_test
 
 (2): perl $0 -in test.fasta -md 20 -t 33.3 -mr 23 -xr 55 -ms 25 -xs 60 -pm 0.6 -px 2.5 -s 60
 
-(3): perl $0 -in genomes100.fna -drpt supplementary_files/repeatDirection.tsv -rpts supplementary_files/Repeat_List.csv -cs -ccvr -dbc supplementary_files/CRISPR_crisprdb.csv -cf CasFinder-2.0.2 -html
+(3): perl $0 -in genomes100.fna -drpt supplementary_files/repeatDirection.tsv -rpts supplementary_files/Repeat_List.csv -cs -ccvr -dbc supplementary_files/CRISPR_crisprdb.csv -cf CasFinder-2.0.3 -html
 
-(4): perl $0 -in sequence.fasta -cas -log -out RES_Sequence -ccc 20000 -ccvRep -keep -html -rcfowce -def S -cpuM 4 -copyCSS supplementary_files/crispr.css -cf CasFinder-2.0.2
+(4): perl $0 -in sequence.fasta -cas -log -out RES_Sequence -ccc 20000 -ccvRep -keep -html -rcfowce -def S -cpuM 4 -copyCSS supplementary_files/crispr.css -cf CasFinder-2.0.3
 
-(5): perl $0 -in sequence.fasta -cas -log -out RES_Sequence -cf CasFinder-2.0.2 -def G -force -so path/to/sel392v2.so
+(5): perl $0 -in sequence.fasta -cas -log -out RES_Sequence -cf CasFinder-2.0.3 -def G -force -so path/to/sel392v2.so
 
 HEREDOC
 }

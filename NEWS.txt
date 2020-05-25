@@ -14,3 +14,16 @@
 
 # Change #3
 # Installation procedures have been added for CentOS and Fedora operating systems.
+
+# Change #4
+# In CRISPRCasFinder version 4.2.20, the following modifications have been done:
+# - The error concerning the analysis of multifasta file has been fixed. This error was due to a bad management of the launching of MacSyFinder/CasFinder 
+#   when no CDS was detected in a sequence found in the multifasta.
+# - CasFinder version 2.0.3 (the most recent updated version of CasFinder) has been added to the repository.
+#   Please also note that path names to Cas definitions and profiles have been modified in order to fix the issue concerning detection of cas genes.
+#   The former CasFinder-2.0.2 folder has been removed.
+# - Please note that the "-rcfowce" option used in the online version of CRISPRCasFinder may produce different results as compared to the command line version of the tool, 
+#   because this option ("-rcfowce") allows users to run CasFinder only when a CRISPR locus has been detected. 
+#   The version of the dependent software (such as EMBOSS) may also cause slight differences.
+#   The command line used during an analysis can be visualized in the result JSON file.
+# - Please note that the Singularity image corresponding to the current version of the tool has not yet been updated. 

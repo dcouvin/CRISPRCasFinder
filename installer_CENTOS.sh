@@ -10,7 +10,7 @@
 #
 # after running this script ('bash installer_CENTOS.sh'), if your command prompt changes, you may need to type 'exit' command
 #
-# same version than CRISPRCasFinder.pl, here 4.2.19
+# same version than CRISPRCasFinder.pl, here 4.2.20
 # authors: David Couvin, Fabrice Leclerc, Claire Toffano-Nioche
 
 #------------------------
