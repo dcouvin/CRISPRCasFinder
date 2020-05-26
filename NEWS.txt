@@ -26,4 +26,7 @@
 #   because this option ("-rcfowce") allows users to run CasFinder only when a CRISPR locus has been detected. 
 #   The version of the dependent software (such as EMBOSS) may also cause slight differences.
 #   The command line used during an analysis can be visualized in the result JSON file.
-# - Please note that the Singularity image corresponding to the current version of the tool has not yet been updated. 
+# - Please note that the Singularity image corresponding to the current version of the tool has not yet been updated.
+# - Please note that this version of CasFinder (2.0.3) does not correspond to the last update 
+#   (Makarova et al., 2020 ; https://doi.org/10.1038/s41579-019-0299-x). This change will be performed soon thanks to colleagues from 
+#   Institut Pasteur in Paris. Thank you for your patience.
