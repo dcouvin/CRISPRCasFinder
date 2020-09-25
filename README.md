@@ -83,7 +83,7 @@ The standalone version is also available as a singularity container (hosted on t
 <!--[![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/1624)-->
 
 ## To run the container
-After downloading the CrisprCasFinder.simg image on the [Download page](https://crisprcas.i2bc.paris-saclay.fr/Home/Download), you can for example run the following command (sequence.fasta file must be replaced by your file):
+After downloading the [CrisprCasFinder.simg](https://crisprcas.i2bc.paris-saclay.fr/Home/DownloadFile?filename=CrisprCasFinder.simg) image from the [CRISPR-Cas++ Download page](https://crisprcas.i2bc.paris-saclay.fr/Home/Download), you can for example run the following command (sequence.fasta file must be replaced by your file):
 
 ```bash
 singularity exec -B $PWD CrisprCasFinder.simg perl /usr/local/CRISPRCasFinder/CRISPRCasFinder.pl -so /usr/local/CRISPRCasFinder/sel392v2.so -cf /usr/local/CRISPRCasFinder/CasFinder-2.0.3 -drpt /usr/local/CRISPRCasFinder/supplementary_files/repeatDirection.tsv -rpts /usr/local/CRISPRCasFinder/supplementary_files/Repeat_List.csv -cas -def G -out RES21092020_2 -in sequence.fasta
@@ -99,7 +99,7 @@ singularity pull --name CRISPRCasFinder shub://dcouvin/CRISPRCasFinder:4.2.18
 ```
 -->
 
-For more information about singularity containers: https://www.sylabs.io/docs/
+Please visit the following link for more information about singularity containers: https://www.sylabs.io/docs/
 
 # Outline of the CRISPRCasFinder workflow
 
