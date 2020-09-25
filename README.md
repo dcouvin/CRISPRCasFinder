@@ -78,12 +78,17 @@ A more complete User Manual is available at the following file : CRISPRCasFinder
 # Container
 
 If you want to try CRISPRCasFinder without installing dependencies,
-The standalone version is also available as singularity container:
+The standalone version is also available as a singularity container (hosted on the [Download page of the CRISPR-Cas++ portal](https://crisprcas.i2bc.paris-saclay.fr/Home/Download)):
 
-[![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/1624)
+<!--[![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/1624)-->
 
 ## To run the container
- 
+After downloading the CrisprCasFinder.simg image on the [Download page](https://crisprcas.i2bc.paris-saclay.fr/Home/Download), you can for example run the following command (sequence.fasta file must be replaced by your file):
+
+```bash
+singularity exec -B $PWD CrisprCasFinder.simg perl /usr/local/CRISPRCasFinder/CRISPRCasFinder.pl -so /usr/local/CRISPRCasFinder/sel392v2.so -cf /usr/local/CRISPRCasFinder/CasFinder-2.0.3 -drpt /usr/local/CRISPRCasFinder/supplementary_files/repeatDirection.tsv -rpts /usr/local/CRISPRCasFinder/supplementary_files/Repeat_List.csv -cas -def G -out RES21092020_2 -in sequence.fasta
+```
+<!--
 ```bash
 singularity run shub://dcouvin/CRISPRCasFinder:4.2.18 -def General -cas -i my_sequence.fasta -keep
 ```
@@ -92,7 +97,7 @@ or download the image locally, and optionally rename it, then run it
 singularity pull --name CRISPRCasFinder shub://dcouvin/CRISPRCasFinder:4.2.18 
 ./CRISPRCasFinder -def General -cas -i my_sequence.fasta -keep
 ```
-
+-->
 
 For more information about singularity containers: https://www.sylabs.io/docs/
 
