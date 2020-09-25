@@ -30,3 +30,8 @@
 # - Please note that this version of CasFinder (2.0.3) does not correspond to the last update 
 #   (Makarova et al., 2020 ; https://doi.org/10.1038/s41579-019-0299-x). This change will be performed soon thanks to colleagues from 
 #   Institut Pasteur in Paris. Thank you for your patience.
+
+# Change #5
+# Please note that a new singularity container is available and  hosted at the Download page of the CRISPR-Cas++ portal (https://crisprcas.i2bc.paris-saclay.fr/Home/Download)
+
+
