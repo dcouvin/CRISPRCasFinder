@@ -101,7 +101,8 @@ else
     tar -xzf macsyfinder-1.0.5.tar.gz
     test -d bin ||  mkdir bin
     cd bin
-    ln -s ../macsyfinder-1.0.5/bin/macsyfinder
+    #ln -s ../macsyfinder-1.0.5/bin/macsyfinder #macsyfinder-macsyfinder-1.0.5
+    ln -s ../macsyfinder-macsyfinder-1.0.5/bin/macsyfinder
     cd ${CURDIR}
     echo "add definition of MACSY_HOME (${CURDIR}/macsyfinder-1.0.5/) in .profile" >> $LOGFILE
     echo "export MACSY_HOME=${CURDIR}/macsyfinder-1.0.5/" >> $HOME/.profile
