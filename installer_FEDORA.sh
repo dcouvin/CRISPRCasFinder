@@ -191,7 +191,8 @@ else
     then
       echo "Installation of MacSyFinder" >> $LOGFILE
       cd ${CURDIR}
-      wget https://dl.bintray.com/gem-pasteur/MacSyFinder/macsyfinder-1.0.5.tar.gz >> $LOGFILE
+      #wget https://dl.bintray.com/gem-pasteur/MacSyFinder/macsyfinder-1.0.5.tar.gz >> $LOGFILE
+      wget https://github.com/gem-pasteur/macsyfinder/archive/refs/tags/macsyfinder-1.0.5.tar.gz >> $LOGFILE
       tar -xzf macsyfinder-1.0.5.tar.gz
       test -d bin ||  mkdir bin
       cd bin
