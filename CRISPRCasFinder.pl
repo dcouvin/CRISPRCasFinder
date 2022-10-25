@@ -22,9 +22,9 @@ use File::Copy;
 use File::Basename;
 use Data::Dumper;
 use Cwd;
-use Date::Calc qw(:all);
+#use Date::Calc qw(:all);
 use Getopt::Long;
-use Unix::Sysexits;
+#use Unix::Sysexits;
 
 # Bio Perl modules
 use Bio::AlignIO;
@@ -33,7 +33,7 @@ use Bio::DB::Fasta; #to extract sequence from fasta file
 
 # TODO add URLescape module in case the GFF attributes get messy
 #local modules
-my $version = "4.2.20";
+my $version = "4.3.1";
 
 # set parameters for the Vmatch program
 #$ENV{'LD_LIBRARY_PATH'} = '.';
@@ -63,7 +63,7 @@ my $userfile = "";
 
 my $launchCasFinder = 0; # boolean variable indicating if we use casfinder or not (default value=0)
 
-my $casfinder = "CasFinder-2.0.3"; # repository containing new CasFinder (default 'CasFinder-2.0.3')
+#my $casfinder = "CasFinder-2.0.3"; # repository containing new CasFinder (default 'CasFinder-2.0.3')
 
 my $kingdom = "Bacteria"; # allow to choose analysis between Archaea and Bacteria (default 'Bacteria')
 
@@ -206,7 +206,7 @@ GetOptions (
     "cas|cs" => \$launchCasFinder,
     "ccvRep|ccvr" => \$writeFullReport,
     "vicinity|vi=i" => \$vicinity,
-    "CASFinder|cf|CasFinder=s" => \$casfinder,
+    #"CASFinder|cf|CasFinder=s" => \$casfinder,
     "cpuMacSyFinder|cpuM=i" => \$cpuMacSyFinder,
     "rcfowce" => \$rcfowce,
     "definition|def=s" => \$definition, # Values: "SubTyping", "Typing", "General"
@@ -223,7 +223,7 @@ GetOptions (
 ) or do {
     print STDERR "Error in command line arguments\n";
     printhelpbasic($0);
-    exit EX_USAGE;
+    exit(1);
 };
 
 # If a positional argument remains, it's the input file
@@ -236,14 +236,14 @@ if ($n_rem_arguments) {
 if ($print_help)
 {
     printhelpall($0);
-    exit EX_OK;
+    exit(0);
 }
 
 # Print version and exit
 if ($print_version)
 {
     printversion($0);
-    exit EX_OK;
+    exit(0);
 }
 
 # Basic checks of CLI arguments
@@ -253,12 +253,12 @@ if ($print_version)
 if (!$userfile) {
     print STDERR "Error: input file not given.\n";
     printhelpbasic($0);
-    exit EX_USAGE;
+    exit(1);
 }
 if (not -e $userfile) {
     print STDERR "Error: file $userfile not found. Please check that the file exists or enter a correct file name.\n";
     printhelpbasic($0);
-    exit EX_NOINPUT;
+    exit(1);
 }
 
 print "################################################################\n";
@@ -274,7 +274,7 @@ if($vmatchProg){
 else
 {
   print "vmatch2 is not installed, please install it and try again.\n";
-  exit EX_CONFIG;
+  exit(1);
 }
 
 my $mkvtreeProg = isProgInstalled("mkvtree2");
@@ -284,7 +284,7 @@ if($mkvtreeProg){
 else
 {
   print "mkvtree2 (Vmatch dependency) is not installed, please install it and try again.\n";
-  exit EX_CONFIG;
+  exit(1);
 }
 
 my $vsubseqselectProg = isProgInstalled("vsubseqselect2");
@@ -294,7 +294,7 @@ if($vsubseqselectProg){
 else
 {
   print "vsubseqselect2 (Vmatch dependency) is not installed, please install it and try again.\n";
-  exit EX_CONFIG;
+  exit(1);
 }
 #--
 my $fuzznuc = isProgInstalled("fuzznuc");
@@ -304,7 +304,7 @@ if($fuzznuc){
 else
 {
     print "fuzznuc (from emboss) is not installed, please install it and try again.\n";
-    exit EX_CONFIG;
+    exit(1);
 }
 
 my $needle = isProgInstalled("needle");
@@ -314,7 +314,7 @@ if($needle){
 else
 {
   print "needle (from emboss) is not installed, please install it and try again.\n";
-  exit EX_CONFIG;
+  exit(1);
 }
 
 ##
@@ -327,8 +327,9 @@ $DRerrors = $DRerrors/100;
 
 ## Time - Begin
 #my ($start_hour,$start_min,$start_sec) = Now(); # Now([+1]) replaced by Now()
-my($start_year,$start_month,$start_day, $start_hour,$start_min,$start_sec) = Today_and_Now();
+#my($start_year,$start_month,$start_day, $start_hour,$start_min,$start_sec) = Today_and_Now();
 ##
+my $epoch = time();  # start time
 
 my $seqIO = Bio::SeqIO->new(-format=>'Fasta', -file=>$userfile);
 my $inputfileCount=0;
@@ -336,7 +337,8 @@ my ($seq,$inputfile);
 my $basename = basename($userfile);
 my @outdir = split /\./, $basename;
 my $outdir = $outdir[0];
-$outdir .= "_".$start_day."_".$start_month."_".$start_year."_".$start_hour."_".$start_min."_".$start_sec;
+#$outdir .= "_".$start_day."_".$start_month."_".$start_year."_".$start_hour."_".$start_min."_".$start_sec;
+$outdir .= "_".$epoch;
 
 # DC - 11/05/2017 Retrieve date (localtime) and default repository
 my $ResultDir = "";
@@ -356,7 +358,7 @@ if(-d $ResultDirFinal){
 }
 
 # $ResultDir now corresponds to the temporary result directory ($outdir)
-$ResultDir = $outdir;
+#$ResultDir = $outdir;
 mkdir $ResultDir unless -d $ResultDir;
 
 
@@ -400,8 +402,10 @@ if($html){
 my @statusLOG = stat($userfile); # Get input file size in bytes
 
 # Two additional log files (logfile and logSequences) -DC 06/2017  
-my $logfile = "logFile_".$start_day."_".$start_month."_".$start_year."_".$start_hour."_".$start_min."_".$start_sec.".txt"; # to write command lines
-my $logSeq = "logSequences_".$start_day."_".$start_month."_".$start_year."_".$start_hour."_".$start_min."_".$start_sec.".tsv"; # to write quick information on sequences
+#my $logfile = "logFile_".$start_day."_".$start_month."_".$start_year."_".$start_hour."_".$start_min."_".$start_sec.".txt"; # to write command lines
+#my $logSeq = "logSequences_".$start_day."_".$start_month."_".$start_year."_".$start_hour."_".$start_min."_".$start_sec.".tsv"; # to write quick information on sequences
+my $logfile = "logFile_".$epoch;
+my $logSeq = "logSequences_".$epoch;
 
 if($logOption){
 	open (LOG, ">$logfile") or die "open : $!";
@@ -419,18 +423,19 @@ my $jsonResult = "result.json"; # JSON result to get all info concerning CRISPR-
 open (JSONRES, ">$jsonResult") or die "open : $!";
 print JSONRES "{\n";
 
-my $dateJSON = $start_day."/".$start_month."/".$start_year."_".$start_hour.":".$start_min.":".$start_sec;
+my $dateJSON = $epoch; #$start_day."/".$start_month."/".$start_year."_".$start_hour.":".$start_min.":".$start_sec;
 my $cmdLine = "perl $0 @ARGV";
 my $jsonLineRes = "\"Date\":\"".$dateJSON."\",\n\"Version\":\"".$version."\",\n\"Command\":\"".$cmdLine."\",\n\"Sequences\":\n[";
 ##
 
 if($logOption){
-	print LOG "[$start_hour:$start_min:$start_sec] $cmdLine\n---> Results will be stored in $ResultDirFinal\n\n"; # the main command line and results path
+	print LOG "$cmdLine\n---> Results will be stored in $ResultDirFinal\n\n"; # the main command line and results path
+	#[$start_hour:$start_min:$start_sec] 
 }
 if($quiet){
 }
 else{
-	print "[$start_hour:$start_min:$start_sec] ---> Results will be stored in $ResultDirFinal\n\n";
+	print " ---> Results will be stored in $ResultDirFinal\n\n"; #[$start_hour:$start_min:$start_sec]
 }
 
 #my $totalNumberOfCrisprs=0; #LK
@@ -550,7 +555,7 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   	#my @vmatchoptions = qw(-l 23 25 60 -e 1 -s leftseq -evalue 1 -absolute -nodist -noevalue -noscore -noidentity -sort ia -best 1000000 -selfun sel392v2.so 55);
   
   	#my $currentRepositoryForSo = getcwd(); #get current repository to use sel392v2.so
-  	my ($vmatch_hour,$vmatch_min,$vmatch_sec) = Now();
+  	#my ($vmatch_hour,$vmatch_min,$vmatch_sec) = Now();
   	# DC - set Vmatch options in function of parameters   ### replace -sort ia by -sort ida
   	#print " $repeatsQuery exists ?\n";
   	if(-e $so){
@@ -577,9 +582,9 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   		print "The shared object file ($so) must be available in your current directory. Otherwise, you must use option -soFile (or -so)! \n\n";
 	
 		if($logOption){
-			print LOG "[$vmatch_hour:$vmatch_min:$vmatch_sec] The shared object file ($so) must be available in your current directory. Otherwise, you must use option -soFile (or -so)! \n\n";
+			print LOG "The shared object file ($so) must be available in your current directory. Otherwise, you must use option -soFile (or -so)! \n\n";  #[$vmatch_hour:$vmatch_min:$vmatch_sec] 
 		}
-        	exit EX_CONFIG;
+        	exit(1);
   	}
 
   	push(@vmatchoptions,$indexname); # DC - replace 
@@ -588,7 +593,7 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   	push(@vmatchoptions, " > vmatch_result.txt");
 
   	if($logOption){
-  		print LOG "\n[$vmatch_hour:$vmatch_min:$vmatch_sec] vmatch2 @vmatchoptions\n"; # print in Logfile DC replaced vmatch by vmatch2
+  		print LOG "\n vmatch2 @vmatchoptions\n"; # print in Logfile DC replaced vmatch by vmatch2 , [$vmatch_hour:$vmatch_min:$vmatch_sec] 
   	}
   	#Modification DC - 05/05/2017
   	#makesystemcall("./vmatch " . join(' ',@vmatchoptions)); #DC
@@ -676,12 +681,12 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
 
   	if($rcfowce){
 	if($launchCasFinder and ($nbrcris>0)){
-		($nbrCas, $casfile, $jsonCAS, @tabCRISPRCasClustersA) = casFinder($ResultDir,$inputfile,$seqDesc,$RefSeq,$nbrcris,$kingdom,$casfinder);
+		($nbrCas, $casfile, $jsonCAS, @tabCRISPRCasClustersA) = casFinder($ResultDir,$inputfile,$seqDesc,$RefSeq,$nbrcris,$kingdom);
 	}
 
   	}
   	elsif($launchCasFinder and ($rcfowce == 0)){
-		($nbrCas, $casfile, $jsonCAS, @tabCRISPRCasClustersA) = casFinder($ResultDir,$inputfile,$seqDesc,$RefSeq,$nbrcris,$kingdom,$casfinder);
+		($nbrCas, $casfile, $jsonCAS, @tabCRISPRCasClustersA) = casFinder($ResultDir,$inputfile,$seqDesc,$RefSeq,$nbrcris,$kingdom);
   	}
   	#print "NBR CAS = $nbrCas\n";
   	if(! $nbrCas){ $nbrCas = 0; }
@@ -947,18 +952,23 @@ if($launchCasFinder){
 
 ## Time - end
 #my ($end_hour,$end_min,$end_sec) = Now();
-my($end_year,$end_month,$end_day, $end_hour,$end_min,$end_sec) = Today_and_Now();
+#my($end_year,$end_month,$end_day, $end_hour,$end_min,$end_sec) = Today_and_Now();
 ##
 
-my ($D_y,$D_m,$D_d, $Dh,$Dm,$Ds) =
-      Delta_YMDHMS($start_year,$start_month,$start_day, $start_hour, $start_min, $start_sec,
-                   $end_year, $end_month, $end_day, $end_hour,$end_min,$end_sec);
+#my ($D_y,$D_m,$D_d, $Dh,$Dm,$Ds) =
+ #     Delta_YMDHMS($start_year,$start_month,$start_day, $start_hour, $start_min, $start_sec,
+ #                  $end_year, $end_month, $end_day, $end_hour,$end_min,$end_sec);
  
-print "\n[$end_hour:$end_min:$end_sec] Thank you for using $0! Thank you for your patience!\n";
-print "\n[$end_hour:$end_min:$end_sec] The script lasted: ".$D_y." year(s) ".$D_m." month(s) ".$D_d." day(s) , ".$Dh." hour(s) ".$Dm." minute(s) ".$Ds." second(s)\n";
+print "\nThank you for using $0! Thank you for your patience!\n"; # [$end_hour:$end_min:$end_sec] 
+#print "\n[$end_hour:$end_min:$end_sec] The script lasted: ".$D_y." year(s) ".$D_m." month(s) ".$D_d." day(s) , ".$Dh." hour(s) ".$Dm." minute(s) ".$Ds." second(s)\n";
+my $endEpoch = time(); #my $epoch = time();
+my $minutesEpoch = ($endEpoch - $epoch) / 60;
+
+print "\nThe script lasted: ".($minutesEpoch/60)." hour(s) ".$minutesEpoch." minute(s) ".($endEpoch - $epoch)." second(s)\n";
+
 
 if($logOption){
-  print LOG "\n[$end_hour:$end_min:$end_sec] The script lasted: ".$D_y." year(s) ".$D_m." month(s) ".$D_d." day(s) , ".$Dh." hour(s) ".$Dm." minute(s) ".$Ds." second(s)\n";
+  #print LOG "\n[$end_hour:$end_min:$end_sec] The script lasted: ".$D_y." year(s) ".$D_m." month(s) ".$D_d." day(s) , ".$Dh." hour(s) ".$Dm." minute(s) ".$Ds." second(s)\n";
 
   close (LOG);
   close (LOGSEQ);
@@ -1011,7 +1021,8 @@ if($html){
 
   ## DC - $outdir will be moved to $ResultDir after
   #rmdir "$outdir-$inputfileCount"; # Only if empty
-  `mv $ResultDir $ResultDirFinal`;#rmdir $outdir;
+  #`mv $ResultDir $ResultDirFinal`;#rmdir $outdir;
+  #makesystemcall("mv $ResultDir $ResultDirFinal") if (-d $ResultDir);
 
 # Remove '.index' files
 makesystemcall("rm -f *.index");
@@ -1068,9 +1079,9 @@ sub makeHtml
     open(CAS,"<",$casFile) or die("Could not open the Cas report file $casFile because $!\n");
   }
 
-  my ($hour,$min,$sec) = Now();
+  #my ($hour,$min,$sec) = Now();
   if($logOption){
-  	print LOG "\n[$hour:$min:$sec] Create HTML file (index.html) for visualization\n";
+  	#print LOG "\n[$hour:$min:$sec] Create HTML file (index.html) for visualization\n";
   }
 
   #open(HTML,">>",$htmlFile) or die("Could not open the file $htmlFile because $!\n");
@@ -1347,10 +1358,11 @@ sub makeHtml
 # Results: list of Cas systems and Cas genes corresponding to analyzed genome
 # with positions and orientations of genes, information relative to Cas,
 # and other information (annotations)
+# October 2022: changes regarding MacSyFinder v2 and CASFinder v3
 #############################################################################
 sub casFinder
 {
-  my($ResultDir,$inputfile,$seqDesc,$RefSeq,$nbrcris,$kingdom,$casfinder)=@_;
+  my($ResultDir,$inputfile,$seqDesc,$RefSeq,$nbrcris,$kingdom)=@_;
 
   my $repProkka = "";
   if($useProkka){ $repProkka = $ResultDir."/prokka_".$RefSeq; }
@@ -1365,34 +1377,34 @@ sub casFinder
   my $default = 0;
   my $addToMacSy = "";
   #manage $definition info
-  if( ($definition eq "General") or ($definition eq "general") or ($definition eq "G") or ($definition eq "g") ){
-	$casdb = $casfinder."/DEF-Class-2.0.3/";  # DEF-General-2.0 replaced by DEF-Class-2.0.2 then replaced by DEF-Class-2.0.3
-	$addToMacSy .= "--min-genes-required General-Class1 1 "; # General-1CAS replaced by General-Class1
-	$addToMacSy .= "--min-genes-required General-Class2 1 "; # General-3CAS replaced by General-Class2
-	#$default = 1;
-  }
-  elsif( ($definition eq "Typing") or ($definition eq "typing") or ($definition eq "T") or ($definition eq "t") ){
-  	$casdb = $casfinder."/DEF-Typing-2.0.3/"; # DEF-Typing-2.0 replaced by DEF-Typing-2.0.2 then replaced by DEF-Typing-2.0.3
-	#$addToMacSy .= "--min-genes-required CAS 1 --min-genes-required CAS-TypeI 1 --min-genes-required CAS-TypeII 1 --min-genes-required CAS-TypeIII 1 --min-genes-required CAS-TypeIV 1 --min-genes-required CAS-TypeV 1 ";
-	#$addToMacSy .= "--min-genes-required CAS-TypeVI 1 ";
-  }
-  elsif( ($definition eq "SubTyping") or ($definition eq "subtyping") or ($definition eq "S") or ($definition eq "s") ){
-  	$casdb = $casfinder."/DEF-SubTyping-2.0.3/"; # DEF-SubTyping-2.0 replaced by DEF-SubTyping-2.0.2 then replaced by DEF-SubTyping-2.0.3
-  }
-  else{
-  	#$casdb = $casfinder."/DEF-General-2.0/";
-	#$default = 1;
-  }
+  # if( ($definition eq "General") or ($definition eq "general") or ($definition eq "G") or ($definition eq "g") ){
+	# $casdb = $casfinder."/DEF-Class-2.0.3/";  # DEF-General-2.0 replaced by DEF-Class-2.0.2 then replaced by DEF-Class-2.0.3
+	# $addToMacSy .= "--min-genes-required General-Class1 1 "; # General-1CAS replaced by General-Class1
+	# $addToMacSy .= "--min-genes-required General-Class2 1 "; # General-3CAS replaced by General-Class2
+	# #$default = 1;
+  # }
+  # elsif( ($definition eq "Typing") or ($definition eq "typing") or ($definition eq "T") or ($definition eq "t") ){
+  	# $casdb = $casfinder."/DEF-Typing-2.0.3/"; # DEF-Typing-2.0 replaced by DEF-Typing-2.0.2 then replaced by DEF-Typing-2.0.3
+	# #$addToMacSy .= "--min-genes-required CAS 1 --min-genes-required CAS-TypeI 1 --min-genes-required CAS-TypeII 1 --min-genes-required CAS-TypeIII 1 --min-genes-required CAS-TypeIV 1 --min-genes-required CAS-TypeV 1 ";
+	# #$addToMacSy .= "--min-genes-required CAS-TypeVI 1 ";
+  # }
+  # elsif( ($definition eq "SubTyping") or ($definition eq "subtyping") or ($definition eq "S") or ($definition eq "s") ){
+  	# $casdb = $casfinder."/DEF-SubTyping-2.0.3/"; # DEF-SubTyping-2.0 replaced by DEF-SubTyping-2.0.2 then replaced by DEF-SubTyping-2.0.3
+  # }
+  # else{
+  	# #$casdb = $casfinder."/DEF-General-2.0/";
+	# #$default = 1;
+  # }
   
-  $casdb =~ s/\/\//\//; #DC - replace '//' by '/'
+  # $casdb =~ s/\/\//\//; #DC - replace '//' by '/'
 
-  my $profiles = $casfinder."/CASprofiles-2.0.3/"; # CASprofiles-2.0 replaced by CASprofiles-2.0.2 then replaced by CASprofiles-2.0.3
-  $profiles =~ s/\/\//\//; #DC - replace '//' by '/'
+  # my $profiles = $casfinder."/CASprofiles-2.0.3/"; # CASprofiles-2.0 replaced by CASprofiles-2.0.2 then replaced by CASprofiles-2.0.3
+  # $profiles =~ s/\/\//\//; #DC - replace '//' by '/'
 
   my $results = $ResultDir."/Cas_REPORT.tsv"; # former name: $ResultDir."/Cas_".$RefSeq.".txt";
   my $allCas = $ResultDir."/CRISPR-Cas_systems_vicinity.tsv"; # to store all individual CRISPR-Cas systems
 
-  my ($hour,$min,$sec) = Now(); 
+  #my ($hour,$min,$sec) = Now(); 
 
   #open CCS.tsv file
   my $resultsCRISPRCasSummary = $ResultDir."/CRISPR-Cas_summary.tsv";
@@ -1421,8 +1433,8 @@ sub casFinder
   ####### work on CRISPR-Cas clusters and tracrRNA -End
 
   eval{
-    use JSON::Parse 'json_file_to_perl';
-    use JSON::Parse 'valid_json';
+    #use JSON::Parse 'json_file_to_perl';
+    #use JSON::Parse 'valid_json';
     
     my $prokkaProg = isProgInstalled("prokka");
     my $prodigalProg = isProgInstalled("prodigal");
@@ -1445,9 +1457,9 @@ sub casFinder
       print "Otherwise, please retry without Cas option (-cas)\n\n";
 
       if($logOption){
-        print LOG "\n[$hour:$min:$sec] /!\\ prokka is not installed ........ \n";
-        print LOG "\n[$hour:$min:$sec] Please install it by following the documentation provided here: https://github.com/tseemann/prokka  OR  http://www.vicbioinformatics.com/software.prokka.shtml\n\n";
-        print LOG "\n[$hour:$min:$sec] Otherwise, please retry without Cas option (-cas)\n\n";
+        print LOG "\n/!\\ prokka is not installed ........ \n"; #[$hour:$min:$sec] 
+        print LOG "\nPlease install it by following the documentation provided here: https://github.com/tseemann/prokka  OR  http://www.vicbioinformatics.com/software.prokka.shtml\n\n";
+        print LOG "\nOtherwise, please retry without Cas option (-cas)\n\n";
       }
 
       #printhelpall($0);
@@ -1475,9 +1487,9 @@ sub casFinder
       print "Otherwise, please retry without Cas option (-cas)\n\n";
 
       if($logOption){
-        print LOG "\n[$hour:$min:$sec] /!\\ prodigal is not installed ........ \n";
-        print LOG "\n[$hour:$min:$sec] Install it by following the documentation provided here: https://github.com/hyattpd/Prodigal\n\n";
-        print LOG "\n[$hour:$min:$sec] Otherwise, please retry without Cas option (-cas)\n\n";
+        print LOG "\n/!\\ prodigal is not installed ........ \n"; #[$hour:$min:$sec] 
+        print LOG "\nInstall it by following the documentation provided here: https://github.com/hyattpd/Prodigal\n\n";
+        print LOG "\nOtherwise, please retry without Cas option (-cas)\n\n";
       }
 
       #printhelpall($0);
@@ -1507,7 +1519,7 @@ sub casFinder
 
 
     # Call Prokka
-    my ($prokka_hour,$prokka_min,$prokka_sec) = Now();
+    #my ($prokka_hour,$prokka_min,$prokka_sec) = Now();
     my $options = "";
     if($quiet){ $options .= "--quiet "; }
     if($fast){ $options .= "--fast --rawproduct --norrna --notrna "; }
@@ -1535,34 +1547,37 @@ sub casFinder
     else{
 	$proteome = "$repProkka/$RefSeq.faa";
     }
-
-    my ($macsyfinder_hour,$macsyfinder_min,$macsyfinder_sec) = Now();
-    if ( (-d $casfinder) and (-d $casdb) and (-d $profiles) ) {
+	
+    #$macsyfinder = "macsyfinder --sequence-db my_aa.fna --replicon-topology circular --db-type gembase --models CASFinder --accessory-weight 1 --exchangeable-weight 1 --coverage-profile 0.4 --redundancy-penalty 1 -w 4 -o $casDir ";
+	$macsyfinder = "macsyfinder -w $cpuMacSyFinder --replicon-topology circular --models CASFinder --accessory-weight 1 --exchangeable-weight 1 --coverage-profile 0.4 --redundancy-penalty 1 --sequence-db $proteome --out-dir $casDir ";
+	    
+    #my ($macsyfinder_hour,$macsyfinder_min,$macsyfinder_sec) = Now();
+    #if ( (-d $casfinder) and (-d $casdb) and (-d $profiles) ) {
 	  #if($default){
-	    $macsyfinder = "macsyfinder -w $cpuMacSyFinder -d $casdb -p $profiles --sequence-db $proteome all --out-dir $casDir ";
+	    #$macsyfinder = "macsyfinder -w $cpuMacSyFinder -d $casdb -p $profiles --sequence-db $proteome all --out-dir $casDir ";
 	    #$macsyfinder = "macsyfinder -w $cpuMacSyFinder -d $casdb -p $profiles --sequence-db $proteome all --out-dir $casDir "; 
-	    $macsyfinder .= $addToMacSy; # --multi-loci General-CAS
+	    #$macsyfinder .= $addToMacSy; # --multi-loci General-CAS
 	  #}
 	  #else{
 	    #$macsyfinder = "macsyfinder -w $cpuMacSyFinder -d $casdb -p $profiles --sequence-db $proteome all --out-dir $casDir "; #--multi-loci 'CAS*' --min-genes-required 'CAS*' 1";
 	  #}
-    }
+    #}
     #elsif($default){
         #$macsyfinder = "macsyfinder -w $cpuMacSyFinder --sequence-db $proteome all --out-dir $casDir"; #MacSyfinder without new definitions/profiles
     #}
-    else{  
-    	$macsyfinder = "macsyfinder -w $cpuMacSyFinder --sequence-db $proteome all --out-dir $casDir"; #MacSyfinder without new definitions/profiles
-    }
+    #else{  
+    #	$macsyfinder = "macsyfinder -w $cpuMacSyFinder --sequence-db $proteome all --out-dir $casDir"; #MacSyfinder without new definitions/profiles
+    #}
     #print "$macsyfinder\n";
     #print "METAGENOME = $metagenome ; ACTUAL VALUE = $actualMetaOptionValue\n\n\n";
     if($metagenome){ $macsyfinder .= " --db-type unordered"; } 
-    elsif($actualMetaOptionValue == 0){ $macsyfinder .= " --db-type ordered_replicon"; }
+    elsif($actualMetaOptionValue == 0){ $macsyfinder .= " --db-type gembase"; } #--db-type ordered_replicon
     #elsif($gembase){ $macsyfinder .= " --db-type gembase"; }
     if($quiet){ 
 	open (OUTMACSY, ">macsyfinderOutput") or die "open : $!";  # Open macsyfinderOutput (writing mode)
 	$macsyfinder .= " >> macsyfinderOutput";
 	if($logOption){
-      		print LOG "\n[$hour:$min:$sec] MacSyFinder output when launched quieter\n";
+      		print LOG "\n MacSyFinder output when launched quieter\n"; #[$hour:$min:$sec]
         	open (OUTMACSY, "<macsyfinderOutput") or die "open : $!";  # Open macsyfinderOutput
 		while (my $fileOutMacsy = <OUTMACSY>) {
          		print LOG "$fileOutMacsy";
@@ -1573,7 +1588,7 @@ sub casFinder
 	}
     } #&>> outputMacSyFinder.out   or -v
 
-    my $json = $casDir."results.macsyfinder.json"; # the JSON results file from macsyfinder
+    my $tsv = $casDir."best_solution.tsv"; # the JSON results file from macsyfinder replaced by the TSV file for best solution
 
     my $gff = $repProkka."/".$RefSeq.".gff"; # the GFF file provided by prokka, example: NZ_AP017367/NZ_AP017367.gff
     if(-e $userGFF){
@@ -1593,7 +1608,7 @@ sub casFinder
     }     
 
     if($logOption){
-      print LOG "\n[$hour:$min:$sec] Writing in file Cas_REPORT.tsv\n";
+      print LOG "\n Writing in file Cas_REPORT.tsv\n"; #[$hour:$min:$sec] 
         #print LOG "[$hour:$min:$sec] Writing in file CRISPR-Cas_systems_vicinity.tsv\n";
     }
 
@@ -1605,11 +1620,11 @@ sub casFinder
     else{
 	    if($logOption){
 		if($useProdigal){
-			print LOG "[$prokka_hour:$prokka_min:$prokka_sec] $prodigal\n";
+			print LOG "$prodigal\n"; #[$prokka_hour:$prokka_min:$prokka_sec] 
 			#print "PRODIGAL command = $prodigal\n";
 		}
 		else{
-	    		print LOG "[$prokka_hour:$prokka_min:$prokka_sec] $prokka\n";
+	    		print LOG " $prokka\n"; #[$prokka_hour:$prokka_min:$prokka_sec]
 		}
 	    }
 	    if($useProdigal){
@@ -1624,7 +1639,7 @@ sub casFinder
     my $cdsCheck = 1;
     if (-z $proteome){ #Checking if $proteome file is empty
 	if($logOption){
-		print LOG "[$macsyfinder_hour:$macsyfinder_min:$macsyfinder_sec] CDS file ($proteome) is empty! No Cas search because no CDS was detected!\n";
+		print LOG " CDS file ($proteome) is empty! No Cas search because no CDS was detected!\n"; #[$macsyfinder_hour:$macsyfinder_min:$macsyfinder_sec]
 	}
 	if($quiet){}
 	else{
@@ -1641,7 +1656,7 @@ sub casFinder
 
     if (-e $gff and $cdsCheck){   # If GFF is created (Prokka is done) + addition of $cdsCheck
 	if($logOption){
-		print LOG "[$macsyfinder_hour:$macsyfinder_min:$macsyfinder_sec] $macsyfinder\n";
+		print LOG " $macsyfinder\n"; #[$macsyfinder_hour:$macsyfinder_min:$macsyfinder_sec]
 	}
 	system($macsyfinder); # We can launch MacSyFinder
     }
@@ -1656,7 +1671,7 @@ sub casFinder
     }
 
     ## get the summary report which has been created by casfinder
-    my $summaryCas = $casDir."macsyfinder.summary"; # the summary results file from macsyfinder
+    my $summaryCas = $casDir."best_solution_summary.tsv"; # the summary results file from macsyfinder
     if(-e $summaryCas and $gscf){
 	# copy the file to Casfinder_summary.tsv
 	my $tmpSummary = $ResultDir."/Casfinder_summary_$RefSeq.tsv";
@@ -1664,24 +1679,46 @@ sub casFinder
 	system($cmdCopySummary);
     }
 
-    ### If JSON has been created
+    ### If JSON (TSV best solution result file) has been created    if ( $line =~ /$v/ && $line !~ /#/ ) {}
 
-    if (-e $json){ 
-		my $p = json_file_to_perl ($json); #Translate JSON file into Perl object 
+    if (-e $tsv){ 
+		#my $p = json_file_to_perl ($json); #Translate JSON file into Perl object 
 
-		my $sizeTable = @{$p}; #Global size of main table of JSON file
-
+		#my $sizeTable = @{$p}; #Global size of main table of JSON file
+		my $sizeTable = 0;
+		
 		my @tabGenes=(); # table containing sequences
+		my %hSystem=();
+		my %hGeneInfo=();
+		my %hGeneSystem=();
 
 		## Push all needed genes in a table
-		for (my $i = 0; $i < $sizeTable; $i++) {
-			my $sizeGenes2 = @{$p->[$i]->{'genes'}};
+		# for (my $i = 0; $i < $sizeTable; $i++) {
+			# my $sizeGenes2 = @{$p->[$i]->{'genes'}};
 	
-			for (my $j = 0; $j < $sizeGenes2; $j++) {
-				my $sequenceID = $p->[$i]->{'genes'}->[$j]->{'id'};
+			# for (my $j = 0; $j < $sizeGenes2; $j++) {
+				# my $sequenceID = $p->[$i]->{'genes'}->[$j]->{'id'};
+				# push (@tabGenes, $sequenceID);
+			# }
+		# }
+		open (TSVMAC,"<$tsv") or die $!;
+		while (my $lineTSV = <TSVMAC>) {
+			chomp($lineTSV);
+			#next if($lineTSV =~ s/^\s*$//);
+			if ($lineTSV !~ /#/ && $lineTSV !~ /^replicon\t/ && $lineTSV !~ /^\s*$/){	
+			    #next if /^\s*$/;
+			    my @tabTSV = split(/\t/, $lineTSV);	
+				my $sequenceID = $tabTSV[1]; #index corresponding to gene ID
 				push (@tabGenes, $sequenceID);
+				$hSystem{$tabTSV[6]} = $tabTSV[5];
+				#print "HSYSTEM value for System number: $tabTSV[6], $hSystem{$tabTSV[6]} \n";
+				push (@{ $hGeneSystem{$tabTSV[6]} }, $tabTSV[1]);
+				$hGeneInfo{$tabTSV[1]} = ["$tabTSV[2]", "$tabTSV[4]", "$tabTSV[6]", "$tabTSV[12]"]; #hash contains: gene name, systemCAS, sys_loci, hit_status
 			}
 		}
+		$sizeTable = keys %hSystem;
+		#print "SIZE TABLE IS: $sizeTable \n";
+		close(TSVMAC);
 
 		open (GFF, "<$gff") or die "open : $!";  #Open $gff in reading mode
 
@@ -1696,7 +1733,7 @@ sub casFinder
 			while (defined ($line = <GFF>)){
 				foreach my $v (@tabGenes) {
 				chomp($line);
-				
+				#print "MY GENE IS: $v , \n";
 				my @partIDs = split(/_/, $v);
 				my $elemIDpart = "ID=1_".$partIDs[$#partIDs].";";
 				    if($useProdigal){
@@ -1739,35 +1776,36 @@ sub casFinder
 		#my $countSys = 1; # to count Cas systems in JSON file
 		my $countGeneralCas = 0;
 
-		for (my $i = 0; $i < $sizeTable; $i++) {
+		for (my $i = 1; $i <= $sizeTable; $i++) {   # loop for each system
 			#print "############################################\n";
 			if(! $quiet){
-            		print "### System: $p->[$i]->{'name'} ($p->[$i]->{'id'})\n";
+            		#print "### System: $p->[$i]->{'name'} ($p->[$i]->{'id'})\n";
+					print "### System: $hSystem{$i}\n";
             		print "#SequenceID\tCas-type/subtype\tGene status\tSystem\tType\tBegin\tEnd\tStrand\tOther_information\n";
 			}
 
-			print RESULTS "### System: $p->[$i]->{'name'} ($p->[$i]->{'id'})\n";
+			print RESULTS "### System: $hSystem{$i}\n";
 			print RESULTS "#SequenceID\tCas-type/subtype\tGene status\tSystem\tType\tBegin\tEnd\tStrand\tOther_information\n";
 			
-			my $systemName = $p->[$i]->{'name'};
+			my $systemName = $hSystem{$i};
 			my $stringCasGenes = "[";
 
 			my @tabPositions = ();
 
-			my $sizeGenes = @{$p->[$i]->{'genes'}};
+			my $sizeGenes = @{ $hGeneSystem{$i} };
 			
 			my $secondChainCas = "\"Genes\": [\n"; # Cas genes for JSON file
 
 			for (my $j = 0; $j < $sizeGenes; $j++) {
 		
-			    my $seqName = $p->[$i]->{'genes'}->[$j]->{'id'};
-			    my $matcher = $p->[$i]->{'genes'}->[$j]->{'match'};
+			    my $seqName = $hGeneSystem{$i}[$j]; #my $seqName = $p->[$i]->{'genes'}->[$j]->{'id'};
+			    my $matcher = $hGeneInfo{$seqName}[0]; #$p->[$i]->{'genes'}->[$j]->{'match'};
  			    if ( defined($matcher) ){
 				if(! $quiet){	
-				print "$p->[$i]->{'genes'}->[$j]->{'id'}\t";  #Retrieve genes 'id'
-				print "$p->[$i]->{'genes'}->[$j]->{'match'}\t"; #Retrieve genes 'match' corresponding to Cas type
-				print "$p->[$i]->{'genes'}->[$j]->{'gene_status'}\t"; #Retrieve genes 'status' corresponding to information 'mandatory', 'forbidden', 'accessory'
-				print "$p->[$i]->{'genes'}->[$j]->{'system'}\t"; #Retrieve genes 'system' corresponding to information on Cas types 'Type II, Type III, ...'
+				print "$seqName\t";#"$p->[$i]->{'genes'}->[$j]->{'id'}\t";  #Retrieve genes 'id'
+				print "$matcher\t";#"$p->[$i]->{'genes'}->[$j]->{'match'}\t"; #Retrieve genes 'match' corresponding to Cas type
+				print "$hGeneInfo{$seqName}[3]\t"; #"$p->[$i]->{'genes'}->[$j]->{'gene_status'}\t"; #Retrieve genes 'status' corresponding to information 'mandatory', 'forbidden', 'accessory'
+				print "$hGeneInfo{$seqName}[1]\t"; #"$p->[$i]->{'genes'}->[$j]->{'system'}\t"; #Retrieve genes 'system' corresponding to information on Cas types 'Type II, Type III, ...'
 				print "$hashGeneType{$seqName}\t"; #"$tab[2]\t";
 				print "$hashGeneBegin{$seqName}\t"; #"$tab[3]\t";
 				print "$hashGeneEnd{$seqName}\t"; #"$tab[4]\t";
@@ -1776,10 +1814,10 @@ sub casFinder
 				}
 				#Print Same thing in RESULTS file
 
-				print RESULTS "$p->[$i]->{'genes'}->[$j]->{'id'}\t";  #Retrieve genes 'id'
-				print RESULTS "$p->[$i]->{'genes'}->[$j]->{'match'}\t"; #Retrieve genes 'match' corresponding to Cas type
-				print RESULTS "$p->[$i]->{'genes'}->[$j]->{'gene_status'}\t"; #Retrieve genes 'status' : 'mandatory', 'forbidden', 'accessory'
-				print RESULTS "$p->[$i]->{'genes'}->[$j]->{'system'}\t"; #Retrieve genes 'system' or Cas types: 'Type II, Type III, ...'
+				print RESULTS "$seqName\t";  #Retrieve genes 'id'
+				print RESULTS "$matcher\t"; #Retrieve genes 'match' corresponding to Cas type
+				print RESULTS "$hGeneInfo{$seqName}[3]\t"; #Retrieve genes 'status' : 'mandatory', 'forbidden', 'accessory'
+				print RESULTS "$hGeneInfo{$seqName}[1]\t"; #Retrieve genes 'system' or Cas types: 'Type II, Type III, ...'
 				print RESULTS "$hashGeneType{$seqName}\t";
 				print RESULTS "$hashGeneBegin{$seqName}\t";
 				print RESULTS "$hashGeneEnd{$seqName}\t";
@@ -1850,15 +1888,15 @@ sub casFinder
 
 			    }
 
-			}	
+			} ## End FOR genes loop
 			my $beginCasCluster = min(@tabPositions);
 			my $endCasCluster = max(@tabPositions);
 
 			$stringCasGenes .= "]";
 			$stringCasGenes =~ s/; ]/]/;
 
-			if(! $quiet){print "####Summary system $p->[$i]->{'name'}:begin=$beginCasCluster;end=$endCasCluster;sequenceID=$RefSeq\n\n";}
-			print RESULTS "####Summary system $p->[$i]->{'name'}:begin=$beginCasCluster;end=$endCasCluster:{sequenceID=$RefSeq} : $stringCasGenes\n\n";
+			if(! $quiet){print "####Summary system $hSystem{$i}:begin=$beginCasCluster;end=$endCasCluster;sequenceID=$RefSeq\n\n";}
+			print RESULTS "####Summary system $hSystem{$i}:begin=$beginCasCluster;end=$endCasCluster:{sequenceID=$RefSeq} : $stringCasGenes\n\n";
 
 			## Fill CCS file and count Cas systems
 			my $ccsCas = $systemName."[".$beginCasCluster.";".$endCasCluster."],";
@@ -1871,7 +1909,7 @@ sub casFinder
 				
 				#if($p->[$i]->{'name'} eq "General-CAS"){
 				$countGeneralCas++;
-				my $otherNameGeneralCas = $p->[$i]->{'name'}."_n".$countGeneralCas;
+				my $otherNameGeneralCas = $hSystem{$i}."_n".$countGeneralCas;
 				$hashCasBegin{$otherNameGeneralCas} = $beginCasCluster;
 	  			$hashCasEnd{$otherNameGeneralCas} = $endCasCluster;	
 				#}
@@ -1886,7 +1924,7 @@ sub casFinder
 			## Fill the JSON file dedicated to Cas systems
 			$secondChainCas .= "]},";
 			$secondChainCas =~ s/,]},/]},/;
-			$jsonLineCas .= "{\n\"Type\": \"".$p->[$i]->{'name'}."\",\"Start\": ".$beginCasCluster.",\"End\": ".$endCasCluster.",".$secondChainCas; 
+			$jsonLineCas .= "{\n\"Type\": \"".$hSystem{$i}."\",\"Start\": ".$beginCasCluster.",\"End\": ".$endCasCluster.",".$secondChainCas; 
 			## End Fill JSON Cas
 
 			# Read file containing CRISPRs and watch if one is close to a Cas systems
@@ -1916,14 +1954,14 @@ sub casFinder
 						#print TMP $_;
 						#print CRISPR "\t$p->[$i]->{'name'} [$beginCasCluster;$endCasCluster]\n";
 						print CAS "$tab[4]\t$tab[4] [$tab[5];$tab[6]]\t";
-						print CAS "$p->[$i]->{'name'} [$beginCasCluster;$endCasCluster]\n";
+						print CAS "$hSystem{$i} [$beginCasCluster;$endCasCluster]\n";
 					}
 					elsif ( (($tab[6]+$vicinity) >= $beginCasCluster) and (($tab[6]+$vicinity) < $endCasCluster) and $writeFullReport ){
 						#$_ .= "\t$p->[$i]->{'name'} [$beginCasCluster;$endCasCluster]\n";
 						#print TMP $_;
 						#print CRISPR "\t$p->[$i]->{'name'} [$beginCasCluster;$endCasCluster]\n";
 						print CAS "$tab[4]\t$tab[4] [$tab[5];$tab[6]]\t";
-						print CAS "$p->[$i]->{'name'} [$beginCasCluster;$endCasCluster]\n";
+						print CAS "$hSystem{$i} [$beginCasCluster;$endCasCluster]\n";
 					} 
 				
 				    }
@@ -2156,7 +2194,7 @@ sub casFinder
 		}
 		### End generation of clusters
 
-	} # End of IF (-e $file) { ... }
+	} # End of IF (-e $JSONfile) { ... }
 	else {
 		if (! $quiet) { print "No Cas results\n"; }
 		$nbCas = 0;
@@ -2231,11 +2269,11 @@ sub fullReport{
 	  # Read file containing CRISPRs and write fullReport
 	  open (CRISPR, "<$resultsCRISPRs") or die "open : $!";
 	  open (FULL, ">$fullReport") or die "open : $!";
-	  my ($hour,$min,$sec) = Now();
+	  #my ($hour,$min,$sec) = Now();
 
 	  if($logOption){
-	  	print LOG "\n[$hour:$min:$sec] Create CRISPR-CAS_vicinity_REPORT.tsv (corresponding to CRISPRs arrays and neighboring CAS systems in a range of $vicinity bps)\n";
-	  }
+	  	print LOG "\n Create CRISPR-CAS_vicinity_REPORT.tsv (corresponding to CRISPRs arrays and neighboring CAS systems in a range of $vicinity bps)\n";
+	  } #[$hour:$min:$sec]
 
 	  while(<CRISPR>) {
 	  	chomp($_);
@@ -2315,10 +2353,10 @@ sub countOrientation{
   }
 
   open (ORI, ">$orientationCountsFile") or die "open : $!";
-  my ($hour,$min,$sec) = Now();
+  #my ($hour,$min,$sec) = Now();
 
   if($logOption){
-  	print LOG "\n[$hour:$min:$sec] Create orientationCounts file ($orientationCountsFile)\n";
+  	print LOG "\n Create orientationCounts file ($orientationCountsFile)\n"; #[$hour:$min:$sec]
   }
 
   print ORI "#### Statistics on CRISPRs orientation by CRISPRCasFinder vs. CRISPRDirection\n\n";
@@ -2357,10 +2395,10 @@ sub makeGff{
   my @dir=<$ResultDir/$inputBasename*>;
   my $globalAT2 = "";
 
-  my ($hour,$min,$sec) = Now();
+  #my ($hour,$min,$sec) = Now();
 
   if($logOption){
-  	print LOG "\n[$hour:$min:$sec] Create GFF3 file ($inputBasename.gff) corresponding to CRISPRs arrays\n";
+  	print LOG "\n Create GFF3 file ($inputBasename.gff) corresponding to CRISPRs arrays\n"; #[$hour:$min:$sec] 
   }
   # parse
   my $GFFstr="";
@@ -2491,10 +2529,10 @@ sub reportToGff{
   $attributes.="Name=$featureId;ID=$idCRISPR"; # DC - 05/2017
   $DRsequence=$tag{DR}; delete($tag{DR});
   
-  my ($hour,$min,$sec) = Now();
+  #my ($hour,$min,$sec) = Now();
 
   if($logOption){
-  	print LOG "\n[$hour:$min:$sec] --> GFF file ($inputfile.gff) with CRISPR ID = $idCRISPR and Consensus DR = $DRsequence\n";
+  	print LOG "\n --> GFF file ($inputfile.gff) with CRISPR ID = $idCRISPR and Consensus DR = $DRsequence\n"; #[$hour:$min:$sec]
   }
 
 
@@ -2649,10 +2687,10 @@ sub makeJson
   my $secondChain = "";
   my ($file, $extension) = split(/\./, $gff); # retrieve file name
   # Write Json file
-  my ($hour,$min,$sec) = Now();
+  #my ($hour,$min,$sec) = Now();
 
   if($logOption){
-  	print LOG "\n[$hour:$min:$sec] Create JSON format data corresponding to CRISPR arrays\n";
+  	print LOG "\n Create JSON format data corresponding to CRISPR arrays\n"; #[$hour:$min:$sec]
   }
   
   # Hash consensusDR <=> evidence-level
@@ -3104,10 +3142,10 @@ sub crisprAnalysis
     }
   }
   ### Write Results
-  my ($hour,$min,$sec) = Now();
+  #my ($hour,$min,$sec) = Now();
 
   if($logOption){
-  	print LOG "\n[$hour:$min:$sec] Write Crisprs_REPORT.tsv\n";
+  	print LOG "\n Write Crisprs_REPORT.tsv\n"; #[$hour:$min:$sec]
   }
 
   my $resultsCRISPRs = $ResultDir."/Crisprs_REPORT.tsv";
@@ -3264,13 +3302,13 @@ sub crisprAnalysis
     #### End Analyze Spacers
 
     #### Move created alignment files into $directory
-      my ($hourMv,$minMv,$secMv) = Now();
+      #my ($hourMv,$minMv,$secMv) = Now();
       my $fastaStar = $spacerFasta."*";
       my $ret = system("mv $fastaStar $directory");
       #print "Moving files $fastaStar in $directory (return type: $ret)\n";
       
       if($logOption){	
-      	print LOG "\n[$hourMv:$minMv:$secMv] Moving files $fastaStar in $directory (return type: $ret)\n";
+      	print LOG "\n Moving files $fastaStar in $directory (return type: $ret)\n"; #[$hourMv:$minMv:$secMv]
       }
 
       $fastaStar = $drFasta."*";
@@ -3278,7 +3316,7 @@ sub crisprAnalysis
       #print "Moving files $fastaStar in $directory (return type: $ret)\n";
 
       if($logOption){
-      	print LOG "\n[$hourMv:$minMv:$secMv] Moving files $fastaStar in $directory (return type: $ret)\n";
+      	print LOG "\n Moving files $fastaStar in $directory (return type: $ret)\n"; #[$hourMv:$minMv:$secMv]
       }
 
     #### Write results    
@@ -3644,7 +3682,7 @@ sub isProgInstalled {
                 	print "\nThe program $program cannot be found on your system\n";
 			print "Have you installed it? Your PATH variable contains: $ENV{'PATH'}\n\n";
 			print "\nPlease install $program\n";
-			exit EX_CONFIG;
+			exit(1);
 		}
  	}	
      return $found;
@@ -3762,10 +3800,10 @@ my $simDRs = 0; # indicates if all DRs are different
    	$refFalsSpacers = \@false_spacers;
    }
 
-   my ($hour,$min,$sec) = Now();
+   #my ($hour,$min,$sec) = Now();
 
    if($logOption){
-	print LOG "[$hour:$min:$sec] Function definespacers returns following values for ($crisprfile): $simDRs , $refFalsSpacers , @spacers_correct\n ";
+	print LOG " Function definespacers returns following values for ($crisprfile): $simDRs , $refFalsSpacers , @spacers_correct\n "; #[$hour:$min:$sec]
    }
    
    return($simDRs,$refFalsSpacers, @spacers_correct);
@@ -3849,10 +3887,10 @@ sub check_cris_div
    }
 	if(!$reffal_spacers){$reffal_spacers = \@false_spacers;}
 
-	my ($hour,$min,$sec) = Now();
+	#my ($hour,$min,$sec) = Now();
 
    	if($logOption){
-		print LOG "[$hour:$min:$sec] Function check_cris_div returns: $reffal_spacers , @spacers_new\n ";
+		print LOG " Function check_cris_div returns: $reffal_spacers , @spacers_new\n "; #[$hour:$min:$sec]
    	}
 
 	return($reffal_spacers,@spacers_new);
@@ -3914,13 +3952,13 @@ sub fastaAlignmentMuscle
 	#	$muscle .= " -maxiters 1 -diags ";
 	#}
 	
-	my ($hour,$min,$sec) = Now();
+	#my ($hour,$min,$sec) = Now();
 
 	if($prog){
 		makesystemcall($muscle);
 
 		if($logOption){
-			print LOG "\n[$hour:$min:$sec] $muscle\n";
+			print LOG "\n $muscle\n"; #[$hour:$min:$sec]
 		}
 	}
   };
@@ -3953,7 +3991,7 @@ sub fastaAlignmentMuscleOne
 	#	$muscle .= " -maxiters 1 -diags ";
 	#}
 
-	my ($hour,$min,$sec) = Now();
+	#my ($hour,$min,$sec) = Now();
 
 	if($prog){
 		makesystemcall($muscle);
@@ -3994,9 +4032,9 @@ sub extractsequence
 	# Modification DC - 05/05/2017
     	#makesystemcall("./vsubseqselect " . join(' ',@subselectoptions)); #DC
     	makesystemcall("vsubseqselect2 " . join(' ',@subselectoptions)); #LK - DC replaced vsubseqselect by vsubseqselect2
-	my ($hour,$min,$sec) = Now();
+	#my ($hour,$min,$sec) = Now();
 	if($logOption){
-   		print LOG "[$hour:$min:$sec] vsubseqselect2 @subselectoptions\n"; # DC replaced vsubseqselect by vsubseqselect2
+   		print LOG " vsubseqselect2 @subselectoptions\n"; # DC replaced vsubseqselect by vsubseqselect2 , [$hour:$min:$sec]
 	}
    }
    return @seqencesdefinition;
@@ -4032,10 +4070,10 @@ sub trans_data
      }
   }
 close(FD);
-my ($hour,$min,$sec) = Now();
+#my ($hour,$min,$sec) = Now();
 
 if($logOption){
-  print LOG "\n[$hour:$min:$sec] Getting results from vmatch and transform vmatch output file...\n";
+  print LOG "\n Getting results from vmatch and transform vmatch output file...\n"; #[$hour:$min:$sec]
 }
   
 return @repetitions;
@@ -4050,10 +4088,10 @@ sub write_clusters{
 
   #print "@tabseq\n"; #DC
 
-  my ($hour,$min,$sec) = Now();
+  #my ($hour,$min,$sec) = Now();
   
   if($logOption){
-  	print LOG "\n[$hour:$min:$sec] Find CRISPRs candidates and check DRs...\n";
+  	print LOG "\n Find CRISPRs candidates and check DRs...\n"; #[$hour:$min:$sec]
   }
 
   my($count, $seqbeg, $seqend,$i,$j, $DR, $DRocc, $nbrcris,$DRlength);
@@ -4168,10 +4206,10 @@ sub write_clusters{
 		makesystemcall("fuzznuc " . join(' ',@fuzznucoptions)); #DC
 		#my $testCrisprFile = "Test_".$crisprfile;
 		#makesystemcall("cp $crisprfile $testCrisprFile ");
-		my ($hour,$min,$sec) = Now();
+		#my ($hour,$min,$sec) = Now();
 
 		if($logOption){
-			print LOG "[$hour:$min:$sec] fuzznuc " . join(' ',@fuzznucoptions)." \n";
+			print LOG " fuzznuc " . join(' ',@fuzznucoptions)." \n"; #[$hour:$min:$sec]
 		}
 
 		if($#DR_cand_occ > 0)
@@ -4224,10 +4262,10 @@ sub write_clusters{
 			my $actual_path_after_fill_in = getcwd(); #DC
   			#print "ACTUAL PATH after fill_in_crisprfile !!!!: $actual_path_after_fill_in\n"; #DC
 			
-			($hour,$min,$sec) = Now(); # DC - 07/2017
+			#($hour,$min,$sec) = Now(); # DC - 07/2017
 			
 			if($logOption){
-				print LOG "\n[$hour:$min:$sec] Nb spacers = $nbspacers , similarity DRs = $simDRs , Hypotheticals = $OneSpacerCris_nbr .\n";
+				print LOG "\n Nb spacers = $nbspacers , similarity DRs = $simDRs , Hypotheticals = $OneSpacerCris_nbr .\n"; #[$hour:$min:$sec]
 			}
 
 
@@ -4236,7 +4274,7 @@ sub write_clusters{
 				#DC - 09/05/2017
 				#print "CHDIR located in Write Clusters : Path = $ResultDir / $RefSeq \n"; # DC
 				# DC - 07/2017 - DANGEROUS MODIFICATION
-				($hour,$min,$sec) = Now(); # DC - 07/2017
+				#($hour,$min,$sec) = Now(); # DC - 07/2017
 				#$actual_path = getcwd();
 				if($logOption){
 					#print LOG "\n[$hour:$min:$sec] Actual path directory before CRISPR modification: $actual_path ...\n"; # DC - 07/2017
@@ -4253,10 +4291,10 @@ sub write_clusters{
 		 		#--------------------------------------
 		 		while($modf >=0)
 		 		{
-					($hour,$min,$sec) = Now();
+					#($hour,$min,$sec) = Now();
   
 					if($logOption){
-						print LOG "\n[$hour:$min:$sec] Modification would be performed (Nb good CRISPRs = $crisprs_nbr; Nb hypothetical = $hyp_cris_nbr)...\n";
+						print LOG "\n Modification would be performed (Nb good CRISPRs = $crisprs_nbr; Nb hypothetical = $hyp_cris_nbr)...\n"; #[$hour:$min:$sec]
 					}
 
 	  		 		if($crisprs_nbr - $hyp_cris_nbr >= 1)
@@ -4291,7 +4329,7 @@ sub write_clusters{
 			$modf = -1;
 		
 			if($logOption){
-				print LOG "\n[$hour:$min:$sec] Actual path directory after CRISPR modification: $actual_path ...\n"; # DC - 07/2017
+				print LOG "\n Actual path directory after CRISPR modification: $actual_path ...\n"; # DC - 07/2017 , [$hour:$min:$sec]
 				#print "\n[$hour:$min:$sec] Actual path directory after CRISPR modification: $actual_path ...\n";
 			}
 
@@ -4311,11 +4349,11 @@ sub modify_files
   my($inputfile,$ResultDir,$RefSeq,$rank,$crisprs_nbr,$HYPCris_nbr,$modf)=@_;
   my(@lines,@temp,$nb_spacers,@nb_div, $newCrisNbr, @divi);
 
-  my ($hour,$min,$sec) = Now();
+  #my ($hour,$min,$sec) = Now();
   my $actual_pathDC = getcwd(); #DC
 
   if($logOption){
-  	print LOG "[$hour:$min:$sec] Modify CRISPRs files generated ($inputfile)...........\n Actual path: $actual_pathDC\n\n";
+  	print LOG " Modify CRISPRs files generated ($inputfile)...........\n Actual path: $actual_pathDC\n\n"; #[$hour:$min:$sec]
   }
 
   # Modification DC - 05/05/2017
@@ -4379,7 +4417,7 @@ if($nbsp1>=1){
 	# DC - 05/05/2017
 	#print " 1rst Calling create_spFile, DIR = $dir , ResultDir = $ResultDir\n";
 	if($logOption){
-  		print LOG "[$hour:$min:$sec] arguments of create_spFile : $dir,$ResultDir,$RefSeq,$Spfile_new, $Spfile_old, 0, $nbsp1\n";	
+  		print LOG " arguments of create_spFile : $dir,$ResultDir,$RefSeq,$Spfile_new, $Spfile_old, 0, $nbsp1\n"; #[$hour:$min:$sec]	
 	}
 
 	create_spFile($dir,$ResultDir,$RefSeq,$Spfile_new, $Spfile_old,0, $nbsp1);
@@ -4495,10 +4533,10 @@ sub create_file{
  my $File_Content='';
  my @temp;
 
- my ($hour,$min,$sec) = Now();
+ #my ($hour,$min,$sec) = Now();
 
  if($logOption){
-   print LOG "[$hour:$min:$sec] Create first CRISPRs files ...........\n";
+   print LOG "Create first CRISPRs files ...........\n"; #[$hour:$min:$sec] 
  }
 
   open(FD, $file_old)  or die "Error in opening the file:$file_old!";
@@ -4546,7 +4584,7 @@ if($ordre == 2){$crisprs_nbr++;}
   print WRITER $File_Content;
 
   if($logOption){
-  	print LOG "[$hour:$min:$sec] File created: $file_new...........\n";
+  	print LOG " File created: $file_new...........\n"; #[$hour:$min:$sec]
   }
   close(WRITER);
 
@@ -4560,13 +4598,13 @@ sub create_spFile{
  $sp_prev = $sp_prev *2 +1;  # DC replaced 2 by 3 ?
  $nbsp = $sp_prev + $nbsp *2 -1; # DC replaced 2 by 3 ?
 
- my ($hour,$min,$sec) = Now();
+ #my ($hour,$min,$sec) = Now();
  # DC - 05/05/2017
  if($logOption){
- 	print LOG "[$hour:$min:$sec] Old spacer file: $Spfile_old \n"; #DC
-	print LOG "[$hour:$min:$sec] New spacer file: $Spfile_new \n"; #DC
-	print LOG "[$hour:$min:$sec] Previous number of spacers: $sp_prev \n"; #DC
-	print LOG "[$hour:$min:$sec] Number of spacers: $nbsp \n"; #DC
+ 	print LOG "Old spacer file: $Spfile_old \n"; #DC , [$hour:$min:$sec] 
+	print LOG " New spacer file: $Spfile_new \n"; #DC
+	print LOG " Previous number of spacers: $sp_prev \n"; #DC
+	print LOG " Number of spacers: $nbsp \n"; #DC
 
 	#print "[$hour:$min:$sec] Old spacer file: $Spfile_old \n"; #DC
 	#print "[$hour:$min:$sec] New spacer file: $Spfile_new \n"; #DC
@@ -4629,15 +4667,15 @@ return $line;
 
 #------------------------------------------------------------------------------
 sub create_recap{
-  use Date::Calc qw(:all);
+  #use Date::Calc qw(:all);
   my($RefSeq, $nbrcris, $OneSpacerCris_nbr, $ResultDir) = @_;
   my $File_Content;
   my $Crispr_report = $RefSeq."_CRISPRs"; 
   my $directory = $ResultDir;
-  my ($hour_recap,$min_recap,$sec_recap) = Now();
+  #my ($hour_recap,$min_recap,$sec_recap) = Now();
 
   if($logOption){
-  	print LOG "[$hour_recap:$min_recap:$sec_recap] Create first CRISPR(s) file(s) ...........\n";
+  	print LOG " Create first CRISPR(s) file(s) ...........\n"; #[$hour_recap:$min_recap:$sec_recap]
   }
 
   unless(-d $directory){ mkdir $directory or die "$0: I can not create the folder $directory: $!\n" }
@@ -4645,7 +4683,8 @@ sub create_recap{
 
   unless(-d $dir){ mkdir $dir or die "$0: I can not create the folder $dir: $!\n" }
   
-  my($year,$month,$day, $hour,$min,$sec) = Today_and_Now();
+  #my($year,$month,$day, $hour,$min,$sec) = Today_and_Now();
+  my($year,$month,$day, $hour,$min,$sec) = (0,0,0,0,0,0);
   $File_Content  = "########################################\n";
   $File_Content .= "# Program: CRISPR Finder \n";
   $File_Content .= "# Author: Ibtissem GRISSA\n";
@@ -4673,10 +4712,10 @@ sub copy_spacers{
   $dir = $dir."/Spacers_$id";
 
   #print "j'ai copiÈ $SpacersFile dans $dir";
-  my ($hour,$min,$sec) = Now();
+  #my ($hour,$min,$sec) = Now();
   
   if($logOption){
-  	print LOG "[$hour:$min:$sec] Copy Spacers files in $dir...........\n";
+  	print LOG " Copy Spacers files in $dir...........\n"; #[$hour:$min:$sec]
   }
 
   my $cop = "cp -R $SpacersFile $dir";
@@ -4685,7 +4724,7 @@ sub copy_spacers{
   #my $cop = "cp $SpacersFile $dir"; #DC
   
   if($logOption){
-  	print LOG "[$hour:$min:$sec] $cop ...........\n";
+  	print LOG " $cop ...........\n"; #[$hour:$min:$sec]
   }
 
   system($cop);
@@ -4695,20 +4734,20 @@ sub copy_spacers{
 # this file will be used for the database storage
 sub fill_in_crisprfile
 {
-  use Date::Calc qw(:all);
+  #use Date::Calc qw(:all);
 
   my(	$simDRs,$RefSeq,$ResultDir,$id,$CrisprBeg,$CrisprEnd,
   	$DRseq,$nbspacers,$SpacersFile,$RefFalsSpacers,%spacersPos) = @_; 
 
-  my ($hour_crispr,$min_crispr,$sec_crispr) = Now();
+  #my ($hour_crispr,$min_crispr,$sec_crispr) = Now();
 
   if($logOption){
-  	print LOG "[$hour_crispr:$min_crispr:$sec_crispr] Create first CRISPRs files ...........\n";
+  	print LOG " Create first CRISPRs files ...........\n"; #[$hour_crispr:$min_crispr:$sec_crispr]
   }
 
   my ($Crispr_file,$File_Content,$Bpos,$i);
   my $DRlength = length($DRseq);
-  my($year,$month,$day, $hour,$min,$sec) = Today_and_Now();
+  #my($year,$month,$day, $hour,$min,$sec) = Today_and_Now();
   my $directory = $ResultDir;
   if(-e "$directory"){}else{mkdir($directory);}
   my $dir = $directory."/".$RefSeq;
@@ -4728,7 +4767,7 @@ sub fill_in_crisprfile
   $File_Content  = "########################################\n";
   $File_Content .= "# Program: CRISPR Finder\n";
   $File_Content .= "# Author: Ibtissem GRISSA\n";
-  $File_Content .= "# Rundate (GMT): $day/$month/$year $hour:$min:$sec\n";
+  $File_Content .= "# Rundate (GMT): ND\n";  #$day/$month/$year $hour:$min:$sec\n";
   $File_Content .= "# Report_file: $Crispr_file\n";
   $File_Content .= "########################################\n";
   $File_Content .= "#=======================================\n";
@@ -4803,7 +4842,7 @@ sub fill_in_crisprfile
   close WRITER;
 
   if($logOption){
-  	print LOG "[$hour_crispr:$min_crispr:$sec_crispr] Create file: $Crispr_file ...........\n";
+  	print LOG "[ Create file: $Crispr_file ...........\n"; # $hour_crispr:$min_crispr:$sec_crispr]
   }
 
   return $Crispr_file;
@@ -4887,10 +4926,10 @@ sub Find_theCrispr
    if($#FalsSpacers >=0){for(my $h =0; $h<= $#FalsSpacers; $h++){$FalsSpacers[$h] += $seqbeg;}}
    my %spacersH = trans_struct_hach($seqbeg,@spacers);
    
-   my ($hour,$min,$sec) = Now();
+   #my ($hour,$min,$sec) = Now();
    
    if($logOption){
-   	print LOG "[$hour:$min:$sec] Check short CRISPRs arrays and check spacers alignment using Muscle....\n";
+   	print LOG " Check short CRISPRs arrays and check spacers alignment using Muscle....\n"; #[$hour:$min:$sec]
    }
 
    $goodcrispr = 0;
@@ -4961,10 +5000,10 @@ sub check_short_crispr
   $needleoptions = "needle -auto -asequence DR -bsequence $spacerfile -gapopen 10.0 -gapextend 0.5 -outfile alignDR_Spacer.needle"; # DC
   makesystemcall($needleoptions);
 
-  my ($hour,$min,$sec) = Now();
+  #my ($hour,$min,$sec) = Now();
   
   if($logOption){
-  	print LOG "[$hour:$min:$sec] $needleoptions\n";
+  	print LOG " $needleoptions\n"; #[$hour:$min:$sec]
   }
 
   $goodcrispr = similarity_needle();
@@ -4977,7 +5016,7 @@ sub similarity_needle{
 
   open(FD, "alignDR_Spacer.needle")  or die "Error in opening the input file : alignDR_Spacer.needle!";
 
-  my ($hour,$min,$sec) = Now();
+  #my ($hour,$min,$sec) = Now();
   # find the gap value
   while(<FD>){
 	if($_ =~ "Gaps:" ){
@@ -4988,7 +5027,7 @@ sub similarity_needle{
 	  $score =~ s/%\)//;
 	
           if($logOption){
-  		print LOG "[$hour:$min:$sec] Running function similarity_needle... score is: $score\n";
+  		print LOG " Running function similarity_needle... score is: $score\n"; #[$hour:$min:$sec]
   	  }	
           if(!$score){ $score=0; }  
 
@@ -5040,10 +5079,10 @@ sub find_clusters		# find all possible clusters (even the shortest)
  my $count = 0;
  my $nb_clust = 0;	# nb_clust = 2*nbr_clusters
 
- my ($hour,$min,$sec) = Now();
+ #my ($hour,$min,$sec) = Now();
  
  if($logOption){
- 	print LOG "[$hour:$min:$sec] Find clusters and store their start and end positions\n";
+ 	print LOG " Find clusters and store their start and end positions\n"; #[$hour:$min:$sec]
  } 
 
 #print "nbr de rep = $#repetitions --\n";
@@ -5164,10 +5203,10 @@ sub callmkvtree
   {
     makesystemcall("mkvtree2 -db $inputfile " .   # LK - DC replaced mkvtree by mkvtree2
                    "-dna -pl -lcp -suf -tis -ois -bwt -bck -sti1");
-    my ($hour,$min,$sec) = Now();
+    #my ($hour,$min,$sec) = Now();
 
     if($logOption){
-    	print LOG "[$hour:$min:$sec] mkvtree2 -db $inputfile -dna -pl -lcp -suf -tis -ois -bwt -bck -sti1\n"; # DC replaced mkvtree by mkvtree2
+    	print LOG " mkvtree2 -db $inputfile -dna -pl -lcp -suf -tis -ois -bwt -bck -sti1\n"; # DC replaced mkvtree by mkvtree2, [$hour:$min:$sec]
     }
 
   }
@@ -5288,8 +5327,6 @@ Other options:
 
   -vicinity or -vi [XXX]	Option used to define number of nucleotides separating a CRISPR array from its neighboring Cas system (default: $vicinity)
   
-  -CASFinder or -cf [XXX]	Option allowing to use the repository containing new CasFinder provided by Institut Pasteur (default: '$casfinder')
-
   -cpuMacSyFinder or -cpuM [XXX]	Option allowing to set number of CPUs to use for MacSyFinder (default: $cpuMacSyFinder)
 
   -rcfowce	Option allowing to run Casfinder only when any CRISPR exists (default: $rcfowce) (set if -cas is set)
@@ -5353,7 +5390,7 @@ sub printversion
 {
     my $programname = shift @_;
     print "This is $programname, version $version,\n";
-    print "a perl script to identify CRISPR arrays and associated Cas genes from DNA sequences\n";
+    print "a perl script to identify CRISPR arrays and associated cas genes from DNA sequences\n";
 }
 
 sub printhelpbasic
