@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# shell script allowing to install all CRISPRCasFinder.pl-v4.2's dependencies on CentOS 
+# shell script allowing to install all CRISPRCasFinder.pl-v4.3's dependencies on CentOS 
 # (could be potentially adapted for Red Hat)
 #
 # please note that this script requires conda to be installed on your system 
@@ -10,7 +10,7 @@
 #
 # after running this script ('bash installer_CENTOS.sh'), if your command prompt changes, you may need to type 'exit' command
 #
-# same version than CRISPRCasFinder.pl, here 4.2.20
+# same version than CRISPRCasFinder.pl, here 4.3.1
 # authors: David Couvin, Fabrice Leclerc, Claire Toffano-Nioche
 
 #------------------------
@@ -47,9 +47,9 @@ then
     echo "Please note that conda (https://docs.conda.io/en/latest/miniconda.html ; http://www.ddocent.com//bioconda/) must be installed on your system."
     echo ""
     echo "You can type following commands to quickly install conda:"
-    echo "wget https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh"
-    echo "bash Miniconda2-latest-Linux-x86_64.sh"
-	echo "export PATH=/path/to/miniconda2/bin/:$PATH"
+    echo "wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+    echo "bash Miniconda3-latest-Linux-x86_64.sh"
+	echo "export PATH=/path/to/miniconda3/bin/:$PATH"
 	echo "source ~/.bashrc"
     echo "conda init"
     echo "conda config --add channels defaults"
@@ -97,13 +97,13 @@ else
     #launchInstall "$packageManagmentInstall" "EMBOSS-devel" "$LOGFILE"  # may not be necessary
     launchInstall "$packageManagmentInstall" "EMBOSS-libs" "$LOGFILE"
 	
-	if [ ! -x "$(command -v fuzznuc)" ] && [ ! -x "$(command -v needle)" ]
+        if [ ! -x "$(command -v fuzznuc)" ] && [ ! -x "$(command -v needle)" ]
 	then
 		echo "Installation of EMBOSS using Bioconda." >> $LOGFILE
 		conda install -c bioconda emboss
 	else
 		echo "EMBOSS is already installed." >> $LOGFILE
-	fi
+        fi
 	
     launchInstall "$packageManagmentInstall" "ncbi-blast+" "$LOGFILE"
 	
@@ -115,7 +115,7 @@ else
 	fi
 	
 	if [ ! -x "$(command -v makeblastdb)" ]
-    then
+        then
 		wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.9.0/ncbi-blast-2.9.0+-x64-linux.tar.gz
 		tar -xzvf ncbi-blast-2.9.0+-x64-linux.tar.gz
 		sudo cp ncbi-blast-2.9.0+/bin/* $CURDIR/bin/
@@ -123,15 +123,15 @@ else
 		echo "ncbi-blast+ is already installed." >> $LOGFILE
 	fi
     
-	launchInstall "$packageManagmentInstall" "perl-Time-Piece" "$LOGFILE"
+    launchInstall "$packageManagmentInstall" "perl-Time-Piece" "$LOGFILE"
     launchInstall "$packageManagmentInstall" "perl-XML-Simple" "$LOGFILE"
     launchInstall "$packageManagmentInstall" "perl-Digest-MD5" "$LOGFILE"
-	launchInstall "$packageManagmentInstall" "gcc" "$LOGFILE"
+    launchInstall "$packageManagmentInstall" "gcc" "$LOGFILE"
     launchInstall "$packageManagmentInstall" "gcc-c++" "$LOGFILE"
     launchInstall "$packageManagmentInstall" "make" "$LOGFILE"
     
     #cpanm BioPerl
-    sudo cpanm Unix::Sysexits >> $LOGFILE
+    #sudo cpanm Unix::Sysexits >> $LOGFILE
     sudo cpanm Bio::Perl >> $LOGFILE
 
     #BioPerl-Run
@@ -147,15 +147,17 @@ else
 
     #cpanm Others
     sudo cpanm Bio::FeatureIO >> $LOGFILE
-    sudo cpanm Try::Tiny >> $LOGFILE
-    sudo cpanm Test::Most >> $LOGFILE
-    sudo cpanm JSON::Parse >> $LOGFILE
+    #sudo cpanm Try::Tiny >> $LOGFILE
+    #sudo cpanm Test::Most >> $LOGFILE
+    #sudo cpanm JSON::Parse >> $LOGFILE
     sudo cpanm Class::Struct >> $LOGFILE
     sudo cpanm Bio::DB::Fasta >> $LOGFILE
     sudo cpanm File::Copy  >> $LOGFILE
     sudo cpanm Bio::Seq Bio::SeqIO >> $LOGFILE
-    sudo cpanm --force Bio::Tools::Run::Alignment::Muscle >> $LOGFILE
-    sudo cpanm Date::Calc >> $LOGFILE
+    #sudo cpanm --force Bio::Tools::Run::Alignment::Muscle >> $LOGFILE
+    #sudo cpanm Date::Calc >> $LOGFILE
+    sudo cpanm Bio::AlignIO >> $LOGFILE
+    sudo cpanm Getopt::Long >> $LOGFILE
 
     #install vmatch
     if [ ! -x "$(command -v vmatch2)" ] && [ ! -x "$(command -v mkvtree2)" ] && [ ! -x "$(command -v vsubseqselect2)" ]
@@ -213,20 +215,22 @@ else
     #install macsyfinder
     if [ ! -x "$(command -v macsyfinder)" ] 
     then
-      echo "Installation of MacSyFinder" >> $LOGFILE
-      cd ${CURDIR}
-      #wget https://dl.bintray.com/gem-pasteur/MacSyFinder/macsyfinder-1.0.5.tar.gz >> $LOGFILE
-      wget https://github.com/gem-pasteur/macsyfinder/archive/refs/tags/macsyfinder-1.0.5.tar.gz >> $LOGFILE
-      tar -xzf macsyfinder-1.0.5.tar.gz
-      test -d bin ||  mkdir bin
-      cd bin
-      #ln -s ../macsyfinder-1.0.5/bin/macsyfinder
-      ln -s ../macsyfinder-macsyfinder-1.0.5/bin/macsyfinder
-      cd ${CURDIR}
-      echo "add definition of MACSY_HOME (${CURDIR}/macsyfinder-1.0.5/) in .bashrc" >> $LOGFILE
-      echo "export MACSY_HOME=${CURDIR}/macsyfinder-1.0.5/" >> $HOME/.bashrc
-      echo "add bin folder ($CURDIR/bin) to the definition of PATH in $HOME/.bashrc" >> $LOGFILE
-      echo "export PATH=${CURDIR}/bin:${PATH}" >> $HOME/.bashrc
+      echo "Installation of MacSyFinder using conda/mamba" >> $LOGFILE
+      conda install -c conda-forge mamba
+      mamba install -c bioconda macsyfinder=2.0
+      macsydata install -u CASFinder==3.1.0
+      conda install -c bioconda perl-bioperl-core
+      #cd ${CURDIR}
+      #wget https://github.com/gem-pasteur/macsyfinder/archive/refs/tags/macsyfinder-1.0.5.tar.gz >> $LOGFILE
+      #tar -xzf macsyfinder-1.0.5.tar.gz
+      #test -d bin ||  mkdir bin
+      #cd bin
+      #ln -s ../macsyfinder-macsyfinder-1.0.5/bin/macsyfinder
+      #cd ${CURDIR}
+      #echo "add definition of MACSY_HOME (${CURDIR}/macsyfinder-1.0.5/) in .bashrc" >> $LOGFILE
+      #echo "export MACSY_HOME=${CURDIR}/macsyfinder-1.0.5/" >> $HOME/.bashrc
+      #echo "add bin folder ($CURDIR/bin) to the definition of PATH in $HOME/.bashrc" >> $LOGFILE
+      #echo "export PATH=${CURDIR}/bin:${PATH}" >> $HOME/.bashrc
     else
       echo "MacSyFinder is already installed." >> $LOGFILE
     fi
