@@ -33,9 +33,9 @@ Please first install conda if it is not already installed:
 ```bash
 sudo yum -y update
 sudo yum -y upgrade
-wget https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh
-bash Miniconda2-latest-Linux-x86_64.sh
-export PATH=/path/to/miniconda2/bin/:$PATH
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+export PATH=/path/to/miniconda3/bin/:$PATH
 source ~/.bashrc
 conda init
 conda config --add channels defaults
@@ -64,7 +64,7 @@ For further information, please see the documentation.
 
 ## To run CRISPRCasFinder in the current directory with example sequence you can type:
 ```bash
-perl CRISPRCasFinder.pl -in install_test/sequence.fasta -cas -cf CasFinder-2.0.3 -def G -keep
+perl CRISPRCasFinder.pl -in install_test/sequence.fasta -cas -keep
 ```
 For further details, please see the documentation.
 
@@ -83,6 +83,7 @@ The standalone version is also available as a singularity container (hosted on t
 <!--[![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/1624)-->
 
 ## To run the container
+### Former version of CRISPRCasFinder (v4.2.20)
 After downloading the [CrisprCasFinder.simg](https://crisprcas.i2bc.paris-saclay.fr/Home/DownloadFile?filename=CrisprCasFinder.simg) image from the [CRISPR-Cas++ Download page](https://crisprcas.i2bc.paris-saclay.fr/Home/Download), you can for example run the following command (sequence.fasta file must be replaced by your file):
 
 ```bash
