@@ -48,6 +48,7 @@ conda install -c bioconda perl-bioperl-core
 # Please use a conda environment when running the code (several tests are in progress)
 # Note that following Perl modules are no more needed: JSON::Parse, Date::Calc, Unix::Sysexits
 # Please note that you will need to first install conda and activate it to run the new bash installer files
+# Note that former CasFinder folder ("CasFinder-2.0.3") is no more needed in CRISPRCasFinder version 4.3.1
 
 
 
