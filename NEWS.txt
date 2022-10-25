@@ -34,4 +34,20 @@
 # Change #5
 # Please note that a new singularity container is available and  hosted at the Download page of the CRISPR-Cas++ portal (https://crisprcas.i2bc.paris-saclay.fr/Home/Download)
 
+# Change #6
+# Please note that in the former installer bash files, the path corresponding to MacSyFinder version 1.0.5 was: https://github.com/gem-pasteur/macsyfinder/archive/refs/tags/macsyfinder-1.0.5.tar.gz
+
+# Change #7
+# Please note that a new version of CRISPRCasFinder is in development (version 4.3.1) using MacSyFinder version 2.0 (https://github.com/gem-pasteur/macsyfinder) and CASFinder version 3.1.0.
+# You can use conda/mamba to install the new version of MacSyFinder and corresponding CASFinder version.
+# Example of command lines to install the new version of MacSyFinder/CASFinder:
+conda install -c conda-forge mamba
+mamba install -c bioconda macsyfinder=2.0
+macsydata install -u CASFinder==3.1.0
+conda install -c bioconda perl-bioperl-core
+# Please use a conda environment when running the code (several tests are in progress)
+# Note that following Perl modules are no more needed: JSON::Parse, Date::Calc, Unix::Sysexits
+
+
+
 
