@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# shell script allowing to install all CRISPRCasFinder.pl-v4.2's dependencies on Fedora
+# shell script allowing to install all CRISPRCasFinder.pl-v4.3's dependencies on Fedora
 # (could be potentially adapted for Red Hat)
 #
-# same version than CRISPRCasFinder.pl, here 4.2.20
+# same version than CRISPRCasFinder.pl, here 4.3.1
 # authors: David Couvin, Fabrice Leclerc, Claire Toffano-Nioche
 
 #------------------------
@@ -104,18 +104,20 @@ else
     fi
 
     #cpanm
-    sudo cpanm Unix::Sysexits >> $LOGFILE
+    #sudo cpanm Unix::Sysexits >> $LOGFILE
     sudo cpanm Bio::Perl >> $LOGFILE
     sudo cpanm Bio::FeatureIO >> $LOGFILE
-    sudo cpanm Try::Tiny >> $LOGFILE
-    sudo cpanm Test::Most >> $LOGFILE
-    sudo cpanm JSON::Parse >> $LOGFILE
+    #sudo cpanm Try::Tiny >> $LOGFILE
+    #sudo cpanm Test::Most >> $LOGFILE
+    #sudo cpanm JSON::Parse >> $LOGFILE
     sudo cpanm Class::Struct >> $LOGFILE
     sudo cpanm Bio::DB::Fasta >> $LOGFILE
     sudo cpanm File::Copy  >> $LOGFILE
-    sudo cpanm Bio::Seq Bio::SeqIO >> $LOGFILE
-    sudo cpanm --force Bio::Tools::Run::Alignment::Muscle >> $LOGFILE
+    #sudo cpanm Bio::Seq Bio::SeqIO >> $LOGFILE
+    #sudo cpanm --force Bio::Tools::Run::Alignment::Muscle >> $LOGFILE
     sudo cpanm Date::Calc >> $LOGFILE
+    sudo cpanm Bio::AlignIO >> $LOGFILE
+    sudo cpanm Getopt::Long >> $LOGFILE
 
     #BioPerl-Run
     # wget https://cpan.metacpan.org/authors/id/C/CJ/CJFIELDS/BioPerl-Run-1.007003.tar.gz 
@@ -189,20 +191,22 @@ else
     #install macsyfinder
     if [ ! -x "$(command -v macsyfinder)" ] 
     then
-      echo "Installation of MacSyFinder" >> $LOGFILE
-      cd ${CURDIR}
-      #wget https://dl.bintray.com/gem-pasteur/MacSyFinder/macsyfinder-1.0.5.tar.gz >> $LOGFILE
-      wget https://github.com/gem-pasteur/macsyfinder/archive/refs/tags/macsyfinder-1.0.5.tar.gz >> $LOGFILE
-      tar -xzf macsyfinder-1.0.5.tar.gz
-      test -d bin ||  mkdir bin
-      cd bin
-      #ln -s ../macsyfinder-1.0.5/bin/macsyfinder
-      ln -s ../macsyfinder-macsyfinder-1.0.5/bin/macsyfinder
-      cd ${CURDIR}
-      echo "add definition of MACSY_HOME (${CURDIR}/macsyfinder-1.0.5/) in .bashrc" >> $LOGFILE
-      echo "export MACSY_HOME=${CURDIR}/macsyfinder-1.0.5/" >> $HOME/.bashrc
-      echo "add bin folder ($CURDIR/bin) to the definition of PATH in $HOME/.bashrc" >> $LOGFILE
-      echo "export PATH=${CURDIR}/bin:${PATH}" >> $HOME/.bashrc
+      echo "Installation of MacSyFinder using conda/mamba" >> $LOGFILE
+      conda install -c conda-forge mamba
+      mamba install -c bioconda macsyfinder=2.0
+      macsydata install -u CASFinder==3.1.0
+      conda install -c bioconda perl-bioperl-core
+      #cd ${CURDIR}
+      #wget https://github.com/gem-pasteur/macsyfinder/archive/refs/tags/macsyfinder-1.0.5.tar.gz >> $LOGFILE
+      #tar -xzf macsyfinder-1.0.5.tar.gz
+      #test -d bin ||  mkdir bin
+      #cd bin
+      #ln -s ../macsyfinder-macsyfinder-1.0.5/bin/macsyfinder
+      #cd ${CURDIR}
+      #echo "add definition of MACSY_HOME (${CURDIR}/macsyfinder-1.0.5/) in .bashrc" >> $LOGFILE
+      #echo "export MACSY_HOME=${CURDIR}/macsyfinder-1.0.5/" >> $HOME/.bashrc
+      #echo "add bin folder ($CURDIR/bin) to the definition of PATH in $HOME/.bashrc" >> $LOGFILE
+      #echo "export PATH=${CURDIR}/bin:${PATH}" >> $HOME/.bashrc
     else
       echo "MacSyFinder is already installed." >> $LOGFILE
     fi
