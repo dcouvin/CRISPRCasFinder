@@ -1,6 +1,7 @@
 # CRISPRCasFinder
 
 CRISPRCasFinder is an updated, improved, and integrated version of CRISPRFinder and CasFinder. 
+![CRISPR-Cas++](crispr-cas_logo.png)
 
 # References/Citations
 
