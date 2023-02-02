@@ -2,7 +2,7 @@
 
 # shell script allowing to install all CRISPRCasFinder.pl-v4.3's dependencies
 #
-# same version than CRISPRCasFinder.pl, here 4.3.1
+# same version than CRISPRCasFinder.pl, here 4.3.2
 # please note that you will need to first install conda and activate it to run the programme
  
 # authors: David Couvin, Fabrice Leclerc, Claire Toffano-Nioche
@@ -85,9 +85,9 @@ else
     tar -zxf vmatch-2.3.0-${distribution}-64bit.tar.gz >> $LOGFILE
     gcc -Wall -Werror -fPIC -O3 -shared vmatch-2.3.0-${distribution}-64bit/SELECT/sel392.c -o $CURDIR/sel392v2.so >> $LOGFILE
     echo "copy $CURDIR/src/vmatch-2.3.0-${distribution}-64bit/vmatch, mkvtree and vsubseqselect to $CURDIR/bin/" >> $LOGFILE
-    sudo cp $CURDIR/src/vmatch-2.3.0-${distribution}-64bit/vmatch $CURDIR/bin/vmatch2
-    sudo cp $CURDIR/src/vmatch-2.3.0-${distribution}-64bit/mkvtree $CURDIR/bin/mkvtree2
-    sudo cp $CURDIR/src/vmatch-2.3.0-${distribution}-64bit/vsubseqselect $CURDIR/bin/vsubseqselect2
+    sudo cp $CURDIR/src/vmatch-2.3.0-${distribution}-64bit/vmatch $CURDIR/bin/vmatch
+    sudo cp $CURDIR/src/vmatch-2.3.0-${distribution}-64bit/mkvtree $CURDIR/bin/mkvtree
+    sudo cp $CURDIR/src/vmatch-2.3.0-${distribution}-64bit/vsubseqselect $CURDIR/bin/vsubseqselect
     echo "change directory to $CURDIR" >> $LOGFILE
     cd $CURDIR
 
