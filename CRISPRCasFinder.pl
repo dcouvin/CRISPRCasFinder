@@ -33,7 +33,7 @@ use Bio::DB::Fasta; #to extract sequence from fasta file
 
 # TODO add URLescape module in case the GFF attributes get messy
 #local modules
-my $version = "4.3.1";
+my $version = "4.3.2";
 
 # set parameters for the Vmatch program
 #$ENV{'LD_LIBRARY_PATH'} = '.';
@@ -267,33 +267,33 @@ print "################################################################\n\n\n";
 
 ## Control dependencies
 
-my $vmatchProg = isProgInstalled("vmatch2");
+my $vmatchProg = isProgInstalled("vmatch");
 if($vmatchProg){
-  print "vmatch2 is...............OK \n";
+  print "vmatch is...............OK \n";
 }
 else
 {
-  print "vmatch2 is not installed, please install it and try again.\n";
+  print "vmatch is not installed, please install it and try again.\n";
   exit(1);
 }
 
-my $mkvtreeProg = isProgInstalled("mkvtree2");
+my $mkvtreeProg = isProgInstalled("mkvtree");
 if($mkvtreeProg){
-  print "mkvtree2 is...............OK \n";
+  print "mkvtree is...............OK \n";
 }
 else
 {
-  print "mkvtree2 (Vmatch dependency) is not installed, please install it and try again.\n";
+  print "mkvtree (Vmatch dependency) is not installed, please install it and try again.\n";
   exit(1);
 }
 
-my $vsubseqselectProg = isProgInstalled("vsubseqselect2");
+my $vsubseqselectProg = isProgInstalled("vsubseqselect");
 if($vsubseqselectProg){
-  print "vsubseqselect2 is...............OK \n";
+  print "vsubseqselect is...............OK \n";
 }
 else
 {
-  print "vsubseqselect2 (Vmatch dependency) is not installed, please install it and try again.\n";
+  print "vsubseqselect (Vmatch dependency) is not installed, please install it and try again.\n";
   exit(1);
 }
 #--
@@ -548,7 +548,7 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   	else{
   		print "  ( Input file: $inputfile, Sequence ID: $seqID1, Sequence name = $seqDesc )\n"; # DC
   	}
-  	# execute the first vmatch2 search
+  	# execute the first vmatch search
   
   	# Modification DC - 05/05/2017
   	my @vmatchoptions = ""; #qw(-l 23 25 60 -e 1 -s leftseq -evalue 1 -absolute -nodist -noevalue -noscore -noidentity -sort ia -best 1000000 -selfun ./sel392v2.so 55); #DC
@@ -564,7 +564,8 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
 	     if(-e $repeatsQuery){
 		#print " $repeatsQuery exists !!!!\n";
 		@vmatchoptions = ("-l", $M1, "-s", "leftseq", "-evalue", "1", "-absolute", "-nodist","-noevalue", "-noscore", "-noidentity", "-sort", "ia", "-q", "$repeatsQuery", "-best", 1000000, "-selfun", "$so", $M2);
-	     }
+			
+		}
 	     else{
 		@vmatchoptions = ("-l", $M1, $S1, $S2,"-s", "leftseq", "-evalue", "1", "-absolute", "-nodist","-noevalue", "-noscore", "-noidentity", "-sort", "ia", "-best", 1000000, "-selfun", "$so", $M2);
 	     }
@@ -593,11 +594,11 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   	push(@vmatchoptions, " > vmatch_result.txt");
 
   	if($logOption){
-  		print LOG "\n vmatch2 @vmatchoptions\n"; # print in Logfile DC replaced vmatch by vmatch2 , [$vmatch_hour:$vmatch_min:$vmatch_sec] 
+  		print LOG "\n vmatch @vmatchoptions\n"; # print in Logfile DC replaced vmatch by vmatch2 , [$vmatch_hour:$vmatch_min:$vmatch_sec] 
   	}
   	#Modification DC - 05/05/2017
   	#makesystemcall("./vmatch " . join(' ',@vmatchoptions)); #DC
-  	makesystemcall("vmatch2 " . join(' ',@vmatchoptions)); #LK - DC replaced vmatch by vmatch2
+  	makesystemcall("vmatch " . join(' ',@vmatchoptions)); #LK - DC replaced vmatch by vmatch2
   	#makesystemcall("cp vmatch_result.txt CHECKvmatch_result.txt");
   
   	my @rep = trans_data("vmatch_result.txt");
@@ -3943,8 +3944,8 @@ sub fastaAlignmentMuscle
   eval
   {
 	my $prog = isProgInstalled("muscle");
-
-	my $muscle = " muscle -in $file -out $result "; #muscle command-line
+	my $muscle = " muscle -align $file -output $result ";
+	#my $muscle = " muscle -in $file -out $result "; #muscle command-line
 	if ($quiet){
 		$muscle .= " -quiet ";
 	}
@@ -3982,8 +3983,8 @@ sub fastaAlignmentMuscleOne
   eval
   {
 	my $prog = isProgInstalled("muscle");
-	
-	my $muscle = " muscle -in $file -out $result "; #muscle command-line
+	my $muscle = " muscle -align $file -output $result ";
+	#my $muscle = " muscle -in $file -out $result "; #muscle command-line
 	if ($quiet){
 		$muscle .= " -quiet ";
 	}
@@ -4031,10 +4032,10 @@ sub extractsequence
 
 	# Modification DC - 05/05/2017
     	#makesystemcall("./vsubseqselect " . join(' ',@subselectoptions)); #DC
-    	makesystemcall("vsubseqselect2 " . join(' ',@subselectoptions)); #LK - DC replaced vsubseqselect by vsubseqselect2
+    	makesystemcall("vsubseqselect " . join(' ',@subselectoptions)); #LK - DC replaced vsubseqselect by vsubseqselect2
 	#my ($hour,$min,$sec) = Now();
 	if($logOption){
-   		print LOG " vsubseqselect2 @subselectoptions\n"; # DC replaced vsubseqselect by vsubseqselect2 , [$hour:$min:$sec]
+   		print LOG " vsubseqselect @subselectoptions\n"; # DC replaced vsubseqselect by vsubseqselect2 , [$hour:$min:$sec]
 	}
    }
    return @seqencesdefinition;
@@ -5201,12 +5202,12 @@ sub callmkvtree
   my ($inputfile,$indexname) = @_;
   if(not (checkdbfile($inputfile,"${indexname}.prj")))
   {
-    makesystemcall("mkvtree2 -db $inputfile " .   # LK - DC replaced mkvtree by mkvtree2
+    makesystemcall("mkvtree -db $inputfile " .   # LK - DC replaced mkvtree by mkvtree2
                    "-dna -pl -lcp -suf -tis -ois -bwt -bck -sti1");
     #my ($hour,$min,$sec) = Now();
 
     if($logOption){
-    	print LOG " mkvtree2 -db $inputfile -dna -pl -lcp -suf -tis -ois -bwt -bck -sti1\n"; # DC replaced mkvtree by mkvtree2, [$hour:$min:$sec]
+    	print LOG " mkvtree -db $inputfile -dna -pl -lcp -suf -tis -ois -bwt -bck -sti1\n"; # DC replaced mkvtree by mkvtree2, [$hour:$min:$sec]
     }
 
   }
