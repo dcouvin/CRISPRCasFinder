@@ -1,4 +1,4 @@
-## News from latest version of CRISPRCasFinder
+## News from latest version of CRISPRCasFinder (version 4.3.2)
 
 # Change #1
 # CRISPR arrays having one to three spacers will now be rated with evidence-level 4 if their consensus repeat matched with a level 4 CRISPR array's consensus repeat (from the same studied sequence).
@@ -50,5 +50,12 @@ conda install -c bioconda perl-bioperl-core
 # Please note that you will need to first install conda and activate it to run the new bash installer files
 # Note that former CasFinder folder ("CasFinder-2.0.3") is no more needed in CRISPRCasFinder version 4.3.1
 
-
+# Change #8
+# Please note that some changes have been applied to CRISPRCasFinder (version 4.3.2). As version 4.3.1, this version also use MacSyFinder version 2.0
+# Note that a new installation has been added to run the programme through a conda/mamba environment (instructions are provided in the README file)
+# Note that CRISPRCasFinder vers 4.3.2 need MUSCLE version 5.1 in order to work properly. Otherwise, you will need to modify the CRISPRCasFinder.pl file
+# indeed, the new version of MUSCLE can be run using the following command: "muscle -align <inputfile> -output <outputfile>"
+# instead of the former command: "muscle -in <inputfile> -out <outputfile>"
+# Furthermore, this new version of CCF still need "sel392v2.so" file to work (a Linux Ubuntu version of this file is provided in the GitHub repository),
+# if needed, "sel392v2.so" file could be generated from other operating systems following Vmatch documentation/installation (http://www.vmatch.de/)
 
