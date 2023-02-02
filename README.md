@@ -21,6 +21,9 @@ Further information are available at: https://crisprcas.i2bc.paris-saclay.fr.
 ## Conda/Bioconda/Mamba
 ```bash
 conda env create -f ccf.environment.yml -n crisprcasfinder
+mamba activate
+mamba install -c bioconda macsyfinder=2.0
+macsydata install -u CASFinder==3.1.0
 ```
 
 ## MacOS
