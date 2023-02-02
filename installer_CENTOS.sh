@@ -10,7 +10,7 @@
 #
 # after running this script ('bash installer_CENTOS.sh'), if your command prompt changes, you may need to type 'exit' command
 #
-# same version than CRISPRCasFinder.pl, here 4.3.1
+# same version than CRISPRCasFinder.pl, here 4.3.2
 # authors: David Couvin, Fabrice Leclerc, Claire Toffano-Nioche
 
 #------------------------
@@ -169,9 +169,9 @@ else
       tar -zxf vmatch-2.3.0-${distribution}.tar.gz >> $LOGFILE
       gcc -Wall -Werror -fPIC -O3 -shared vmatch-2.3.0-${distribution}/SELECT/sel392.c -o $CURDIR/sel392v2.so >> $LOGFILE
       echo "copy $CURDIR/src/vmatch-2.3.0-${distribution}/vmatch, mkvtree and vsubseqselect to $CURDIR/bin/" >> $LOGFILE
-      sudo cp $CURDIR/src/vmatch-2.3.0-${distribution}/vmatch $CURDIR/bin/vmatch2
-      sudo cp $CURDIR/src/vmatch-2.3.0-${distribution}/mkvtree $CURDIR/bin/mkvtree2
-      sudo cp $CURDIR/src/vmatch-2.3.0-${distribution}/vsubseqselect $CURDIR/bin/vsubseqselect2
+      sudo cp $CURDIR/src/vmatch-2.3.0-${distribution}/vmatch $CURDIR/bin/vmatch
+      sudo cp $CURDIR/src/vmatch-2.3.0-${distribution}/mkvtree $CURDIR/bin/mkvtree
+      sudo cp $CURDIR/src/vmatch-2.3.0-${distribution}/vsubseqselect $CURDIR/bin/vsubseqselect
       echo "change directory to $CURDIR" >> $LOGFILE
       cd $CURDIR
     else
