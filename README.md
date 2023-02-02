@@ -18,6 +18,11 @@ CRISPRCasFinder, an update of CRISRFinder, includes a portable version, enhanced
 Further information are available at: https://crisprcas.i2bc.paris-saclay.fr.
 
 # Quick Installation
+## Conda/Bioconda/Mamba
+```bash
+conda env create -f ccf.environment.yml -n crisprcasfinder
+```
+
 ## MacOS
 ```bash
 ./installer_MAC.sh
