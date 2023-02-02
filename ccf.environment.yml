@@ -1,0 +1,25 @@
+name: crisprcasfinder
+channels:
+- conda-forge
+- bioconda
+- defaults
+dependencies:
+- python >=3.10
+- wget
+- curl
+- git
+- java-jdk
+- parallel
+- perl-app-cpanminus
+- hmmer
+- emboss
+- blast
+- perl-bioperl-core
+- perl-xml-simple
+- perl-digest-md5
+- vmatch
+- muscle
+- prodigal
+- mamba
+- macsyfinder=2.0
+prefix: crisprcasfinder
