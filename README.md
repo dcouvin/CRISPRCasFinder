@@ -19,6 +19,7 @@ Further information are available at: https://crisprcas.i2bc.paris-saclay.fr.
 
 # Quick Installation
 ## Conda/Bioconda/Mamba
+Note that you will first need to install [conda/bioconda](http://www.ddocent.com/bioconda/) to run the following commands:
 ```bash
 conda env create -f ccf.environment.yml -n crisprcasfinder
 conda activate crisprcasfinder
