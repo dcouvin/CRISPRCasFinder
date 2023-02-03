@@ -23,6 +23,7 @@ Note that you will first need to install [conda/bioconda](http://www.ddocent.com
 ```bash
 conda env create -f ccf.environment.yml -n crisprcasfinder
 conda activate crisprcasfinder
+mamba init
 mamba activate
 mamba install -c bioconda macsyfinder=2.0
 macsydata install -u CASFinder==3.1.0
