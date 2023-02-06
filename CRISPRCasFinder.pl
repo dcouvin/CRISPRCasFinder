@@ -1711,9 +1711,10 @@ sub casFinder
 			    my @tabTSV = split(/\t/, $lineTSV);	
 				my $sequenceID = $tabTSV[1]; #index corresponding to gene ID
 				push (@tabGenes, $sequenceID);
-				$hSystem{$tabTSV[6]} = $tabTSV[5];
-				#print "HSYSTEM value for System number: $tabTSV[6], $hSystem{$tabTSV[6]} \n";
-				push (@{ $hGeneSystem{$tabTSV[6]} }, $tabTSV[1]);
+				my @tabTMPSys = split('_', $tabTSV[5]); # temp table to extract the system number
+				$hSystem{$tabTMPSys[$#tabTMPSys]} = $tabTSV[5];
+				#print "HSYSTEM value for System number: $tabTMPSys[$#tabTMPSys] \n";
+				push (@{ $hGeneSystem{$tabTMPSys[$#tabTMPSys]} }, $tabTSV[1]);  # replacing $tabTSV[6] by $tabTMPSys[$#tabTMPSys]
 				$hGeneInfo{$tabTSV[1]} = ["$tabTSV[2]", "$tabTSV[4]", "$tabTSV[6]", "$tabTSV[12]"]; #hash contains: gene name, systemCAS, sys_loci, hit_status
 			}
 		}
@@ -1777,6 +1778,7 @@ sub casFinder
 		#my $countSys = 1; # to count Cas systems in JSON file
 		my $countGeneralCas = 0;
 
+		#foreach my $i (keys %hSystem) {
 		for (my $i = 1; $i <= $sizeTable; $i++) {   # loop for each system
 			#print "############################################\n";
 			if(! $quiet){
@@ -5382,7 +5384,7 @@ In this example, your result folder will be in the directory named: "Result_test
 
 (4): perl $0 -in sequence.fasta -cas -log -out RES_Sequence -ccc 20000 -ccvRep -keep -html -rcfowce -def S -cpuM 4 -copyCSS supplementary_files/crispr.css -cf CasFinder-2.0.3
 
-(5): perl $0 -in sequence.fasta -cas -log -out RES_Sequence -cf CasFinder-2.0.3 -def G -force -so path/to/sel392v2.so
+(5): perl $0 -in sequence.fasta -cas -log -out RES_Sequence -force -so path/to/sel392v2.so
 
 HEREDOC
 }
