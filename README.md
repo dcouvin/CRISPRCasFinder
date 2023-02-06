@@ -15,6 +15,8 @@ If you use this software, please cite:
 CRISPRCasFinder, an update of CRISRFinder, includes a portable version, enhanced performance and integrates search for Cas proteins.
 <b>Nucleic Acids Res.</b> 2018 Jul 2;46(W1):W246-W251. DOI: https://doi.org/10.1093/nar/gky425 [PMID:29790974](https://www.ncbi.nlm.nih.gov/pubmed/29790974)
 
+- Néron B, Denise R, Coluzzi C, Touchon M, Rocha EPC, Abby SS (2022). MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes. <b>bioRxiv</b> DOI: 10.1101/2022.09.02.506364 [Link](https://www.biorxiv.org/content/10.1101/2022.09.02.506364v1)
+
 Further information are available at: https://crisprcas.i2bc.paris-saclay.fr.
 
 # Quick Installation
