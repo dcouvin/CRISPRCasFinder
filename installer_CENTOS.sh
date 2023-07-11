@@ -217,7 +217,7 @@ else
     then
       echo "Installation of MacSyFinder using conda/mamba" >> $LOGFILE
       conda install -c conda-forge mamba
-      mamba install -c bioconda macsyfinder=2.0
+      mamba install -c bioconda macsyfinder=2.1.2
       macsydata install -u CASFinder==3.1.0
       conda install -c bioconda perl-bioperl-core
       #cd ${CURDIR}
