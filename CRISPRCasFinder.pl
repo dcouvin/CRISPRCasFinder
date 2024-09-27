@@ -720,7 +720,7 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   	#create a directory GFF and move all GFFs to this directory
   	#my $directoryGFFfiles = $ResultDir."/GFF";  # Directory for GFFs
   	#mkdir $directoryGFFfiles unless -d $directoryGFFfiles;
-	if(-d $ResultDir."/GFF"){ makesystemcall("mv $gffFilename $ResultDir/GFF "); }
+	if(-d $ResultDir."/GFF"){ makesystemcall("cp $gffFilename $ResultDir/GFF "); }
 
   	#Move CRISPRproperties, DRs and Spacers to specific directories
   	my $input_spacers = $ResultDir."/".$RefSeq."/Spacers_"; # Path to the Spacers files
@@ -735,14 +735,14 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   	mkdir $directoryCRISPRproperties unless -d $directoryCRISPRproperties;
   
   	if ( (-e $input_spacers."1") and (-e $input_drs."1") ){
-    		makesystemcall("mv $input_spacers* $directorySpacers");
-    		makesystemcall("mv $input_drs* $directoryDRs");
-    		makesystemcall("mv $input_properties* $directoryCRISPRproperties");
+    		makesystemcall("cp -r $input_spacers* $directorySpacers");
+    		makesystemcall("cp -r $input_drs* $directoryDRs");
+    		makesystemcall("cp -r $input_properties* $directoryCRISPRproperties");
  	}
 
   	if(-e $input_properties."_CRISPRs"){
     		my $reportProperties = $input_properties."_CRISPRs";
-    		makesystemcall("mv $reportProperties $directoryCRISPRproperties");
+    		makesystemcall("cp -r $reportProperties $directoryCRISPRproperties");
   	}
 
   	my $directoryProperties = $ResultDir."/".$RefSeq;
@@ -752,13 +752,13 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
 		$newProperties = $ResultDir."/CRISPRFinderProperties/".$RefSeq."_properties";
 	} #NV
   	if(-d $directoryProperties){
-    		makesystemcall("mv $directoryProperties $newProperties"); # rename properties for each sequence
+    		makesystemcall("cp -r $directoryProperties $newProperties"); # rename properties for each sequence
   	}
 
   	#create a directory Properties and move all sequenceProperties directories in one
   	#my $directoryPropertiesFinal = $ResultDir."/CRISPRFinderProperties";  # Directory for Properties
   	#mkdir $directoryPropertiesFinal unless -d $directoryPropertiesFinal;
-  	#makesystemcall("mv $newProperties $directoryPropertiesFinal");
+  	#makesystemcall("cp -r $newProperties $directoryPropertiesFinal");
 
   	# End Move properties, DRs and Spacers
   
@@ -815,7 +815,7 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   	my $analyzedSequences = $ResultDir."/analyzedSequences";  # Directory for FASTAs
   	mkdir $analyzedSequences unless -d $analyzedSequences;
   	if(-e $inputfile){
-    		makesystemcall("mv $inputfile $analyzedSequences");
+    		makesystemcall("cp -r $inputfile $analyzedSequences");
   	}
  } #NV end condition for mss option  
 } # end while (my $seq = $seqIO->next_seq)
@@ -831,14 +831,14 @@ print JSONRES $jsonLineRes;
 close (JSONRES);
 # move JSONRES in ResultDir
 if(-e $jsonResult){
-  makesystemcall("mv $jsonResult $ResultDir");
+  makesystemcall("cp -r $jsonResult $ResultDir");
 }
 
 #create a directory JSONfiles and move all JSONs to this directory
 #my $directoryJSONfiles = $ResultDir."/JSON_files";  # Directory for JSONs
 #mkdir $directoryJSONfiles unless -d $directoryJSONfiles;
 #if(-e $ResultDir."/result.json"){
-#  makesystemcall("mv $ResultDir/*.json $directoryJSONfiles");
+#  makesystemcall("cp -r $ResultDir/*.json $directoryJSONfiles");
 #}
 
 #fullReport
@@ -877,10 +877,10 @@ if(-e $clustersResults){ makesystemcall("cp $clustersResults $clustersResultsX")
 my $directoryTSVfiles = $ResultDir."/TSV";  # Directory for TSVs
 mkdir $directoryTSVfiles unless -d $directoryTSVfiles;
 if(-e "$ResultDir/Crisprs_REPORT.tsv"){
-  makesystemcall("mv $ResultDir/*.tsv $directoryTSVfiles");
+  makesystemcall("cp $ResultDir/*.tsv $directoryTSVfiles");
 }
 if(-e "$ResultDir/Crisprs_REPORT.xls"){
-  makesystemcall("mv $ResultDir/*.xls $directoryTSVfiles");
+  makesystemcall("cp $ResultDir/*.xls $directoryTSVfiles");
 }
 
 #create a directory FASTAfiles and move all rawFASTAs to this directory
@@ -895,21 +895,21 @@ mkdir $directoryFASTAfiles unless -d $directoryFASTAfiles;
 
 my $analyzedSequences2 = $ResultDir."/analyzedSequences";  # Directory for analyzed FASTAs
 if(-d $analyzedSequences2){
-  makesystemcall("mv $analyzedSequences2 $directoryFASTAfiles");
+  makesystemcall("cp -r $analyzedSequences2 $directoryFASTAfiles");
 }
 
 #create a directory Properties and move all sequenceProperties directories in one
 my $directoryProperties = $ResultDir."/CRISPRFinderProperties";  # Directory for Properties
 #mkdir $directoryProperties unless -d $directoryProperties; #before NV
 #if(-e "$ResultDir/*_properties"){
-  #makesystemcall("mv $ResultDir/*_properties $directoryProperties"); #before NV
+  #makesystemcall("cp -r $ResultDir/*_properties $directoryProperties"); #before NV
 #}
 
 #create a directory GFF and move all GFFs to this directory
 #my $directoryGFFfiles = $ResultDir."/GFF";  # Directory for GFFs # DC
 #mkdir $directoryGFFfiles unless -d $directoryGFFfiles; # DC
 #if(-e "$ResultDir/*.gff"){
-  #makesystemcall("mv $ResultDir/*.gff $directoryGFFfiles"); #before NV
+  #makesystemcall("cp -r $ResultDir/*.gff $directoryGFFfiles"); #before NV
   #makesystemcall("find $ResultDir -name *.gff -exec mv {} $directoryGFFfiles \\;"); #NV DC
 #}
 
@@ -990,8 +990,8 @@ if($logOption){
   unless(-d $directoryLog){ mkdir $directoryLog or die "$0: I can not create the folder $directoryLog: $!\n" }
 
   if ( (-e $logfile) and (-e $logSeq) ){
-    makesystemcall("mv $logfile $directoryLog");
-    makesystemcall("mv $logSeq $directoryLog");
+    makesystemcall("cp $logfile $directoryLog");
+    makesystemcall("cp $logSeq $directoryLog");
   }
 }
 
@@ -1000,7 +1000,7 @@ if($html){
   my $directoryViz = $ResultDir."/Visualization"; # directory  to store basic Visualization files
   unless(-d $directoryViz){ mkdir $directoryViz or die "$0: I can not create the folder $directoryViz: $!\n" }
 
-  makesystemcall("mv $htmlFile $directoryViz");
+  makesystemcall("cp $htmlFile $directoryViz");
 
   if(-e "crispr.css"){
   	makesystemcall("cp crispr.css $directoryViz");
@@ -1668,7 +1668,7 @@ sub casFinder
 
     	system ("cp $gff $tmpGFFprokka"); 
 
-	makesystemcall("mv $tmpGFFprokka $ResultDir/GFF");
+	makesystemcall("cp -r $tmpGFFprokka $ResultDir/GFF");
     }
 
     ## get the summary report which has been created by casfinder
@@ -2223,7 +2223,7 @@ sub casFinder
 		my $directoryProkka = $ResultDir."/Prokka";  # Directory for Prokka
 		mkdir $directoryProkka unless -d $directoryProkka;
 		if(-d $repProkka and -e $repProkka and -e $directoryProkka){
-			makesystemcall("mv $repProkka $directoryProkka");
+			makesystemcall("cp -r $repProkka $directoryProkka");
 	        }
 	    }
 	    else{
@@ -2231,7 +2231,7 @@ sub casFinder
 		mkdir $directoryProdigal unless -d $directoryProdigal;
 
 		if(-d $repProkka){
-			makesystemcall("mv $repProkka $directoryProdigal");
+			makesystemcall("cp -r $repProkka $directoryProdigal");
 		}
 	    }
 	}
@@ -2239,7 +2239,7 @@ sub casFinder
 	my $directoryCasfinder = $ResultDir."/CasFinder";  # Directory for CasFinder
 	mkdir $directoryCasfinder unless -d $directoryCasfinder;
 	if(-d $casDir){
-	makesystemcall("mv $casDir $directoryCasfinder");
+	makesystemcall("cp -r $casDir $directoryCasfinder");
 	}
   ##}
 
@@ -2298,7 +2298,7 @@ sub fullReport{
 	  close (CRISPR);
 	  close (FULL);
   }
-  makesystemcall("mv $fullReport $resultsCRISPRs"); # Move fullReport file into CRISPRs_report
+  makesystemcall("cp $fullReport $resultsCRISPRs"); # Move fullReport file into CRISPRs_report
   #makesystemcall("rm -f $allCas"); # remove $allCas
   return $fullReport;
 }
@@ -3307,7 +3307,7 @@ sub crisprAnalysis
     #### Move created alignment files into $directory
       #my ($hourMv,$minMv,$secMv) = Now();
       my $fastaStar = $spacerFasta."*";
-      my $ret = system("mv $fastaStar $directory");
+      my $ret = system("cp -r $fastaStar $directory");
       #print "Moving files $fastaStar in $directory (return type: $ret)\n";
       
       if($logOption){	
@@ -3315,7 +3315,7 @@ sub crisprAnalysis
       }
 
       $fastaStar = $drFasta."*";
-      $ret = system("mv $fastaStar $directory");
+      $ret = system("cp -r $fastaStar $directory");
       #print "Moving files $fastaStar in $directory (return type: $ret)\n";
 
       if($logOption){
