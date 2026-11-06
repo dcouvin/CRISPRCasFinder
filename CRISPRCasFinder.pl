@@ -598,7 +598,7 @@ while($seq = $seqIO->next_seq()){  # DC - replace 'next_seq' by 'next_seq()'
   	}
   	#Modification DC - 05/05/2017
   	#makesystemcall("./vmatch " . join(' ',@vmatchoptions)); #DC
-  	makesystemcall("vmatch " . join(' ',@vmatchoptions)); #LK - DC replaced vmatch by vmatch2
+	  makevmatchcall("vmatch " . join(' ',@vmatchoptions)); # isolate vmatch from inherited descriptors
   	#makesystemcall("cp vmatch_result.txt CHECKvmatch_result.txt");
   
   	my @rep = trans_data("vmatch_result.txt");
@@ -5184,6 +5184,35 @@ sub checkdbfile
   }
   return 0;
 }
+#------------------------------------------------------------------------------
+sub makevmatchcall
+{
+  my ($argstring) = @_;
+  # vmatch may inherit descriptors opened by the embedding process.  Run only
+  # this call through a small Perl child so unrelated descriptors are closed
+  # before the shell command is started.  Try Linux procfs, then /dev/fd (the
+  # latter is the macOS path choice); no native macOS test is claimed here.
+  # If neither directory is available, execute the original command without
+  # isolation as a best-effort compatibility fallback.
+  my $launcher = <<'PERL_LAUNCHER';
+for my $candidate ("/proc/$$/fd", "/dev/fd") {
+  if (opendir(my $dir, $candidate)) {
+    my @fds = grep { /^\d+$/ && $_ > 2 && $_ != fileno($dir) } readdir($dir);
+    closedir($dir);
+    POSIX::close($_) for @fds;
+    last;
+  }
+}
+exec('/bin/sh', '-c', $ARGV[0]) or die "exec: $!\n";
+PERL_LAUNCHER
+  my $retcode = system($^X, '-MPOSIX', '-e', $launcher, $argstring);
+  if($retcode != 0)
+  {
+    print STDERR "failure: \"$argstring\", errorcode $retcode\n";
+    exit 1;
+  }
+}
+
 #------------------------------------------------------------------------------
 sub makesystemcall
 {
